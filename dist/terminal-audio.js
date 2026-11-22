@@ -1,0 +1,12 @@
+(()=>{
+ let ctx=null,master=null,dialScheduled=false;
+ function context(){if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC();master=ctx.createGain();master.gain.value=.52;master.connect(ctx.destination)}return ctx}
+ async function unlock(){const c=context();if(!c)return false;try{if(c.state==='suspended')await c.resume();return c.state==='running'}catch{return false}}
+ function tone(c,freq,start,duration,type='sine',volume=.035,endFreq=null){const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,start);if(endFreq)o.frequency.exponentialRampToValueAtTime(endFreq,start+duration);g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(volume,start+.008);g.gain.exponentialRampToValueAtTime(.0001,start+duration);o.connect(g);g.connect(master);o.start(start);o.stop(start+duration+.02)}
+ function noise(c,start,duration,volume=.012){const length=Math.ceil(c.sampleRate*duration),buffer=c.createBuffer(1,length,c.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(1-i/length*.25);const src=c.createBufferSource(),g=c.createGain();src.buffer=buffer;g.gain.setValueAtTime(volume,start);g.gain.exponentialRampToValueAtTime(.0001,start+duration);src.connect(g);g.connect(master);src.start(start);src.stop(start+duration)}
+ async function dialup(){if(dialScheduled)return true;if(!(await unlock()))return false;dialScheduled=true;const c=ctx,t=c.currentTime+.03;tone(c,350,t,.68,'sine',.028);tone(c,440,t,.68,'sine',.024);const digits=[[697,1209],[770,1336],[852,1477],[697,1336],[770,1209],[852,1336]];digits.forEach((d,i)=>{const s=t+.75+i*.16;tone(c,d[0],s,.11,'sine',.025);tone(c,d[1],s,.11,'sine',.025)});tone(c,680,t+1.76,.32,'square',.018,1800);tone(c,2100,t+2.05,.22,'sawtooth',.02,900);noise(c,t+2.05,3.05,.018);for(let i=0;i<39;i++){const s=t+2.18+i*.072,f=[1070,1270,1650,1850,2100][i%5];tone(c,f,s,.062,i%3===0?'square':'sine',.018,i%4===0?f*1.14:null)}tone(c,2250,t+4.95,.2,'sine',.02);tone(c,1200,t+4.95,.2,'sine',.015);return true}
+ async function key(){if(!(await unlock()))return;const c=ctx,t=c.currentTime+.002;tone(c,190,t,.045,'square',.032,78);noise(c,t,.035,.018)}
+ async function error(){if(!(await unlock()))return;const c=ctx,t=c.currentTime;tone(c,110,t,.14,'sawtooth',.025);tone(c,82,t+.12,.18,'square',.022)}
+ document.addEventListener('click',e=>{if(e.target.closest('.word,.bracket,.gate-actions button,#restartHack,.file-link'))key()},true);
+ window.TerminalAudio={unlock,dialup,key,error};
+})();

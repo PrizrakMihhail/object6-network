@@ -2,10 +2,20 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#140303">
-  <title>Четвёртая Передача // Внешняя сеть</title><link rel="stylesheet" href="fourth.css"><link rel="stylesheet" href="logo.css">
+  <title>Четвёртая Передача // Внешняя сеть</title><link rel="stylesheet" href="fourth.css"><link rel="stylesheet" href="logo.css"><link rel="stylesheet" href="connection.css"><link rel="stylesheet" href="keyboard.css">
 </head>
 <body>
   <div class="crt" aria-hidden="true"></div>
+  <section id="connectionOverlay" class="connection-overlay" aria-live="polite" aria-label="Подключение к терминалу Четвёртой Передачи">
+    <div class="connection-box">
+      <img src="assets/g4-logo-red-v1.png" alt="">
+      <p class="connection-code">G4 REMOTE ACCESS PROTOCOL / V.4.13</p>
+      <h1>УСТАНОВКА СОЕДИНЕНИЯ</h1>
+      <div class="connection-meter"><span></span></div>
+      <p id="connectionStatus">НАБОР НОМЕРА...</p>
+      <p id="audioHint" class="audio-hint">ЛЮБАЯ КЛАВИША ИЛИ КЛИК — АКТИВИРОВАТЬ АУДИО</p>
+    </div>
+  </section>
   <header class="terminal-bar">
     <a href="index.html" class="back">[ ВЕРНУТЬСЯ В СЕТЬ 06 ]</a>
     <span>G4 REMOTE TERMINAL // CHANNEL 04</span><span class="online">● ЛИНИЯ ОТКРЫТА</span>
@@ -28,5 +38,8 @@
       <footer><span>ЧЕТВЁРТАЯ ПЕРЕДАЧА © 2176</span><span>КРЕПОСТЬ // ЦЕНТРАЛЬНАЯ ЕВРОПА</span></footer>
     </section>
   </main>
+  <script src="terminal-audio.js"></script>
   <script src="fourth.js"></script>
+  <script src="connection.js"></script>
+  <script src="keyboard.js"></script>
 </body></html>
