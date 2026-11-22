@@ -1,0 +1,7 @@
+.nav-logo{width:25px;height:25px;object-fit:contain;opacity:.72;filter:saturate(.82) brightness(.86) drop-shadow(0 0 4px rgba(223,73,63,.3));flex:0 0 25px}
+.fourth-link:hover .nav-logo{opacity:1;filter:saturate(1.1) brightness(1.05) drop-shadow(0 0 6px rgba(223,73,63,.55))}
+.g4-mark img{width:74px;height:74px;object-fit:contain;padding-right:1rem;border-right:1px solid var(--dim);filter:brightness(1.08) saturate(1.05) drop-shadow(0 0 8px rgba(239,57,57,.42))}
+.secure-logo{width:84px;height:84px;object-fit:contain;flex:0 0 84px;filter:brightness(1.08) saturate(1.08) drop-shadow(0 0 9px rgba(239,57,57,.42))}
+.hack-head,.vault-head{align-items:center;gap:1.4rem}
+.hack-head>div,.vault-head>div{margin-right:auto}
+@media(max-width:780px){.secure-logo{width:58px;height:58px;float:left;margin:0 1rem .5rem 0}.g4-mark img{width:62px;height:62px}}
