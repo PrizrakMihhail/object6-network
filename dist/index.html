@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b0e0d">
+  <meta name="description" content="Единая сеть архивов Объекта №6">
+  <title>Сеть Объекта №6</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="На главную">
+      <span class="brand-mark">06</span>
+      <span><b>ОБЪЕКТ №6</b><small>INTERNAL RESEARCH NETWORK</small></span>
+    </a>
+    <div class="system-line">
+      <span><i></i> СЕТЬ: ФРИСИТИ</span><span>УРОВЕНЬ: <b id="accessLevel">03</b></span><span class="desktop-only">UTC 2176-04-07 21:42</span>
+    </div>
+    <button class="user-chip" id="accessButton"><span>RND_GUEST_07</span><b>⌁</b></button>
+  </header>
+
+  <div class="shell">
+    <nav class="sidebar" aria-label="Разделы сети">
+      <div class="nav-label">СИСТЕМА</div>
+      <button class="nav-item active" data-view="overview"><span>⌂</span><b>Обзор сети</b></button>
+      <button class="nav-item" data-view="archive"><span>▤</span><b>Архивы</b><em>28</em></button>
+      <button class="nav-item" data-view="mail"><span>□</span><b>Почтовый узел</b><em>4</em></button>
+      <button class="nav-item" data-view="projects"><span>◇</span><b>Проекты</b><em>7</em></button>
+      <button class="nav-item" data-view="intercepts"><span>⌁</span><b>Перехваты</b><em class="alert-count">3</em></button>
+      <div class="nav-label">КОНТУРЫ</div>
+      <button class="node-filter active" data-node="all"><i class="amber"></i> Все узлы</button>
+      <button class="node-filter" data-node="maztech"><i class="orange"></i> MAZTECH</button>
+      <button class="node-filter" data-node="matsumoto"><i class="cyan"></i> MATSUMOTO</button>
+      <button class="node-filter" data-node="field"><i class="green"></i> ПОЛЕВЫЕ</button>
+      <div class="terminal-status">
+        <small>СОЕДИНЕНИЕ</small><b><i></i> СТАБИЛЬНО</b>
+        <div class="meter"><span></span></div>
+        <small>AES-256 / PING 18MS</small>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero-row">
+        <div>
+          <p class="eyebrow">УЗЕЛ / ГЛАВНЫЙ ТЕРМИНАЛ</p>
+          <h1>ЕДИНАЯ СЕТЬ<br><span>ОБЪЕКТА №6</span></h1>
+          <p class="lead">Восстановленный шлюз к архивам MAZTECH и Matsumoto Pharma &amp; Biotech. Часть данных повреждена или перемещена в закрытые контуры.</p>
+        </div>
+        <div class="network-seal" aria-hidden="true"><div>06</div><span>NODE<br>ONLINE</span></div>
+      </section>
+
+      <section class="status-strip" aria-label="Состояние системы">
+        <div><span>ДОСТУПНЫЕ УЗЛЫ</span><b>06 <small>/ 09</small></b></div>
+        <div><span>АРХИВНЫЕ ЕДИНИЦЫ</span><b>42</b></div>
+        <div><span>АКТИВНЫЕ ПРОЕКТЫ</span><b>03</b></div>
+        <div class="warning"><span>НАРУШЕНИЯ КОНТУРА</span><b>02</b></div>
+      </section>
+
+      <section class="workspace">
+        <div class="content-column">
+          <div class="section-head">
+            <div><p class="eyebrow">МАРШРУТИЗАЦИЯ</p><h2>КАРТА УЗЛОВ</h2></div>
+            <div class="segmented" role="group" aria-label="Режим карты"><button class="active" data-map="topology">ТОПОЛОГИЯ</button><button data-map="list">СПИСОК</button></div>
+          </div>
+
+          <div class="network-map" id="networkMap">
+            <svg viewBox="0 0 800 410" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M401 202 L183 98 M401 202 L626 93 M401 202 L155 312 M401 202 L627 310 M401 202 L402 369"/>
+              <path class="pulse-line" d="M401 202 L626 93"/>
+            </svg>
+            <button class="map-node hub" data-doc="core"><strong>06</strong><span>ЦЕНТРАЛЬНЫЙ<br>ШЛЮЗ</span><small>ONLINE</small></button>
+            <button class="map-node mazt" data-doc="lazar"><strong>MZ</strong><span>MAZTECH<br>R&amp;D</span><small>ONLINE</small></button>
+            <button class="map-node mats" data-doc="hannibal"><strong>MT</strong><span>MATSUMOTO<br>ARCHIVE</span><small>DEGRADED</small></button>
+            <button class="map-node field" data-doc="citadel"><strong>CT</strong><span>ЦИТАДЕЛЬ<br>TELEMETRY</span><small>ONLINE</small></button>
+            <button class="map-node locked" data-doc="mirage"><strong>MX</strong><span>MIRAGE<br>VAULT</span><small>LOCKED</small></button>
+            <button class="map-node field bottom" data-doc="mail"><strong>@</strong><span>ПОЧТОВЫЙ<br>РЕЛЕ</span><small>ONLINE</small></button>
+          </div>
+
+          <div class="section-head docs-head">
+            <div><p class="eyebrow">ПОСЛЕДНЯЯ СИНХРОНИЗАЦИЯ: 04:18</p><h2>ДОКУМЕНТЫ СЕТИ</h2></div>
+            <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Поиск по архиву" autocomplete="off"></label>
+          </div>
+          <div class="filters" id="filters">
+            <button class="active" data-filter="all">ВСЕ <b>12</b></button>
+            <button data-filter="critical">КРИТИЧЕСКИЕ <b>3</b></button>
+            <button data-filter="research">ИССЛЕДОВАНИЯ <b>5</b></button>
+            <button data-filter="mail">СООБЩЕНИЯ <b>4</b></button>
+          </div>
+          <div class="document-list" id="documentList"></div>
+        </div>
+
+        <aside class="activity-panel">
+          <div class="panel-title"><span><i></i> АКТИВНОСТЬ СЕТИ</span><button aria-label="Обновить">↻</button></div>
+          <div class="activity-feed">
+            <article class="hot"><time>04:18:07</time><div><b>НЕСАНКЦИОНИРОВАННЫЙ ЗАПРОС</b><p>Контур MIRAGE / ключ отклонён</p></div></article>
+            <article><time>04:12:31</time><div><b>АРХИВ СИНХРОНИЗИРОВАН</b><p>MAZTECH → NODE-06 / 4 файла</p></div></article>
+            <article><time>03:58:42</time><div><b>ВХОДЯЩЕЕ СООБЩЕНИЕ</b><p>Почтовый сервер / приоритет 2</p></div></article>
+            <article class="cyan"><time>03:41:16</time><div><b>MATSUMOTO: HANDSHAKE</b><p>Восстановлено 71% метаданных</p></div></article>
+            <article><time>02:05:09</time><div><b>ТЕЛЕМЕТРИЯ ПОЛУЧЕНА</b><p>ЦИТАДЕЛЬ / спектр отклика</p></div></article>
+          </div>
+          <button class="log-button">ОТКРЫТЬ СИСТЕМНЫЙ ЖУРНАЛ</button>
+          <div class="warning-card">
+            <span class="warn-icon">!</span><div><p>СИСТЕМНОЕ ПРЕДУПРЕЖДЕНИЕ</p><b>Часть файлов Matsumoto повреждена</b><small>Не отключайте терминал во время реконструкции индекса.</small></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="documentDialog" class="document-dialog">
+    <div class="doc-window">
+      <header><div><small id="docPath">ARCHIVE://</small><h2 id="docTitle">ДОКУМЕНТ</h2></div><button id="closeDialog" aria-label="Закрыть">×</button></header>
+      <div class="doc-meta" id="docMeta"></div>
+      <article id="docBody"></article>
+      <footer><span>ЦЕЛОСТНОСТЬ: <b id="docIntegrity">100%</b></span><button id="markButton">ДОБАВИТЬ В ИЗБРАННОЕ</button></footer>
+    </div>
+  </dialog>
+
+  <dialog id="accessDialog" class="access-dialog">
+    <form method="dialog">
+      <p class="eyebrow">АВТОРИЗАЦИЯ ТЕРМИНАЛА</p><h2>УРОВЕНЬ ДОСТУПА</h2>
+      <p>Выберите профиль симуляции. Закрытые материалы остаются заблокированы до получения ключа мастера игры.</p>
+      <label><input type="radio" name="level" value="01"> 01 / ГОСТЕВОЙ</label>
+      <label><input type="radio" name="level" value="03" checked> 03 / ИССЛЕДОВАТЕЛЬСКИЙ</label>
+      <label><input type="radio" name="level" value="05"> 05 / АДМИНИСТРАТИВНЫЙ</label>
+      <button value="confirm" id="confirmAccess">ПРИМЕНИТЬ ПРОФИЛЬ</button>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
