@@ -37,6 +37,18 @@
   color: var(--amber);
 }
 
+.mail-unread {
+  margin-inline-start: .3rem;
+  padding: .1rem .35rem;
+  border-radius: .25rem;
+  background: var(--amber);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.mail-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin-block-start: .8rem; }
+.mail-dialog .mail-tabs button[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+
 .network-dialog {
   width: min(30rem, calc(100% - 2rem));
   max-height: calc(100dvh - 2rem);
@@ -193,6 +205,70 @@
   color: var(--text);
 }
 
+.message-notifications {
+  position: fixed;
+  z-index: 21;
+  top: calc(74px + .65rem);
+  right: .75rem;
+  display: grid;
+  gap: .45rem;
+  width: min(21rem, calc(100vw - 1.5rem));
+  max-height: min(60dvh, calc(100dvh - 8rem));
+  overflow: auto;
+  pointer-events: none;
+}
+
+.message-notifications:not(:empty) { pointer-events: auto; }
+
+.message-notification {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  border: 1px solid var(--line2);
+  border-inline-start: 3px solid var(--amber);
+  background: var(--panel2);
+  box-shadow: 0 .35rem 1rem #0008;
+  pointer-events: auto;
+}
+
+.message-notification button {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.message-notification button:hover { color: var(--amber); }
+
+.message-notification-open {
+  display: grid;
+  gap: .2rem;
+  padding: .55rem .65rem;
+  text-align: start;
+  font-size: .875rem;
+}
+
+.message-notification-open :is(small, strong) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-notification-open small { color: var(--muted); font-size: .75rem; }
+
+.message-notification-open span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+  font-size: .8125rem;
+  line-height: 1.35;
+}
+
+.message-notification-dismiss { min-width: 2.4rem; min-height: 2.4rem; font-size: 1.25rem; }
+
 @media (min-width: 801px) and (max-width: 1050px) {
   .topbar .brand { width: auto; }
 }
@@ -213,6 +289,7 @@
   .topbar .mail-actions { grid-column: 1 / -1; grid-row: 2; padding: 0 .55rem; }
   .mail-actions button { flex: 1; }
   .topbar + .shell .sidebar { top: 6.75rem; }
+  .message-notifications { top: 7.4rem; }
 }
 
 @media (max-width: 400px) {

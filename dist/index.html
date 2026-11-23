@@ -35,13 +35,13 @@
       <button type="button" data-theme-choice="terminal" aria-pressed="false">Терминал</button>
     </div>
     <div class="mail-actions" role="group" aria-label="Сообщения">
-      <button type="button" id="composeButton" aria-haspopup="dialog">Написать сообщение</button>
-      <button type="button" id="inboxButton" aria-haspopup="dialog">Входящие</button>
+      <button type="button" id="mailButton" aria-haspopup="dialog">Почта <span id="mailUnread" class="mail-unread" hidden></span></button>
     </div>
     <button type="button" class="user-chip" id="accessButton" aria-haspopup="dialog">
       <span id="accountButtonLabel">Войти</span><b aria-hidden="true">⌁</b>
     </button>
   </header>
+  <aside id="messageNotifications" class="message-notifications" aria-label="Новые сообщения" aria-live="polite"></aside>
 
   <div class="shell">
     <nav class="sidebar" aria-label="Разделы сети">
@@ -390,15 +390,20 @@
     </section>
   </dialog>
 
-  <dialog id="composeDialog" class="network-dialog mail-dialog" aria-labelledby="composeTitle">
+  <dialog id="inboxDialog" class="network-dialog mail-dialog" aria-labelledby="inboxTitle">
     <header>
-      <h2 id="composeTitle">Новое сообщение</h2>
-      <button type="button" class="network-close" data-close-network aria-label="Закрыть сообщение">×</button>
+      <h2 id="inboxTitle">Почта</h2>
+      <button type="button" class="network-close" data-close-network aria-label="Закрыть почту">×</button>
     </header>
-    <p id="composeStatus" class="network-status" role="status"></p>
-    <form id="composeForm" class="network-form" method="dialog">
+    <nav class="mail-tabs" aria-label="Разделы почты">
+      <button type="button" data-mail-view="inbox" aria-pressed="true">Входящие</button>
+      <button type="button" data-mail-view="sent" aria-pressed="false">Отправленные</button>
+      <button type="button" data-mail-view="compose" aria-pressed="false">Написать</button>
+    </nav>
+    <p id="inboxStatus" class="network-status" role="status"></p>
+    <form id="composeForm" class="network-form" method="dialog" hidden>
       <label>Кому
-        <input name="to" type="text" placeholder="Имя пользователя или код документа" maxlength="64" required autofocus>
+        <input name="to" type="text" placeholder="Имя пользователя или код документа" maxlength="64" required>
       </label>
       <label>Тема
         <input name="title" type="text" maxlength="120" required>
@@ -410,14 +415,6 @@
         <button type="submit" class="network-primary">Отправить</button>
       </div>
     </form>
-  </dialog>
-
-  <dialog id="inboxDialog" class="network-dialog mail-dialog" aria-labelledby="inboxTitle">
-    <header>
-      <h2 id="inboxTitle">Входящие</h2>
-      <button type="button" class="network-close" data-close-network aria-label="Закрыть входящие">×</button>
-    </header>
-    <p id="inboxStatus" class="network-status" role="status"></p>
     <ul id="inboxList" class="inbox-list"></ul>
     <section id="messageDetail" hidden>
       <button type="button" id="backToInbox">К списку</button>

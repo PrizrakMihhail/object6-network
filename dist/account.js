@@ -2,19 +2,20 @@ import config from './supabase-config.js';
 
 const byId = id => document.getElementById(id);
 const accountDialog = byId('accessDialog');
-const composeDialog = byId('composeDialog');
 const inboxDialog = byId('inboxDialog');
 const loginForm = byId('loginForm');
 const registrationForm = byId('registrationForm');
 const composeForm = byId('composeForm');
 const accountProfile = byId('accountProfile');
 const accountStatus = byId('accountStatus');
-const composeStatus = byId('composeStatus');
 const inboxStatus = byId('inboxStatus');
 const inboxList = byId('inboxList');
 const messageDetail = byId('messageDetail');
 const logoutButton = byId('logoutButton');
 const rolePicker = registrationForm.querySelector('details');
+const notifications = byId('messageNotifications');
+const mailUnread = byId('mailUnread');
+const mailTabs = document.querySelectorAll('[data-mail-view]');
 const sessionKey = 'object6-session';
 const dateFormat = new Intl.DateTimeFormat('ru', { dateStyle: 'medium', timeStyle: 'short' });
 const encoder = new TextEncoder();
@@ -44,6 +45,10 @@ let inboxVersion = 0;
 let activeMessageButton = null;
 let pendingSend = null;
 let noticeTimer;
+let readMessages = new Set();
+let unreadMessages = new Set();
+let inboxLoaded = false;
+let mailView = 'inbox';
 
 async function rpc(name, params) {
   if (!config) throw new Error('service_unavailable');
@@ -79,6 +84,13 @@ function showNotice(message) {
 }
 
 function setSession(token, user = null) {
+  if (!token || token !== sessionToken) {
+    notifications.replaceChildren();
+    readMessages = new Set();
+    unreadMessages = new Set();
+    inboxLoaded = false;
+    setUnreadCount(0);
+  }
   sessionToken = token;
   profile = user;
   try {
@@ -96,11 +108,66 @@ function setSession(token, user = null) {
   }
 }
 
+function setUnreadCount(count) {
+  mailUnread.textContent = count;
+  mailUnread.hidden = count === 0;
+  byId('mailButton').setAttribute('aria-label', `Почта, непрочитанных: ${count}`);
+}
+
+async function loadNotifications(token) {
+  try {
+    const messages = await rpc('message_notifications', { p_token: token });
+    if (token !== sessionToken) return;
+    const unread = messages.filter(message => !readMessages.has(message.uuid)
+      && (!inboxLoaded || unreadMessages.has(message.uuid)));
+    if (!inboxLoaded) {
+      unreadMessages = new Set(unread.map(message => message.uuid));
+      setUnreadCount(unreadMessages.size);
+    }
+    unread.forEach(showMessageNotification);
+  } catch (error) {
+    if (token !== sessionToken) return;
+    if (error.message === 'session_expired') setSession(null);
+    else console.warn('Message notifications unavailable:', error.message);
+  }
+}
+
+function showMessageNotification(message) {
+  const card = document.createElement('div');
+  card.className = 'message-notification';
+  card.dataset.uuid = message.uuid;
+  const open = document.createElement('button');
+  open.type = 'button';
+  open.className = 'message-notification-open';
+  const sender = document.createElement('small');
+  sender.textContent = message.sender || 'Неизвестный отправитель';
+  const title = document.createElement('strong');
+  title.textContent = message.title || 'Без темы';
+  const preview = document.createElement('span');
+  preview.textContent = message.preview || '';
+  open.append(sender, title, preview);
+
+  const dismiss = document.createElement('button');
+  dismiss.type = 'button';
+  dismiss.className = 'message-notification-dismiss';
+  dismiss.textContent = '×';
+  dismiss.setAttribute('aria-label', 'Закрыть уведомление');
+  dismiss.addEventListener('click', () => card.remove());
+  open.addEventListener('click', () => {
+    card.remove();
+    openMail(message.uuid);
+  });
+
+  card.append(open, dismiss);
+  notifications.append(card);
+}
+
 async function restoreSession() {
   if (!sessionToken || profile) return;
   try {
     const user = await rpc('profile', { p_token: sessionToken });
     setSession(sessionToken, user);
+    loadNotifications(sessionToken);
   } catch (error) {
     if (error.message !== 'session_expired') throw error;
     setSession(null);
@@ -132,14 +199,6 @@ function requireLogin(target, message) {
   showAccount('login', message);
 }
 
-function showMail(target) {
-  if (target === 'inbox') openInbox();
-  else {
-    setStatus(composeStatus);
-    composeDialog.showModal();
-  }
-}
-
 async function openNetwork(target) {
   try {
     await verifySession();
@@ -153,9 +212,9 @@ async function openNetwork(target) {
     loginTarget = null;
     showAccount(profile ? 'profile' : 'login');
   } else if (profile) {
-    showMail(target);
+    openMail();
   } else {
-    requireLogin(target, target === 'inbox' ? 'Войдите, чтобы открыть входящие.' : 'Войдите, чтобы отправить сообщение.');
+    requireLogin(target, 'Войдите, чтобы открыть почту.');
   }
 }
 
@@ -183,10 +242,11 @@ onSubmit(loginForm, accountStatus, async data => {
   if (result.error) throw new Error(result.error);
   setSession(result.token, result.profile);
   loginForm.reset();
+  loadNotifications(result.token);
   if (!accountDialog.open) return;
   const target = loginTarget;
   accountDialog.close();
-  if (target) showMail(target);
+  if (target) openMail();
   else showNotice('Вы вошли в сеть.');
 });
 
@@ -248,7 +308,7 @@ function handleMailError(error, status, dialog, target) {
   } else showError(status, error);
 }
 
-onSubmit(composeForm, composeStatus, async data => {
+onSubmit(composeForm, inboxStatus, async data => {
   const recipient = data.get('to').trim();
   const title = data.get('title').trim();
   const message = data.get('message');
@@ -265,22 +325,24 @@ onSubmit(composeForm, composeStatus, async data => {
     if (token !== sessionToken) return;
     pendingSend = null;
     composeForm.reset();
-    composeDialog.close();
+    if (inboxDialog.open && mailView === 'compose') selectMailView('sent');
     showNotice('Сообщение отправлено.');
   } catch (error) {
     if (token !== sessionToken) return;
     if (error.message === 'message_conflict') pendingSend = null;
-    handleMailError(error, composeStatus, composeDialog, 'compose');
+    if (mailView === 'compose' || error.message === 'session_expired') {
+      handleMailError(error, inboxStatus, inboxDialog, 'mail');
+    }
   }
 });
 
 function messageMetadata(message) {
   const time = message.sent ? new Date(message.sent) : null;
-  const sender = message.sender || 'Неизвестный отправитель';
-  return time && Number.isFinite(time.getTime()) ? `${sender} · ${dateFormat.format(time)}` : sender;
+  const contact = message.recipient ? `Кому: ${message.recipient}` : message.sender || 'Неизвестный отправитель';
+  return time && Number.isFinite(time.getTime()) ? `${contact} · ${dateFormat.format(time)}` : contact;
 }
 
-function inboxItem(message) {
+function inboxItem(message, sent) {
   const item = document.createElement('li');
   const button = document.createElement('button');
   const subject = document.createElement('strong');
@@ -291,7 +353,10 @@ function inboxItem(message) {
   meta.className = 'network-muted';
   meta.textContent = messageMetadata(message) + (message.unread ? ' · Не прочитано' : '');
   button.append(subject, meta);
-  button.addEventListener('click', () => openMessage(message, button, meta));
+  button.addEventListener('click', () => {
+    if (sent) showMessageDetail(message, button);
+    else openMessage(message, button, meta);
+  });
   item.append(button);
   return item;
 }
@@ -306,45 +371,80 @@ function clearInbox() {
   setStatus(inboxStatus);
 }
 
-async function openInbox() {
+function openMail(messageUuid) {
+  if (!inboxDialog.open) inboxDialog.showModal();
+  selectMailView('inbox', messageUuid);
+}
+
+async function selectMailView(view, messageUuid) {
   clearInbox();
+  mailView = view;
+  for (const tab of mailTabs) tab.setAttribute('aria-pressed', String(tab.dataset.mailView === view));
+  composeForm.hidden = view !== 'compose';
+  if (!composeForm.hidden) {
+    inboxList.hidden = true;
+    composeForm.elements.namedItem('to').focus();
+    return;
+  }
+  const sent = view === 'sent';
   const version = inboxVersion;
-  inboxDialog.showModal();
   setStatus(inboxStatus, 'Загрузка сообщений…');
   try {
-    const messages = await rpc('inbox', { p_token: sessionToken });
+    const messages = await rpc(sent ? 'sent_messages' : 'inbox', { p_token: sessionToken });
     if (version !== inboxVersion || !inboxDialog.open) return;
-    inboxList.replaceChildren(...messages.map(inboxItem));
-    setStatus(inboxStatus, messages.length ? '' : 'Входящих сообщений нет.');
+    if (!sent) {
+      inboxLoaded = true;
+      unreadMessages = new Set(messages.filter(message => message.unread && !readMessages.has(message.uuid)).map(message => message.uuid));
+      setUnreadCount(unreadMessages.size);
+      for (const card of [...notifications.children]) {
+        if (!unreadMessages.has(card.dataset.uuid)) card.remove();
+      }
+    }
+    inboxList.replaceChildren(...messages.map(message => inboxItem(message, sent)));
+    setStatus(inboxStatus, messages.length ? '' : sent ? 'Отправленных сообщений нет.' : 'Входящих сообщений нет.');
+    if (messageUuid) {
+      const index = messages.findIndex(message => message.uuid === messageUuid);
+      if (index >= 0) inboxList.children[index].firstElementChild.click();
+    }
   } catch (error) {
-    if (version === inboxVersion && inboxDialog.open) handleMailError(error, inboxStatus, inboxDialog, 'inbox');
+    if (version === inboxVersion && inboxDialog.open) handleMailError(error, inboxStatus, inboxDialog, 'mail');
   }
 }
 
 async function openMessage(message, button, meta) {
   const version = ++inboxVersion;
+  const token = sessionToken;
   setStatus(inboxStatus, 'Загрузка сообщения…');
   try {
-    const detail = await rpc('read_message', { p_token: sessionToken, p_uuid: message.uuid });
-    if (version !== inboxVersion || !inboxDialog.open) return;
+    const detail = await rpc('read_message', { p_token: token, p_uuid: message.uuid });
+    if (token !== sessionToken) return;
+    readMessages.add(message.uuid);
+    unreadMessages.delete(message.uuid);
+    setUnreadCount(unreadMessages.size);
+    Array.from(notifications.children).find(card => card.dataset.uuid === message.uuid)?.remove();
     button.removeAttribute('data-unread');
     meta.textContent = messageMetadata(detail);
-    activeMessageButton = button;
-    byId('messageTitle').textContent = detail.title || 'Без темы';
-    byId('messageMeta').textContent = messageMetadata(detail);
-    byId('messageBody').textContent = detail.message;
-    inboxList.hidden = true;
-    messageDetail.hidden = false;
-    setStatus(inboxStatus);
-    byId('messageTitle').focus();
+    if (version !== inboxVersion || !inboxDialog.open) return;
+    showMessageDetail(detail, button);
   } catch (error) {
-    if (version === inboxVersion && inboxDialog.open) handleMailError(error, inboxStatus, inboxDialog, 'inbox');
+    if (version === inboxVersion && inboxDialog.open) handleMailError(error, inboxStatus, inboxDialog, 'mail');
   }
 }
 
+function showMessageDetail(detail, button) {
+  activeMessageButton = button;
+  byId('messageTitle').textContent = detail.title || 'Без темы';
+  byId('messageMeta').textContent = messageMetadata(detail);
+  byId('messageBody').textContent = detail.message;
+  inboxList.hidden = true;
+  messageDetail.hidden = false;
+  setStatus(inboxStatus);
+  byId('messageTitle').focus();
+}
+
 byId('accessButton').addEventListener('click', () => openNetwork('account'));
-byId('composeButton').addEventListener('click', () => openNetwork('compose'));
-byId('inboxButton').addEventListener('click', () => openNetwork('inbox'));
+byId('mailButton').addEventListener('click', () => openNetwork('mail'));
+for (const tab of mailTabs) tab.addEventListener('click', () => selectMailView(tab.dataset.mailView));
 byId('showRegistration').addEventListener('click', () => showAccount('registration'));
 byId('showLogin').addEventListener('click', () => showAccount('login'));
 rolePicker.addEventListener('change', updateRoles);
