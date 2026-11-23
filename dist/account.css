@@ -1,0 +1,222 @@
+.topbar .user-chip {
+  min-width: 0;
+  max-width: 13rem;
+  gap: .65rem;
+  padding-inline: .9rem;
+  color: var(--text);
+  font-size: .875rem;
+}
+
+.topbar .user-chip span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mail-actions {
+  display: flex;
+  gap: .35rem;
+  padding-inline: .3rem .65rem;
+}
+
+.mail-actions button,
+.network-dialog button {
+  min-height: 2.5rem;
+  padding: .4rem .75rem;
+  border: 1px solid var(--line2);
+  background: var(--panel2);
+  color: var(--text);
+  font-size: .875rem;
+  cursor: pointer;
+}
+
+.mail-actions button:hover,
+.network-dialog button:not(:disabled):hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.network-dialog {
+  width: min(30rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0 clamp(.9rem, 4vw, 1.5rem) 1.5rem;
+  border: 1px solid var(--line2);
+  background: var(--panel);
+  color: var(--text);
+  color-scheme: dark;
+  box-shadow: 0 0 0 .25rem var(--bg), 0 1rem 4rem #000;
+}
+
+.network-dialog::backdrop {
+  background: #000c;
+  backdrop-filter: blur(3px);
+}
+
+.network-dialog.mail-dialog { width: min(39rem, calc(100% - 2rem)); }
+
+.network-dialog > header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line2);
+  background: var(--panel);
+}
+
+.network-dialog h2 {
+  margin: 0;
+  font: 500 clamp(1.25rem, 5vw, 1.65rem) var(--display);
+}
+
+.network-dialog .network-close {
+  flex: 0 0 2.5rem;
+  padding: 0;
+  font-size: 1.4rem;
+}
+
+.network-form:not([hidden]) {
+  display: grid;
+  gap: .85rem;
+}
+
+.network-form > label {
+  display: grid;
+  gap: .3rem;
+  font-size: .875rem;
+}
+
+.network-form :is(input:not([type="checkbox"]), textarea) {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: .55rem .65rem;
+  border: 1px solid var(--line2);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.network-form textarea { resize: vertical; }
+
+.network-form input::placeholder { color: var(--muted); }
+
+.network-status { font-size: .875rem; overflow-wrap: anywhere; }
+.network-status[data-error] { color: var(--red); }
+.network-muted { color: var(--muted); font-size: .8125rem; }
+
+.network-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+.network-dialog button.network-primary {
+  border-color: var(--amber);
+  background: var(--amber);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.network-dialog button.network-primary:not(:disabled):hover { background: var(--panel2); }
+.network-dialog button:disabled { opacity: .6; cursor: wait; }
+
+.role-picker {
+  border: 1px solid var(--line2);
+  background: var(--bg);
+  font-size: .875rem;
+}
+
+.role-picker summary {
+  padding: .65rem;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.role-picker fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: .7rem;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.role-picker label {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  min-height: 2rem;
+  cursor: pointer;
+}
+
+.role-picker input { accent-color: var(--amber); }
+
+.profile-summary {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: .6rem .8rem;
+  font-size: .875rem;
+}
+
+.profile-summary dt { color: var(--muted); }
+.profile-summary dd { margin: 0; overflow-wrap: anywhere; }
+
+.inbox-list { display: grid; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+.inbox-list[hidden] { display: none; }
+
+.network-dialog .inbox-list button {
+  display: grid;
+  gap: .35rem;
+  width: 100%;
+  padding: .7rem .85rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.network-dialog .inbox-list button[data-unread] { border-inline-start: 3px solid var(--amber); }
+
+#messageTitle, #messageMeta, #messageBody { overflow-wrap: anywhere; }
+#messageBody { line-height: 1.6; white-space: pre-wrap; }
+
+.network-notice:not(:empty) {
+  position: fixed;
+  z-index: 21;
+  right: 1rem;
+  bottom: 3rem;
+  max-width: calc(100vw - 2rem);
+  padding: .7rem .9rem;
+  border: 1px solid var(--line2);
+  background: var(--panel2);
+  color: var(--text);
+}
+
+@media (min-width: 801px) and (max-width: 1050px) {
+  .topbar .brand { width: auto; }
+}
+
+@media (max-width: 800px) {
+  .topbar {
+    height: 6.75rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, auto);
+    grid-template-rows: 3.75rem 2.9rem;
+  }
+
+  .topbar .brand { min-width: 0; padding-inline: .6rem; }
+  .topbar .brand-mark { flex: 0 0 auto; }
+  .topbar .theme-switch { margin-inline: .2rem; }
+  .topbar .user-chip { max-width: 7.5rem; min-width: 3.5rem; padding-inline: .4rem; }
+  .topbar .user-chip b { display: none; }
+  .topbar .mail-actions { grid-column: 1 / -1; grid-row: 2; padding: 0 .55rem; }
+  .mail-actions button { flex: 1; }
+  .topbar + .shell .sidebar { top: 6.75rem; }
+}
+
+@media (max-width: 400px) {
+  .topbar .user-chip { max-width: 5rem; }
+  .topbar .brand-mark { width: 1.6rem; height: 1.6rem; }
+  .topbar .brand b { font-size: .8rem; }
+}

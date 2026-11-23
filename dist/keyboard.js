@@ -6,6 +6,7 @@
  const toggle=document.createElement('button');toggle.className='keyboard-help-toggle';toggle.type='button';toggle.textContent='[?] КЛАВИАТУРА';toggle.setAttribute('aria-expanded','false');const panel=document.createElement('aside');panel.className='keyboard-help';panel.hidden=true;panel.innerHTML='<h2>УПРАВЛЕНИЕ</h2>'+helpContent();document.body.append(panel,toggle);function toggleHelp(){panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden))}toggle.addEventListener('click',toggleHelp);
  document.addEventListener('keydown',e=>{
   document.body.classList.add('keyboard-mode');
+  if(document.querySelector('.network-dialog[open]'))return;
   if(e.key==='?'||e.key==='F1'){e.preventDefault();toggleHelp();return}
   if(document.getElementById('connectionOverlay')){window.TerminalAudio?.unlock();return}
   if(e.key==='Escape'){const dlg=[...document.querySelectorAll('dialog[open]')].at(-1);if(dlg){e.preventDefault();if(dlg.id==='accessDialog'&&document.getElementById('hackView'))location.href='fourth.html';else dlg.close();return}if(location.pathname.endsWith('fourth.html')||location.pathname.endsWith('secure.html')){location.href=location.pathname.endsWith('secure.html')?'fourth.html':'index.html';return}}

@@ -77,6 +77,4 @@ document.querySelectorAll('.nav-item[data-view]').forEach(b=>b.addEventListener(
 document.getElementById('closeDialog').addEventListener('click',()=>document.getElementById('documentDialog').close());
 document.getElementById('documentDialog').addEventListener('click',e=>{if(e.target.id==='documentDialog')e.currentTarget.close()});
 document.getElementById('markButton').addEventListener('click',e=>{const id=e.target.dataset.id;if(!id)return;state.favorite.has(id)?state.favorite.delete(id):state.favorite.add(id);e.target.textContent=state.favorite.has(id)?'УБРАТЬ ИЗ ИЗБРАННОГО':'ДОБАВИТЬ В ИЗБРАННОЕ';render()});
-document.getElementById('accessButton').addEventListener('click',()=>document.getElementById('accessDialog').showModal());
-document.getElementById('confirmAccess').addEventListener('click',()=>{const val=document.querySelector('input[name="level"]:checked').value;document.getElementById('accessLevel').textContent=val});
 render();

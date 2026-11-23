@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="keyboard.css">
   <link rel="stylesheet" href="leisure.css">
   <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="account.css">
   <script src="theme.js"></script>
 </head>
 <body>
@@ -27,13 +28,19 @@
       <span><b>ОБЪЕКТ №6</b><small>INTERNAL RESEARCH NETWORK</small></span>
     </a>
     <div class="system-line">
-      <span><i></i> СЕТЬ: ФРИСИТИ</span><span>УРОВЕНЬ: <b id="accessLevel">03</b></span><span class="desktop-only">UTC 2176-04-07 21:42</span>
+      <span><i></i> СЕТЬ: ФРИСИТИ</span><span class="desktop-only">UTC 2176-04-07 21:42</span>
     </div>
     <div class="theme-switch" role="group" aria-label="Тема интерфейса">
       <button type="button" data-theme-choice="standard" aria-pressed="true">Стандарт</button>
       <button type="button" data-theme-choice="terminal" aria-pressed="false">Терминал</button>
     </div>
-    <button class="user-chip" id="accessButton"><span>RND_GUEST_07</span><b>⌁</b></button>
+    <div class="mail-actions" role="group" aria-label="Сообщения">
+      <button type="button" id="composeButton" aria-haspopup="dialog">Написать сообщение</button>
+      <button type="button" id="inboxButton" aria-haspopup="dialog">Входящие</button>
+    </div>
+    <button type="button" class="user-chip" id="accessButton" aria-haspopup="dialog">
+      <span id="accountButtonLabel">Войти</span><b aria-hidden="true">⌁</b>
+    </button>
   </header>
 
   <div class="shell">
@@ -326,16 +333,100 @@
     </form>
   </dialog>
 
-  <dialog id="accessDialog" class="access-dialog">
-    <form method="dialog">
-      <p class="eyebrow">АВТОРИЗАЦИЯ ТЕРМИНАЛА</p><h2>УРОВЕНЬ ДОСТУПА</h2>
-      <p>Выберите профиль симуляции. Закрытые материалы остаются заблокированы до получения ключа мастера игры.</p>
-      <label><input type="radio" name="level" value="01"> 01 / ГОСТЕВОЙ</label>
-      <label><input type="radio" name="level" value="03" checked> 03 / ИССЛЕДОВАТЕЛЬСКИЙ</label>
-      <label><input type="radio" name="level" value="05"> 05 / АДМИНИСТРАТИВНЫЙ</label>
-      <button value="confirm" id="confirmAccess">ПРИМЕНИТЬ ПРОФИЛЬ</button>
+  <dialog id="accessDialog" class="network-dialog" aria-labelledby="accountTitle">
+    <header>
+      <h2 id="accountTitle">Вход в сеть</h2>
+      <button type="button" class="network-close" data-close-network aria-label="Закрыть окно аккаунта">×</button>
+    </header>
+    <p id="accountStatus" class="network-status" role="status"></p>
+    <form id="loginForm" class="network-form" method="dialog">
+      <label>Имя пользователя
+        <input name="username" type="text" autocomplete="username" maxlength="64" required autofocus>
+      </label>
+      <label>Пароль
+        <input name="password" type="password" autocomplete="current-password" maxlength="72" required>
+      </label>
+      <div class="network-actions">
+        <button type="submit" class="network-primary">Войти</button>
+        <button type="button" id="showRegistration">Регистрация</button>
+      </div>
+    </form>
+    <form id="registrationForm" class="network-form" method="dialog" hidden>
+      <label>Имя пользователя
+        <input name="username" type="text" autocomplete="username" maxlength="64" required>
+      </label>
+      <label>Код документа
+        <input name="id_number" type="text" autocomplete="off" maxlength="64" required>
+      </label>
+      <details class="role-picker">
+        <summary>Роли <span id="selectedRoles" class="network-muted">Выберите одну или несколько</span></summary>
+        <fieldset aria-label="Роли пользователя">
+          <label><input name="role" type="checkbox" value="ADMIN"> ADMIN</label>
+          <label><input name="role" type="checkbox" value="CITIZEN"> CITIZEN</label>
+          <label><input name="role" type="checkbox" value="HACKER"> HACKER</label>
+          <label><input name="role" type="checkbox" value="SCIENTIST"> SCIENTIST</label>
+          <label><input name="role" type="checkbox" value="ENGINEER"> ENGINEER</label>
+          <label><input name="role" type="checkbox" value="LAB1"> LAB1</label>
+          <label><input name="role" type="checkbox" value="LAB2"> LAB2</label>
+        </fieldset>
+      </details>
+      <label>Пароль <span class="network-muted">От 8 символов</span>
+        <input name="password" type="password" autocomplete="new-password" minlength="8" maxlength="72" required>
+      </label>
+      <label>Слово для взлома <span class="network-muted">Необязательно</span>
+        <input name="hack_word" type="password" autocomplete="off" maxlength="72">
+      </label>
+      <div class="network-actions">
+        <button type="submit" class="network-primary">Зарегистрировать</button>
+        <button type="button" id="showLogin">Ко входу</button>
+      </div>
+    </form>
+    <section id="accountProfile" hidden>
+      <dl class="profile-summary">
+        <dt>Имя пользователя</dt><dd id="profileUsername"></dd>
+        <dt>Роли</dt><dd id="profileRoles"></dd>
+      </dl>
+      <button type="button" id="logoutButton">Выйти</button>
+    </section>
+  </dialog>
+
+  <dialog id="composeDialog" class="network-dialog mail-dialog" aria-labelledby="composeTitle">
+    <header>
+      <h2 id="composeTitle">Новое сообщение</h2>
+      <button type="button" class="network-close" data-close-network aria-label="Закрыть сообщение">×</button>
+    </header>
+    <p id="composeStatus" class="network-status" role="status"></p>
+    <form id="composeForm" class="network-form" method="dialog">
+      <label>Кому
+        <input name="to" type="text" placeholder="Имя пользователя или код документа" maxlength="64" required autofocus>
+      </label>
+      <label>Тема
+        <input name="title" type="text" maxlength="120" required>
+      </label>
+      <label>Сообщение
+        <textarea name="message" rows="7" maxlength="10000" required></textarea>
+      </label>
+      <div class="network-actions">
+        <button type="submit" class="network-primary">Отправить</button>
+      </div>
     </form>
   </dialog>
+
+  <dialog id="inboxDialog" class="network-dialog mail-dialog" aria-labelledby="inboxTitle">
+    <header>
+      <h2 id="inboxTitle">Входящие</h2>
+      <button type="button" class="network-close" data-close-network aria-label="Закрыть входящие">×</button>
+    </header>
+    <p id="inboxStatus" class="network-status" role="status"></p>
+    <ul id="inboxList" class="inbox-list"></ul>
+    <section id="messageDetail" hidden>
+      <button type="button" id="backToInbox">К списку</button>
+      <h3 id="messageTitle" tabindex="-1"></h3>
+      <p id="messageMeta" class="network-muted"></p>
+      <div id="messageBody"></div>
+    </section>
+  </dialog>
+  <div id="networkNotice" class="network-notice" role="status"></div>
 
   <dialog id="microreaderDialog" class="microreader-dialog" aria-labelledby="microreaderTitle">
     <section class="microreader-machine">
@@ -432,6 +523,7 @@
   <script src="app.js"></script>
   <script src="reactor.js"></script>
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="account.js"></script>
   <script src="network-signal.js"></script>
   <script src="microreader-catalog.js"></script>
   <script src="microreader.js"></script>
