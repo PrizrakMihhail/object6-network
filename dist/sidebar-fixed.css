@@ -1,0 +1,4 @@
+@media(min-width:801px){
+ .sidebar{position:sticky;top:74px;align-self:start;height:calc(100vh - 74px);min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#3d4a3d #090d0b;padding-bottom:140px}
+ .sidebar .terminal-status{position:static;margin:2rem 11px 0}
+}
