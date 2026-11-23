@@ -287,24 +287,7 @@
   bottom: 13%;
 }
 
-.reactor-couplings {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: .375rem .9rem;
-  margin: 0;
-  padding: 0;
-  color: #a5b4a9;
-  font-size: .75rem;
-  line-height: 1.35;
-  list-style: none;
-}
-
-.reactor-couplings b {
-  color: #e5bf83;
-}
-
-#reactorPuzzle:not([data-mode="puzzle"]) :is(.reactor-instructions, .reactor-couplings) {
+#reactorPuzzle:not([data-mode="puzzle"]) .reactor-instructions {
   display: none;
 }
 
@@ -315,14 +298,15 @@
   font-weight: 600;
 }
 
-.reactor-emergency {
+.reactor-emergency,
+.reactor-map-power {
   color: #ff8d83;
   font-size: .75rem;
   font-weight: 600;
 }
 
-#reactorNode[data-condition="ok"] .reactor-emergency {
-  display: none;
+#reactorNode[data-condition="ok"] .reactor-map-power {
+  color: #b6efff;
 }
 
 .reactor-readout:not([hidden]) dl {
@@ -375,7 +359,8 @@
   }
 
   .reactor-conducting .reactor-wire-in,
-  .reactor-emergency {
+  .reactor-emergency,
+  #reactorNode[data-condition="critical"] .reactor-map-power {
     animation: reactor-pulse 1.2s ease-in-out infinite;
   }
 

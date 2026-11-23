@@ -98,7 +98,7 @@
                 <span class="routing-name">Электроэнергия</span>
                 <span class="routing-status">Критический</span>
                 <span class="routing-description">Цепь реактора разомкнута. Требуется синхронизация роторов.</span>
-                <span class="reactor-emergency">Генераторы · <span id="reactorEmergencyMap">5 кВт</span></span>
+                <span class="reactor-map-power" id="reactorMapPower">Генераторы · 5 кВт</span>
               </button>
               <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
                 <span class="routing-name">Связь с внешним миром</span>
@@ -279,15 +279,15 @@
               <div class="reactor-disc" role="group" aria-label="Три слоя диска реактора">
                 <span class="reactor-contact reactor-contact-in" aria-hidden="true"></span>
                 <span class="reactor-contact reactor-contact-out" aria-hidden="true"></span>
-                <button type="button" class="reactor-rotor" data-rotor="0" aria-label="Ротор I" aria-describedby="rotorCoupling0">
+                <button type="button" class="reactor-rotor" data-rotor="0" aria-label="Ротор I">
                   <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"><span class="reactor-wire-in"></span><span class="reactor-wire-out"></span></span></span>
                   <span class="reactor-layer-mark" aria-hidden="true">I</span>
                 </button>
-                <button type="button" class="reactor-rotor" data-rotor="1" aria-label="Ротор II" aria-describedby="rotorCoupling1">
+                <button type="button" class="reactor-rotor" data-rotor="1" aria-label="Ротор II">
                   <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"><span class="reactor-wire-in"></span><span class="reactor-wire-out"></span></span></span>
                   <span class="reactor-layer-mark" aria-hidden="true">II</span>
                 </button>
-                <button type="button" class="reactor-rotor" data-rotor="2" aria-label="Ротор III" aria-describedby="rotorCoupling2">
+                <button type="button" class="reactor-rotor" data-rotor="2" aria-label="Ротор III">
                   <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"><span class="reactor-wire-in"></span><span class="reactor-wire-out"></span></span></span>
                   <span class="reactor-layer-mark" aria-hidden="true">III</span>
                 </button>
@@ -297,11 +297,6 @@
                 <span class="reactor-terminal-label"><b>Выход</b>Сеть</span>
               </div>
             </div>
-            <ul class="reactor-couplings">
-              <li id="rotorCoupling0"><b>I</b> Связан с II</li>
-              <li id="rotorCoupling1"><b>II</b> Связан с III</li>
-              <li id="rotorCoupling2"><b>III</b> Независимый</li>
-            </ul>
           </div>
         </section>
         <p id="reactorOutcome" class="reactor-outcome" role="status" hidden></p>
