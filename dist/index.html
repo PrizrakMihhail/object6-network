@@ -36,7 +36,7 @@
       <button class="nav-item" data-view="intercepts"><span>⌁</span><b>Перехваты</b><em class="alert-count">3</em></button>
       <button class="nav-item microreader-link" id="microreaderButton"><span>▣</span><b>Микроридер</b><em>10</em></button>
       <a class="nav-item fourth-link" href="fourth.html?connect=1"><img class="nav-logo" src="assets/g4-logo-red-v1.png" alt=""><b>Четвёртая Передача</b><em>OUT</em></a>
-      <button class="nav-item leisure-link" id="leisureButton" type="button" aria-haspopup="dialog"><span aria-hidden="true">▦</span><b>Досуг</b></button>
+      <a class="nav-item leisure-link" href="leisure.html"><span aria-hidden="true">▦</span><b>Досуг</b></a>
       <div class="nav-label">КОНТУРЫ</div>
       <button class="node-filter active" data-node="all"><i class="amber"></i> Все узлы</button>
       <button class="node-filter" data-node="maztech"><i class="orange"></i> MAZTECH</button>
@@ -156,45 +156,9 @@
     </section>
   </dialog>
 
-  <dialog id="leisureDialog" class="leisure-dialog" aria-labelledby="leisureTitle">
-    <header class="leisure-header">
-      <h2 id="leisureTitle">ДОСУГ</h2>
-      <form method="dialog"><button type="submit" aria-label="Закрыть досуг">×</button></form>
-    </header>
-    <div class="leisure-picker" role="group" aria-label="Выбор игры">
-      <button type="button" data-game="blocks" aria-pressed="true">Блоки</button>
-      <button type="button" data-game="snake" aria-pressed="false">Змейка</button>
-    </div>
-    <div class="leisure-layout">
-      <div class="leisure-stage" data-game="blocks">
-        <canvas id="leisureBoard" tabindex="0" aria-label="Игровое поле" aria-describedby="leisureRules"></canvas>
-        <div id="leisureMessage" class="leisure-message" role="status"></div>
-      </div>
-      <div class="leisure-console">
-        <dl class="leisure-stats">
-          <div><dt>Счёт</dt><dd id="leisureScore">0</dd></div>
-          <div><dt>Рекорд</dt><dd id="leisureBest">0</dd></div>
-        </dl>
-        <div class="leisure-actions">
-          <button type="button" id="leisureStart">Начать</button>
-          <button type="button" id="leisurePause" disabled>Пауза</button>
-        </div>
-        <div class="leisure-controls" role="group" aria-label="Управление игрой">
-          <button type="button" data-action="left" aria-label="Влево">←</button>
-          <button type="button" data-action="up" id="leisureUp" aria-label="Повернуть фигуру">↻</button>
-          <button type="button" data-action="right" aria-label="Вправо">→</button>
-          <button type="button" data-action="down" aria-label="Вниз">↓</button>
-          <button type="button" data-action="drop">Сбросить</button>
-        </div>
-        <p class="leisure-rules" id="leisureRules"></p>
-      </div>
-    </div>
-  </dialog>
-
   <script src="app.js"></script>
   <script src="microreader-catalog.js"></script>
   <script src="microreader.js"></script>
   <script src="keyboard.js"></script>
-  <script src="leisure.js"></script>
 </body>
 </html>

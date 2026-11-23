@@ -1,6 +1,7 @@
 (() => {
   const dialog = document.getElementById('leisureDialog');
-  const launcher = document.getElementById('leisureButton');
+  const title = document.getElementById('leisureTitle');
+  const launchers = document.querySelectorAll('[data-launch]');
   const board = document.getElementById('leisureBoard');
   const context = board.getContext('2d');
   const stage = board.parentElement;
@@ -11,7 +12,6 @@
   const pause = document.getElementById('leisurePause');
   const rules = document.getElementById('leisureRules');
   const up = document.getElementById('leisureUp');
-  const games = dialog.querySelectorAll('.leisure-picker button');
   const controls = dialog.querySelectorAll('[data-action]');
   const drop = dialog.querySelector('[data-action="drop"]');
   const cellSize = 24;
@@ -231,33 +231,26 @@
   function setState(next) {
     state = next;
     const running = state === 'playing';
-    message.textContent = { ready: 'Готово к запуску', playing: '', paused: 'Пауза', ended: game.result }[state];
-    start.textContent = { ready: 'Начать', ended: 'Играть снова' }[state] || 'Заново';
+    message.textContent = { playing: '', paused: 'Пауза', ended: game.result }[state];
+    start.textContent = state === 'ended' ? 'Играть снова' : 'Заново';
     pause.textContent = state === 'paused' ? 'Продолжить' : 'Пауза';
     pause.disabled = !running && state !== 'paused';
     controls.forEach(button => { button.disabled = !running; });
   }
 
-  function reset(next = 'ready') {
+  function reset() {
     clearTimeout(timer);
     game = factories[selected]();
     board.width = game.width * cellSize;
     board.height = game.height * cellSize;
-    setState(next);
+    setState('playing');
     draw();
-  }
-
-  function select(name) {
-    if (selected === name) return;
-    selected = name;
-    configureGame();
-    reset();
   }
 
   function configureGame() {
     const blocks = selected === 'blocks';
     stage.dataset.game = selected;
-    for (const button of games) button.setAttribute('aria-pressed', button.dataset.game === selected);
+    title.textContent = blocks ? 'БЛОКИ' : 'ЗМЕЙКА';
     rules.textContent = descriptions[selected] + ' P — пауза.';
     up.textContent = blocks ? '↻' : '↑';
     up.setAttribute('aria-label', blocks ? 'Повернуть фигуру' : 'Вверх');
@@ -297,19 +290,21 @@
     }
   }
 
-  launcher.addEventListener('click', () => {
+  launchers.forEach(button => button.addEventListener('click', () => {
     if (dialog.open) return;
+    selected = button.dataset.launch;
+    configureGame();
     reset();
     dialog.showModal();
-    start.focus();
-  });
+    board.focus({ preventScroll: true });
+    schedule();
+  }));
   dialog.addEventListener('close', () => {
     if (!dialog.open) clearTimeout(timer);
   });
-  games.forEach(button => button.addEventListener('click', () => select(button.dataset.game)));
   controls.forEach(button => button.addEventListener('click', () => playAction(button.dataset.action)));
   start.addEventListener('click', () => {
-    reset('playing');
+    reset();
     board.focus({ preventScroll: true });
     schedule();
   });
@@ -332,5 +327,4 @@
     playAction(action);
   });
 
-  configureGame();
 })();

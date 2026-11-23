@@ -28,7 +28,8 @@
   margin: 0;
 }
 
-.leisure-dialog button {
+.leisure-dialog button,
+.leisure-card button {
   min-height: 2.75rem;
   padding: .375rem .625rem;
   border: 1px solid var(--line2);
@@ -52,14 +53,45 @@
   line-height: 1;
 }
 
-.leisure-picker {
+.leisure-games {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .5rem;
-  padding: .75rem 1rem 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  max-width: 54rem;
 }
 
-.leisure-dialog button[aria-pressed="true"],
+.leisure-home {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  color: var(--amber);
+}
+
+.leisure-card {
+  display: grid;
+  justify-items: start;
+  grid-template-rows: auto 1fr auto;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line2);
+  border-top: 2px solid var(--amber);
+  background: var(--panel);
+}
+
+.leisure-card:nth-child(2) {
+  border-top-color: var(--green);
+}
+
+.leisure-card h2 {
+  margin: 0;
+  font: 500 1.625rem var(--display);
+}
+
+.leisure-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.leisure-card button:hover,
 .leisure-dialog button:not(:disabled):hover {
   border-color: var(--amber);
   background: #271f12;
