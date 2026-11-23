@@ -367,6 +367,14 @@
         <canvas id="leisureBoard" tabindex="0" aria-label="Игровое поле" aria-describedby="leisureRules"></canvas>
         <div id="minesGrid" class="mines-grid" role="group" aria-label="Поле сапёра, 9 на 9" aria-describedby="leisureRules" hidden></div>
         <div id="leisureMessage" class="leisure-message" role="status"></div>
+        <section class="leisure-leaderboard" id="leisureLeaderboard" aria-labelledby="leaderboardTitle" hidden>
+          <div><h3 id="leaderboardTitle">Таблица лидеров</h3><button type="button" id="leaderboardRefresh" aria-label="Обновить таблицу лидеров">↻</button></div>
+          <p id="leaderboardStatus" role="status"></p>
+          <table aria-labelledby="leaderboardTitle">
+            <thead><tr><th scope="col">Место</th><th scope="col">Имя</th><th scope="col">Счёт</th></tr></thead>
+            <tbody id="leaderboardRows"></tbody>
+          </table>
+        </section>
       </div>
       <div class="leisure-console">
         <dl class="leisure-stats">
@@ -394,14 +402,6 @@
         <p class="leisure-rules" id="leisureRules"></p>
       </div>
     </div>
-    <section class="leisure-leaderboard" id="leisureLeaderboard" aria-labelledby="leaderboardTitle" hidden>
-      <div><h3 id="leaderboardTitle">Таблица лидеров</h3><button type="button" id="leaderboardRefresh" aria-label="Обновить таблицу лидеров">↻</button></div>
-      <p id="leaderboardStatus" role="status"></p>
-      <table aria-labelledby="leaderboardTitle">
-        <thead><tr><th scope="col">Место</th><th scope="col">Имя</th><th scope="col">Счёт</th></tr></thead>
-        <tbody id="leaderboardRows"></tbody>
-      </table>
-    </section>
   </dialog>
 
   <dialog id="scoreDialog" class="leisure-dialog leisure-score-dialog" aria-labelledby="scoreDialogTitle">

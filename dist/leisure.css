@@ -271,6 +271,7 @@
 }
 
 .leisure-stage {
+  position: relative;
   display: grid;
   place-items: center;
   justify-self: center;
@@ -386,8 +387,12 @@
   gap: .5rem;
 }
 
-.leisure-dialog > .leisure-leaderboard { margin: .85rem; }
-.leisure-layout[hidden] { display: none; }
+.leisure-stage > .leisure-leaderboard {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: auto;
+}
 .leisure-header #leaderboardToggle { margin-left: auto; }
 .leisure-header { gap: .4rem; }
 

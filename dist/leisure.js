@@ -369,7 +369,6 @@
   let timer;
   let frame;
   let resumeWithButton = false;
-  const gameLayout = dialog.querySelector('.leisure-layout');
   const leaderboardToggle = document.getElementById('leaderboardToggle');
   const leaderboard = document.getElementById('leisureLeaderboard');
   const leaderboardStatus = document.getElementById('leaderboardStatus');
@@ -435,7 +434,9 @@
 
   function showLeaderboard(show) {
     leaderboard.hidden = !show;
-    gameLayout.hidden = show;
+    board.inert = show;
+    start.disabled = show;
+    if (state) pause.disabled = show || (state !== 'playing' && state !== 'paused');
     leaderboardToggle.setAttribute('aria-expanded', String(show));
     leaderboardToggle.textContent = show ? 'К игре' : 'Таблица лидеров';
   }
