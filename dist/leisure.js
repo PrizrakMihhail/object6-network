@@ -370,6 +370,8 @@
   let frame;
   let resumeWithButton = false;
   const leaderboardToggle = document.getElementById('leaderboardToggle');
+  const exitDialog = document.getElementById('leisureExitDialog');
+  let resumeAfterCancel = false;
   const leaderboard = document.getElementById('leisureLeaderboard');
   const leaderboardStatus = document.getElementById('leaderboardStatus');
   const leaderboardRows = document.getElementById('leaderboardRows');
@@ -613,6 +615,26 @@
     }
   }
 
+  function confirmExit(event) {
+    if (state !== 'playing' && state !== 'paused') return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (exitDialog.open) return;
+    resumeAfterCancel = state === 'playing' && selected !== 'mines';
+    if (resumeAfterCancel) togglePause();
+    exitDialog.returnValue = '';
+    exitDialog.showModal();
+  }
+
+  document.getElementById('leisureCloseForm').addEventListener('submit', confirmExit);
+  dialog.addEventListener('cancel', confirmExit);
+  exitDialog.addEventListener('close', () => {
+    if (!dialog.open) return;
+    if (exitDialog.returnValue === 'leave') dialog.close();
+    else if (resumeAfterCancel && !document.hidden) togglePause();
+    resumeAfterCancel = false;
+  });
+
   function focusGame() {
     (selected === 'mines' ? mineButtons[0] : board).focus({ preventScroll: true });
   }
@@ -682,6 +704,10 @@
     if (document.hidden && dialog.open && state === 'playing') togglePause();
   });
   dialog.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      confirmExit(event);
+      return;
+    }
     if (selected === 'mines') return;
     if (event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.code === 'KeyP') {

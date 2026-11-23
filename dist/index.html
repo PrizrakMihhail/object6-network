@@ -360,7 +360,7 @@
     <header class="leisure-header">
       <h2 id="leisureTitle"></h2>
       <button type="button" id="leaderboardToggle" aria-controls="leisureLeaderboard" aria-expanded="false" hidden>Таблица лидеров</button>
-      <form method="dialog"><button type="submit" aria-label="Закрыть досуг">×</button></form>
+      <form id="leisureCloseForm" method="dialog"><button type="submit" aria-label="Закрыть досуг">×</button></form>
     </header>
     <div class="leisure-layout">
       <div class="leisure-stage" data-game="blocks">
@@ -402,6 +402,17 @@
         <p class="leisure-rules" id="leisureRules"></p>
       </div>
     </div>
+  </dialog>
+
+  <dialog id="leisureExitDialog" class="leisure-dialog leisure-score-dialog" aria-labelledby="leisureExitTitle" aria-describedby="leisureExitMessage">
+    <header class="leisure-header"><h2 id="leisureExitTitle">Выйти из игры?</h2></header>
+    <form method="dialog">
+      <p id="leisureExitMessage">Текущая партия будет потеряна.</p>
+      <div class="leisure-actions">
+        <button type="submit" value="stay" autofocus>Остаться</button>
+        <button type="submit" value="leave">Выйти</button>
+      </div>
+    </form>
   </dialog>
 
   <dialog id="scoreDialog" class="leisure-dialog leisure-score-dialog" aria-labelledby="scoreDialogTitle">
