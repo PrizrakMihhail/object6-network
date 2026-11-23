@@ -1,0 +1,9 @@
+.microreader-dialog{overflow:hidden;scrollbar-width:none;-ms-overflow-style:none}
+.microreader-machine,.microreader-glass{scrollbar-width:none;-ms-overflow-style:none}
+.microreader-dialog::-webkit-scrollbar,.microreader-machine::-webkit-scrollbar,.microreader-glass::-webkit-scrollbar{display:none;width:0;height:0}
+.microreader-glass img{transition:filter .55s ease,opacity .55s ease}
+.microreader-machine.lamp-failure .microreader-glass img{filter:grayscale(1) sepia(.1) contrast(1.2) brightness(0);opacity:.02;transition-duration:2s;transition-timing-function:linear}
+.microreader-machine.lamp-failure .microreader-glass{background:#020302;box-shadow:inset 0 0 90px #000,0 0 8px rgba(130,20,13,.12)}
+.microreader-machine.lamp-failure #lampStatus{color:#d66255}
+.microreader-machine.lamp-failure .microreader-status i{background:#cf4138;box-shadow:0 0 10px #cf4138;animation:lamp-fault .28s steps(2,end) infinite}
+@keyframes lamp-fault{50%{opacity:.18}}
