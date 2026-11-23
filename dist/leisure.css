@@ -386,6 +386,11 @@
   gap: .5rem;
 }
 
+.leisure-dialog > .leisure-leaderboard { margin: .85rem; }
+.leisure-layout[hidden] { display: none; }
+.leisure-header #leaderboardToggle { margin-left: auto; }
+.leisure-header { gap: .4rem; }
+
 .leisure-leaderboard > div button { min-height: 1.85rem; padding: .15rem .45rem; }
 .leisure-leaderboard table { width: 100%; border-collapse: collapse; font-size: .875rem; }
 .leisure-leaderboard :is(th, td) { padding: .3rem .2rem; text-align: left; border-bottom: 1px solid var(--line); }

@@ -86,6 +86,8 @@
     let score = 0;
     let cleared = 0;
     let result;
+    let effect;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function fits(candidate) {
       return candidate.cells.every(([dx, dy]) => {
@@ -128,12 +130,37 @@
       for (const [dx, dy] of piece.cells) {
         rows[piece.y + dy][piece.x + dx] = piece.color;
       }
+      piece = null;
+      const full = rows.flatMap((row, index) => row.includes(null) ? [] : [index]);
+      if (!full.length) {
+        spawn();
+        return;
+      }
+      effect = { full, progress: 0, elapsed: 0, duration: reducedMotion ? 1 : 220 };
+    }
+
+    function clearRows() {
       const remaining = rows.filter(row => row.includes(null));
       const completed = height - remaining.length;
       rows.splice(0, height, ...Array.from({ length: completed }, emptyRow), ...remaining);
       cleared += completed;
       score += completed * completed * 100;
       spawn();
+    }
+
+    function animate(ms) {
+      effect.elapsed += ms;
+      effect.progress = Math.min(1, effect.elapsed / effect.duration);
+      if (effect.progress < 1) return;
+      const { distance } = effect;
+      effect = null;
+      if (distance) {
+        piece.y += distance;
+        score += distance;
+        lock();
+      } else {
+        clearRows();
+      }
     }
 
     function tick() {
@@ -147,24 +174,38 @@
         case 'up': rotate(); break;
         case 'down': tick(); break;
         case 'drop':
-          while (move(0, 1)) score += 1;
-          lock();
+          {
+            let distance = 0;
+            while (fits({ ...piece, y: piece.y + distance + 1 })) distance++;
+            if (distance) {
+              effect = { distance, progress: 0, elapsed: 0, duration: reducedMotion ? 1 : Math.min(230, 85 + distance * 9) };
+            } else {
+              lock();
+            }
+          }
           break;
       }
     }
 
     spawn();
     return {
-      width, height, tick, action,
+      width, height, tick, action, animate,
+      get animating() { return Boolean(effect); },
       get score() { return score; },
       get result() { return result; },
       get delay() { return Math.max(115, 650 - Math.floor(cleared / 4) * 55); },
       draw() {
         rows.forEach((row, y) => row.forEach((color, x) => {
-          if (color) drawCell(x, y, color);
+          if (!color) return;
+          if (effect?.full?.includes(y)) {
+            context.globalAlpha = Math.min(1, Math.max(0, 1 - effect.progress * 1.8 + x / width * .8));
+          }
+          drawCell(x, y, color);
+          context.globalAlpha = 1;
         }));
         if (!piece) return;
-        for (const [dx, dy] of piece.cells) drawCell(piece.x + dx, piece.y + dy, piece.color);
+        const offset = effect?.distance ? effect.distance * effect.progress ** 1.7 : 0;
+        for (const [dx, dy] of piece.cells) drawCell(piece.x + dx, piece.y + dy + offset, piece.color);
       }
     };
   }
@@ -326,6 +367,10 @@
   let game;
   let state;
   let timer;
+  let frame;
+  let resumeWithButton = false;
+  const gameLayout = dialog.querySelector('.leisure-layout');
+  const leaderboardToggle = document.getElementById('leaderboardToggle');
   const leaderboard = document.getElementById('leisureLeaderboard');
   const leaderboardStatus = document.getElementById('leaderboardStatus');
   const leaderboardRows = document.getElementById('leaderboardRows');
@@ -380,6 +425,20 @@
   document.getElementById('leaderboardRefresh').addEventListener('click', () => {
     loadLeaderboard(state === 'ended' ? game : null);
   });
+  leaderboardToggle.addEventListener('click', () => {
+    const opening = leaderboard.hidden;
+    if (opening && state === 'playing') togglePause();
+    if (opening && state === 'paused') resumeWithButton = true;
+    showLeaderboard(opening);
+    if (opening) loadLeaderboard(state === 'ended' ? game : null);
+  });
+
+  function showLeaderboard(show) {
+    leaderboard.hidden = !show;
+    gameLayout.hidden = show;
+    leaderboardToggle.setAttribute('aria-expanded', String(show));
+    leaderboardToggle.textContent = show ? 'К игре' : 'Таблица лидеров';
+  }
   scoreSkip.addEventListener('click', () => scoreDialog.close());
   scoreDialog.addEventListener('keydown', event => {
     if (event.key === 'Escape' && scoreSave.disabled) {
@@ -455,14 +514,15 @@
     const running = state === 'playing';
     message.textContent = { ready: 'Игра не началась', playing: '', paused: 'Пауза', ended: game.result }[state];
     start.textContent = state === 'ready' || state === 'ended' ? 'Начать игру' : 'Заново';
-    pause.textContent = state === 'paused' ? 'Продолжить' : 'Пауза';
+    pause.textContent = state === 'paused' ? 'Возобновить' : 'Пауза';
     pause.disabled = !running && state !== 'paused';
     controls.forEach(button => { button.disabled = !running; });
     flagMode.disabled = !running;
   }
 
   function reset(next) {
-    clearTimeout(timer);
+    stopClock();
+    resumeWithButton = false;
     game = factories[selected]();
     if (selected === 'mines') {
       flagMode.setAttribute('aria-pressed', 'false');
@@ -482,7 +542,8 @@
     board.hidden = mines;
     minesGrid.hidden = !mines;
     minesTools.hidden = !mines;
-    leaderboard.hidden = mines;
+    leaderboardToggle.hidden = mines;
+    showLeaderboard(false);
     leaderboardRows.replaceChildren();
     leaderboardStatus.textContent = '';
     title.textContent = titles[selected];
@@ -495,7 +556,7 @@
   function update() {
     draw();
     if (game.result) {
-      clearTimeout(timer);
+      stopClock();
       setState('ended');
       loadLeaderboard(game);
     }
@@ -503,6 +564,20 @@
 
   function schedule() {
     if (selected === 'mines') return;
+    if (game.animating) {
+      let previous;
+      function step(now) {
+        if (!dialog.open || state !== 'playing') return;
+        if (previous !== undefined) game.animate(now - previous);
+        previous = now;
+        update();
+        if (state !== 'playing') return;
+        if (game.animating) frame = requestAnimationFrame(step);
+        else schedule();
+      }
+      frame = requestAnimationFrame(step);
+      return;
+    }
     timer = setTimeout(() => {
       if (!dialog.open || state !== 'playing') return;
       game.tick();
@@ -512,17 +587,26 @@
   }
 
   function playAction(action) {
-    if (state !== 'playing') return;
+    if (state !== 'playing' || game.animating) return;
     game.action(action);
     update();
+    if (game.animating) {
+      stopClock();
+      schedule();
+    }
+  }
+
+  function stopClock() {
+    clearTimeout(timer);
+    cancelAnimationFrame(frame);
   }
 
   function togglePause() {
     if (selected === 'mines') return;
     if (state === 'playing') {
-      clearTimeout(timer);
+      stopClock();
       setState('paused');
-    } else if (state === 'paused') {
+    } else if (state === 'paused' && leaderboard.hidden) {
       setState('playing');
       schedule();
     }
@@ -576,11 +660,10 @@
     reset('ready');
     dialog.showModal();
     start.focus();
-    loadLeaderboard();
   }));
   dialog.addEventListener('close', () => {
     if (!dialog.open) {
-      clearTimeout(timer);
+      stopClock();
       leaderboardRequest++;
     }
   });
@@ -590,7 +673,10 @@
     focusGame();
     schedule();
   });
-  pause.addEventListener('click', togglePause);
+  pause.addEventListener('click', () => {
+    resumeWithButton = false;
+    togglePause();
+  });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && dialog.open && state === 'playing') togglePause();
   });
@@ -599,7 +685,7 @@
     if (event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.code === 'KeyP') {
       event.preventDefault();
-      if (!event.repeat) togglePause();
+      if (!event.repeat && !resumeWithButton) togglePause();
       return;
     }
     const action = keyActions[event.key];

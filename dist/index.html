@@ -359,6 +359,7 @@
   <dialog id="leisureDialog" class="leisure-dialog" aria-labelledby="leisureTitle">
     <header class="leisure-header">
       <h2 id="leisureTitle"></h2>
+      <button type="button" id="leaderboardToggle" aria-controls="leisureLeaderboard" aria-expanded="false" hidden>Таблица лидеров</button>
       <form method="dialog"><button type="submit" aria-label="Закрыть досуг">×</button></form>
     </header>
     <div class="leisure-layout">
@@ -391,16 +392,16 @@
           <button type="button" id="minesFlagMode" aria-pressed="false">Режим флажков</button>
         </div>
         <p class="leisure-rules" id="leisureRules"></p>
-        <section class="leisure-leaderboard" id="leisureLeaderboard" aria-labelledby="leaderboardTitle" hidden>
-          <div><h3 id="leaderboardTitle">Таблица лидеров</h3><button type="button" id="leaderboardRefresh" aria-label="Обновить таблицу лидеров">↻</button></div>
-          <p id="leaderboardStatus" role="status"></p>
-          <table aria-labelledby="leaderboardTitle">
-            <thead><tr><th scope="col">Место</th><th scope="col">Имя</th><th scope="col">Счёт</th></tr></thead>
-            <tbody id="leaderboardRows"></tbody>
-          </table>
-        </section>
       </div>
     </div>
+    <section class="leisure-leaderboard" id="leisureLeaderboard" aria-labelledby="leaderboardTitle" hidden>
+      <div><h3 id="leaderboardTitle">Таблица лидеров</h3><button type="button" id="leaderboardRefresh" aria-label="Обновить таблицу лидеров">↻</button></div>
+      <p id="leaderboardStatus" role="status"></p>
+      <table aria-labelledby="leaderboardTitle">
+        <thead><tr><th scope="col">Место</th><th scope="col">Имя</th><th scope="col">Счёт</th></tr></thead>
+        <tbody id="leaderboardRows"></tbody>
+      </table>
+    </section>
   </dialog>
 
   <dialog id="scoreDialog" class="leisure-dialog leisure-score-dialog" aria-labelledby="scoreDialogTitle">
