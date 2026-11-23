@@ -7,6 +7,7 @@
   <meta name="description" content="Единая сеть архивов Объекта №6">
   <title>Сеть Объекта №6</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="routing.css">
   <link rel="stylesheet" href="sidebar-fixed.css">
   <link rel="stylesheet" href="network-signal.css">
   <link rel="stylesheet" href="microreader.css">
@@ -74,21 +75,100 @@
         <div class="content-column">
           <div class="section-head">
             <div><p class="eyebrow">МАРШРУТИЗАЦИЯ</p><h2>КАРТА УЗЛОВ</h2></div>
-            <div class="segmented" role="group" aria-label="Режим карты"><button class="active" data-map="topology">ТОПОЛОГИЯ</button><button data-map="list">СПИСОК</button></div>
+            <div class="segmented routing-switch" role="group" aria-label="Режим карты">
+              <button type="button" class="active" aria-pressed="true" aria-controls="routing-systems">СИСТЕМЫ</button>
+              <button type="button" aria-pressed="false" aria-controls="routing-structures">СТРУКТУРЫ</button>
+            </div>
           </div>
 
-          <div class="network-map" id="networkMap">
-            <svg viewBox="0 0 800 410" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M401 202 L183 98 M401 202 L626 93 M401 202 L155 312 M401 202 L627 310 M401 202 L402 369"/>
-              <path class="pulse-line" d="M401 202 L626 93"/>
-            </svg>
-            <button class="map-node hub" data-doc="core"><strong>06</strong><span>ЦЕНТРАЛЬНЫЙ<br>ШЛЮЗ</span><small>ONLINE</small></button>
-            <button class="map-node mazt" data-doc="lazar"><strong>MZ</strong><span>MAZTECH<br>R&amp;D</span><small>ONLINE</small></button>
-            <button class="map-node mats" data-doc="hannibal"><strong>MT</strong><span>MATSUMOTO<br>ARCHIVE</span><small>DEGRADED</small></button>
-            <button class="map-node field" data-doc="citadel"><strong>CT</strong><span>ЦИТАДЕЛЬ<br>TELEMETRY</span><small>ONLINE</small></button>
-            <button class="map-node locked" data-doc="mirage"><strong>MX</strong><span>MIRAGE<br>VAULT</span><small>LOCKED</small></button>
-            <button class="map-node field bottom" data-doc="mail"><strong>@</strong><span>ПОЧТОВЫЙ<br>РЕЛЕ</span><small>ONLINE</small></button>
-          </div>
+          <section class="routing-map" id="routing-systems" aria-label="Системы">
+            <article class="routing-node routing-hub" data-condition="ok">
+              <h3>Система жизнеобеспечения</h3>
+              <p class="routing-status">Рабочее состояние</p>
+              <p>Целостность около 75%</p>
+            </article>
+            <div class="routing-nodes">
+              <article class="routing-node" data-condition="ok">
+                <h4>Водоснабжение</h4>
+                <p class="routing-status">Восстановлено</p>
+              </article>
+              <article class="routing-node" data-condition="ok">
+                <h4>Электроэнергия</h4>
+                <p class="routing-status">Восстановлено</p>
+                <p>Работает без перебоев</p>
+              </article>
+              <article class="routing-node" data-condition="warn">
+                <h4>Связь с внешним миром</h4>
+                <p class="routing-status">Работает с перебоями</p>
+                <p>Антенны повреждены. Наземная линия работает с перебоями.</p>
+              </article>
+              <article class="routing-node" data-condition="ok">
+                <h4>Гермодверь в Объект №6</h4>
+                <p class="routing-status">Не повреждена</p>
+              </article>
+            </div>
+          </section>
+          <section class="routing-map" id="routing-structures" aria-label="Структуры" hidden>
+            <article class="routing-node routing-hub" data-condition="ok">
+              <h3>Общее состояние</h3>
+              <p class="routing-status">Приемлемое</p>
+            </article>
+            <div class="routing-nodes">
+              <article class="routing-node" data-condition="ok">
+                <h4>Медблок</h4>
+                <p class="routing-status">Хорошее состояние</p>
+                <p>Повреждения минимальные.</p>
+              </article>
+              <article class="routing-node" data-condition="warn">
+                <h4>Плаза</h4>
+                <p class="routing-status">Среднее состояние</p>
+                <p>Взрывы и пожары повредили часть помещений.</p>
+                <details class="routing-subnodes">
+                  <summary>Помещения Плазы</summary>
+                  <dl>
+                    <dt>Бар</dt>
+                    <dd>Практически не пострадал.</dd>
+                    <dt>Казино</dt>
+                    <dd>Стены целы. Интерьер пострадал от взрыва и пожара.</dd>
+                    <dt>Покои Барона</dt>
+                    <dd>Стены целы. Интерьер критически пострадал от взрыва и пожара.</dd>
+                    <dt>База Четвёртой Передачи</dt>
+                    <dd>Стены целы. Интерьер пострадал от взрыва, пожар не начался.</dd>
+                  </dl>
+                </details>
+              </article>
+              <article class="routing-node" data-condition="ok">
+                <h4>Штаб РНД</h4>
+                <p class="routing-status">Хорошее состояние</p>
+                <p>Практически не пострадал.</p>
+              </article>
+              <article class="routing-node" data-condition="ok">
+                <h4>Оружейная</h4>
+                <p class="routing-status">Хорошее состояние</p>
+                <p>Повреждений нет.</p>
+              </article>
+              <article class="routing-node" data-condition="ok">
+                <h4>КПП</h4>
+                <p class="routing-status">Хорошее состояние</p>
+                <p>Повреждений нет.</p>
+              </article>
+              <article class="routing-node" data-condition="warn">
+                <h4>Жандармерия</h4>
+                <p class="routing-status">Среднее состояние</p>
+                <p>Многочисленные повреждения после штурма Ганнибалом.</p>
+              </article>
+              <article class="routing-node" data-condition="warn">
+                <h4>Свободный отсек</h4>
+                <p class="routing-status">Среднее состояние</p>
+                <p>Повреждения от пожара.</p>
+              </article>
+              <article class="routing-node" data-condition="warn">
+                <h4>«Дружба»</h4>
+                <p class="routing-status">Среднее состояние</p>
+                <p>Повреждения от пожара.</p>
+              </article>
+            </div>
+          </section>
 
           <div class="section-head docs-head">
             <div><p class="eyebrow">ПОСЛЕДНЯЯ СИНХРОНИЗАЦИЯ: 04:18</p><h2>ДОКУМЕНТЫ СЕТИ</h2></div>

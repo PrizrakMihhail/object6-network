@@ -32,8 +32,15 @@ function openDoc(id){
 document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.filter=b.dataset.filter;render()}));
 document.querySelectorAll('.node-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.node-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.node=b.dataset.node;render()}));
 document.getElementById('searchInput').addEventListener('input',e=>{state.query=e.target.value;render()});
-document.querySelectorAll('.map-node').forEach(b=>b.addEventListener('click',()=>openDoc(b.dataset.doc)));
-document.querySelectorAll('.segmented button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.segmented button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('networkMap').classList.toggle('list-mode',b.dataset.map==='list')}));
+const routingModes = document.querySelectorAll('.routing-switch button');
+routingModes.forEach(button => button.addEventListener('click', () => {
+  for (const mode of routingModes) {
+    const selected = mode === button;
+    mode.classList.toggle('active', selected);
+    mode.setAttribute('aria-pressed', String(selected));
+    document.getElementById(mode.getAttribute('aria-controls')).hidden = !selected;
+  }
+}));
 document.querySelectorAll('.nav-item[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));b.classList.add('active');const map={archive:'all',mail:'mail',projects:'research',intercepts:'critical',overview:'all'};state.filter=map[b.dataset.view];document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.filter===state.filter));document.querySelector('.docs-head').scrollIntoView({behavior:'smooth',block:b.dataset.view==='overview'?'end':'start'});render()}));
 document.getElementById('closeDialog').addEventListener('click',()=>document.getElementById('documentDialog').close());
 document.getElementById('documentDialog').addEventListener('click',e=>{if(e.target.id==='documentDialog')e.currentTarget.close()});

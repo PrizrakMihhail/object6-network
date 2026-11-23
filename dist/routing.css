@@ -1,0 +1,113 @@
+.routing-map {
+  padding: clamp(.75rem, 2.2vw, 1.5rem);
+  border: 1px solid var(--line);
+  background: linear-gradient(#26322945 1px, transparent 1px),
+    linear-gradient(90deg, #26322945 1px, transparent 1px),
+    #0c110e;
+  background-size: 24px 24px;
+}
+
+.routing-switch button {
+  min-height: 2.25rem;
+  color: #a1aca0;
+}
+
+.routing-node {
+  min-width: 0;
+  padding: .85rem;
+  border: 1px solid var(--line2);
+  border-left: 3px solid var(--green);
+  background: var(--panel);
+  overflow-wrap: anywhere;
+}
+
+.routing-node[data-condition="warn"] {
+  border-left-color: var(--amber);
+}
+
+.routing-node h3,
+.routing-node h4 {
+  margin: 0;
+  font: 500 1rem/1.25 var(--display);
+  letter-spacing: .03em;
+}
+
+.routing-node p,
+.routing-subnodes {
+  margin: .4rem 0 0;
+  color: #a4ada4;
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
+.routing-node .routing-status {
+  color: #b1c98c;
+  font-weight: 600;
+}
+
+.routing-node[data-condition="warn"] .routing-status {
+  color: #e8bd74;
+}
+
+.routing-hub {
+  position: relative;
+  width: min(100%, 23rem);
+  margin: 0 auto 1.5rem;
+  border: 1px solid #758768;
+  background: #131b14;
+  text-align: center;
+}
+
+.routing-hub::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  height: 1.5rem;
+  border-left: 1px solid var(--line2);
+}
+
+.routing-nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  align-items: start;
+  gap: .75rem;
+  padding-top: .75rem;
+  border-top: 1px solid var(--line2);
+}
+
+.routing-subnodes {
+  margin-top: .65rem;
+  padding-top: .5rem;
+  border-top: 1px solid var(--line);
+}
+
+.routing-subnodes summary {
+  color: #e8bd74;
+  cursor: pointer;
+}
+
+.routing-subnodes dl {
+  margin: .65rem 0 0;
+  padding-left: .65rem;
+  border-left: 1px solid var(--line2);
+}
+
+.routing-subnodes dt {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.routing-subnodes dd {
+  margin: .125rem 0 .6rem;
+}
+
+.routing-subnodes dd:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 420px) {
+  #networkContent .workspace .section-head:first-child {
+    flex-wrap: wrap;
+  }
+}
