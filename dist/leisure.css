@@ -60,9 +60,23 @@
   max-width: 54rem;
 }
 
-.leisure-home {
-  display: inline-block;
-  margin-bottom: 1.25rem;
+.sidebar.showing-leisure .nav-item.active:not(:hover) {
+  color: #818b82;
+  background: transparent;
+  border-left-color: transparent;
+}
+
+.sidebar.showing-leisure .nav-item.active:not(:hover) span {
+  color: inherit;
+}
+
+.leisure-link[aria-current] {
+  color: #e3e6e1;
+  background: linear-gradient(90deg, #cb8b2224, transparent);
+  border-left-color: var(--amber);
+}
+
+.leisure-link[aria-current] span {
   color: var(--amber);
 }
 

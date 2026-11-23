@@ -3,68 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b0e0d">
+  <meta http-equiv="refresh" content="0;url=./#leisure">
   <title>Досуг — Сеть Объекта №6</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="keyboard.css">
-  <link rel="stylesheet" href="leisure.css">
 </head>
-<body>
-  <div class="noise" aria-hidden="true"></div>
-  <header class="topbar">
-    <a class="brand" href="index.html" aria-label="На главную">
-      <span class="brand-mark">06</span>
-      <span><b>ОБЪЕКТ №6</b><small>INTERNAL RESEARCH NETWORK</small></span>
-    </a>
-  </header>
-  <main class="leisure-page">
-    <a class="leisure-home" href="index.html">На главную</a>
-    <div class="hero-row"><h1>ДОСУГ</h1></div>
-    <div class="leisure-games">
-      <section class="leisure-card">
-        <h2 id="blocksTitle">Блоки</h2>
-        <p>Вращайте падающие фигуры и заполняйте ряды.</p>
-        <button type="button" data-launch="blocks" aria-haspopup="dialog" aria-describedby="blocksTitle">Играть</button>
-      </section>
-      <section class="leisure-card">
-        <h2 id="snakeTitle">Змейка</h2>
-        <p>Собирайте янтарные клетки и избегайте столкновений.</p>
-        <button type="button" data-launch="snake" aria-haspopup="dialog" aria-describedby="snakeTitle">Играть</button>
-      </section>
-    </div>
-  </main>
-  <dialog id="leisureDialog" class="leisure-dialog" aria-labelledby="leisureTitle">
-    <header class="leisure-header">
-      <h2 id="leisureTitle"></h2>
-      <form method="dialog"><button type="submit" aria-label="Закрыть досуг">×</button></form>
-    </header>
-    <div class="leisure-layout">
-      <div class="leisure-stage" data-game="blocks">
-        <canvas id="leisureBoard" tabindex="0" aria-label="Игровое поле" aria-describedby="leisureRules"></canvas>
-        <div id="leisureMessage" class="leisure-message" role="status"></div>
-      </div>
-      <div class="leisure-console">
-        <dl class="leisure-stats">
-          <div><dt>Счёт</dt><dd id="leisureScore">0</dd></div>
-          <div><dt>Рекорд</dt><dd id="leisureBest">0</dd></div>
-        </dl>
-        <div class="leisure-actions">
-          <button type="button" id="leisureStart">Заново</button>
-          <button type="button" id="leisurePause" disabled>Пауза</button>
-        </div>
-        <div class="leisure-controls" role="group" aria-label="Управление игрой">
-          <button type="button" data-action="left" aria-label="Влево">←</button>
-          <button type="button" data-action="up" id="leisureUp" aria-label="Повернуть фигуру">↻</button>
-          <button type="button" data-action="right" aria-label="Вправо">→</button>
-          <button type="button" data-action="down" aria-label="Вниз">↓</button>
-          <button type="button" data-action="drop">Сбросить</button>
-        </div>
-        <p class="leisure-rules" id="leisureRules"></p>
-      </div>
-    </div>
-  </dialog>
-
-  <script src="keyboard.js"></script>
-  <script src="leisure.js"></script>
-</body>
+<body><a href="./#leisure">Открыть вкладку «Досуг»</a></body>
 </html>

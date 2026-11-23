@@ -34,9 +34,8 @@
       <button class="nav-item" data-view="mail"><span>□</span><b>Почтовый узел</b><em>4</em></button>
       <button class="nav-item" data-view="projects"><span>◇</span><b>Проекты</b><em>7</em></button>
       <button class="nav-item" data-view="intercepts"><span>⌁</span><b>Перехваты</b><em class="alert-count">3</em></button>
-      <button class="nav-item microreader-link" id="microreaderButton"><span>▣</span><b>Микроридер</b><em>10</em></button>
       <a class="nav-item fourth-link" href="fourth.html?connect=1"><img class="nav-logo" src="assets/g4-logo-red-v1.png" alt=""><b>Четвёртая Передача</b><em>OUT</em></a>
-      <a class="nav-item leisure-link" href="leisure.html"><span aria-hidden="true">▦</span><b>Досуг</b></a>
+      <a class="nav-item leisure-link" id="leisureTab" href="#leisure" aria-controls="leisure"><span aria-hidden="true">▦</span><b>Досуг</b></a>
       <div class="nav-label">КОНТУРЫ</div>
       <button class="node-filter active" data-node="all"><i class="amber"></i> Все узлы</button>
       <button class="node-filter" data-node="maztech"><i class="orange"></i> MAZTECH</button>
@@ -50,6 +49,7 @@
     </nav>
 
     <main>
+      <div id="networkContent">
       <section class="hero-row">
         <div>
           <p class="eyebrow">УЗЕЛ / ГЛАВНЫЙ ТЕРМИНАЛ</p>
@@ -114,6 +114,27 @@
           </div>
         </aside>
       </section>
+      </div>
+      <section id="leisure" aria-labelledby="leisureHeading" hidden>
+        <div class="hero-row"><h1 id="leisureHeading" tabindex="-1">ДОСУГ</h1></div>
+        <div class="leisure-games">
+          <section class="leisure-card">
+            <h2 id="blocksTitle">Блоки</h2>
+            <p>Вращайте падающие фигуры и заполняйте ряды.</p>
+            <button type="button" data-launch="blocks" aria-haspopup="dialog" aria-describedby="blocksTitle">Играть</button>
+          </section>
+          <section class="leisure-card">
+            <h2 id="snakeTitle">Змейка</h2>
+            <p>Собирайте янтарные клетки и избегайте столкновений.</p>
+            <button type="button" data-launch="snake" aria-haspopup="dialog" aria-describedby="snakeTitle">Играть</button>
+          </section>
+          <section class="leisure-card">
+            <h2 id="microreaderCardTitle">Микроридер</h2>
+            <p>Просматривайте газетные вырезки из архива.</p>
+            <button type="button" id="microreaderButton" aria-haspopup="dialog" aria-describedby="microreaderCardTitle">Открыть</button>
+          </section>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -156,9 +177,41 @@
     </section>
   </dialog>
 
+  <dialog id="leisureDialog" class="leisure-dialog" aria-labelledby="leisureTitle">
+    <header class="leisure-header">
+      <h2 id="leisureTitle"></h2>
+      <form method="dialog"><button type="submit" aria-label="Закрыть досуг">×</button></form>
+    </header>
+    <div class="leisure-layout">
+      <div class="leisure-stage" data-game="blocks">
+        <canvas id="leisureBoard" tabindex="0" aria-label="Игровое поле" aria-describedby="leisureRules"></canvas>
+        <div id="leisureMessage" class="leisure-message" role="status"></div>
+      </div>
+      <div class="leisure-console">
+        <dl class="leisure-stats">
+          <div><dt>Счёт</dt><dd id="leisureScore">0</dd></div>
+          <div><dt>Рекорд</dt><dd id="leisureBest">0</dd></div>
+        </dl>
+        <div class="leisure-actions">
+          <button type="button" id="leisureStart">Заново</button>
+          <button type="button" id="leisurePause" disabled>Пауза</button>
+        </div>
+        <div class="leisure-controls" role="group" aria-label="Управление игрой">
+          <button type="button" data-action="left" aria-label="Влево">←</button>
+          <button type="button" data-action="up" id="leisureUp" aria-label="Повернуть фигуру">↻</button>
+          <button type="button" data-action="right" aria-label="Вправо">→</button>
+          <button type="button" data-action="down" aria-label="Вниз">↓</button>
+          <button type="button" data-action="drop">Сбросить</button>
+        </div>
+        <p class="leisure-rules" id="leisureRules"></p>
+      </div>
+    </div>
+  </dialog>
+
   <script src="app.js"></script>
   <script src="microreader-catalog.js"></script>
   <script src="microreader.js"></script>
   <script src="keyboard.js"></script>
+  <script src="leisure.js"></script>
 </body>
 </html>

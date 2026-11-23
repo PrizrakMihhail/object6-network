@@ -1,4 +1,34 @@
 (() => {
+  const tab = document.getElementById('leisureTab');
+  const panel = document.getElementById('leisure');
+  const network = document.getElementById('networkContent');
+  const sidebar = tab.closest('.sidebar');
+
+  function showSelectedSection() {
+    const selected = location.hash === '#leisure';
+    panel.hidden = !selected;
+    network.hidden = selected;
+    sidebar.classList.toggle('showing-leisure', selected);
+    if (selected) tab.setAttribute('aria-current', 'location');
+    else tab.removeAttribute('aria-current');
+  }
+
+  tab.addEventListener('click', event => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (location.hash !== '#leisure') history.pushState(null, '', '#leisure');
+    showSelectedSection();
+    window.scrollTo(0, 0);
+    document.getElementById('leisureHeading').focus({ preventScroll: true });
+  });
+  sidebar.addEventListener('click', event => {
+    if (panel.hidden || !event.target.closest('[data-view], [data-node]')) return;
+    history.pushState(null, '', location.pathname + location.search);
+    showSelectedSection();
+  }, { capture: true });
+  window.addEventListener('hashchange', showSelectedSection);
+  showSelectedSection();
+
   const dialog = document.getElementById('leisureDialog');
   const title = document.getElementById('leisureTitle');
   const launchers = document.querySelectorAll('[data-launch]');
