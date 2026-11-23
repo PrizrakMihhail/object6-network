@@ -91,12 +91,12 @@
           <section class="routing-map" id="routing-systems" aria-label="Системы">
             <div class="routing-graph">
               <svg class="routing-lines" aria-hidden="true"></svg>
-              <button type="button" aria-haspopup="dialog" class="routing-node routing-hub" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node routing-hub" data-structure-slug="life-support" data-condition="ok">
                 <span class="routing-name">Система жизнеобеспечения</span>
                 <span class="routing-status">Рабочее состояние</span>
                 <span class="routing-description">Целостность около 75%</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="water-supply" data-condition="ok">
                 <span class="routing-name">Водоснабжение</span>
                 <span class="routing-status">Восстановлено</span>
               </button>
@@ -106,12 +106,12 @@
                 <span class="routing-description">Цепь реактора разомкнута. Требуется синхронизация роторов.</span>
                 <span class="reactor-map-power" id="reactorMapPower">Генераторы · 5 кВт</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="external-comms" data-condition="warn">
                 <span class="routing-name">Связь с внешним миром</span>
                 <span class="routing-status">Работает с перебоями</span>
                 <span class="routing-description">Антенны повреждены. Наземная линия работает с перебоями.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="blast-door" data-condition="ok">
                 <span class="routing-name">Гермодверь в Объект №6</span>
                 <span class="routing-status">Не повреждена</span>
               </button>
@@ -120,46 +120,46 @@
           <section class="routing-map" id="routing-structures" aria-label="Структуры" hidden>
             <div class="routing-graph">
               <svg class="routing-lines" aria-hidden="true"></svg>
-              <button type="button" aria-haspopup="dialog" class="routing-node routing-hub" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node routing-hub" data-structure-slug="general-condition" data-condition="ok">
                 <span class="routing-name">Общее состояние</span>
                 <span class="routing-status">Приемлемое</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="medical-block" data-condition="ok">
                 <span class="routing-name">Медблок</span>
                 <span class="routing-status">Хорошее состояние</span>
                 <span class="routing-description">Повреждения минимальные.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" aria-controls="plazaDialog" class="routing-node" id="plazaNode" data-condition="warn">
+              <button type="button" aria-haspopup="dialog" aria-controls="plazaDialog" class="routing-node" id="plazaNode" data-structure-slug="plaza" data-condition="warn">
                 <span class="routing-name">Плаза</span>
                 <span class="routing-status">Среднее состояние</span>
                 <span class="routing-description">Взрывы и пожары повредили часть помещений.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="rnd-headquarters" data-condition="ok">
                 <span class="routing-name">Штаб РНД</span>
                 <span class="routing-status">Хорошее состояние</span>
                 <span class="routing-description">Практически не пострадал.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="armory" data-condition="ok">
                 <span class="routing-name">Оружейная</span>
                 <span class="routing-status">Хорошее состояние</span>
                 <span class="routing-description">Повреждений нет.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="checkpoint" data-condition="ok">
                 <span class="routing-name">КПП</span>
                 <span class="routing-status">Хорошее состояние</span>
                 <span class="routing-description">Повреждений нет.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="gendarmerie" data-condition="warn">
                 <span class="routing-name">Жандармерия</span>
                 <span class="routing-status">Среднее состояние</span>
                 <span class="routing-description">Многочисленные повреждения после штурма Ганнибалом.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="free-compartment" data-condition="warn">
                 <span class="routing-name">Свободный отсек</span>
                 <span class="routing-status">Среднее состояние</span>
                 <span class="routing-description">Повреждения от пожара.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
+              <button type="button" aria-haspopup="dialog" class="routing-node" data-structure-slug="druzhba" data-condition="warn">
                 <span class="routing-name">«Дружба»</span>
                 <span class="routing-status">Среднее состояние</span>
                 <span class="routing-description">Повреждения от пожара.</span>
@@ -394,6 +394,7 @@
 
   <script src="app.js"></script>
   <script src="reactor.js"></script>
+  <script type="module" src="supabase.js"></script>
   <script src="network-signal.js"></script>
   <script src="microreader-catalog.js"></script>
   <script src="microreader.js"></script>
