@@ -1,0 +1,336 @@
+(() => {
+  const dialog = document.getElementById('leisureDialog');
+  const launcher = document.getElementById('leisureButton');
+  const board = document.getElementById('leisureBoard');
+  const context = board.getContext('2d');
+  const stage = board.parentElement;
+  const message = document.getElementById('leisureMessage');
+  const scoreLabel = document.getElementById('leisureScore');
+  const bestLabel = document.getElementById('leisureBest');
+  const start = document.getElementById('leisureStart');
+  const pause = document.getElementById('leisurePause');
+  const rules = document.getElementById('leisureRules');
+  const up = document.getElementById('leisureUp');
+  const games = dialog.querySelectorAll('.leisure-picker button');
+  const controls = dialog.querySelectorAll('[data-action]');
+  const drop = dialog.querySelector('[data-action="drop"]');
+  const cellSize = 24;
+  const randomItem = items => items[Math.floor(Math.random() * items.length)];
+
+  function drawCell(x, y, color) {
+    context.fillStyle = color;
+    context.fillRect(x * cellSize + 1, y * cellSize + 1, cellSize - 2, cellSize - 2);
+  }
+
+  const shapes = [
+    { cells: [[0, 0], [1, 0], [0, 1]], color: '#75bfc0' },
+    { cells: [[0, 0], [1, 0], [2, 0]], color: '#a5c879' },
+    { cells: [[0, 0], [1, 0], [0, 1], [1, 1]], color: '#e0b05d' },
+    { cells: [[0, 0], [0, 1], [0, 2], [1, 2]], color: '#db8a64' },
+    { cells: [[0, 0], [0, 1], [1, 1], [1, 2], [2, 2]], color: '#b299ca' },
+    { cells: [[0, 0], [2, 0], [0, 1], [1, 1], [2, 1]], color: '#d97e81' }
+  ];
+
+  function createBlocks() {
+    const width = 12;
+    const height = 18;
+    const emptyRow = () => Array(width).fill(null);
+    const rows = Array.from({ length: height }, emptyRow);
+    let piece;
+    let bag = [];
+    let score = 0;
+    let cleared = 0;
+    let result;
+
+    function fits(candidate) {
+      return candidate.cells.every(([dx, dy]) => {
+        const x = candidate.x + dx;
+        const y = candidate.y + dy;
+        return x >= 0 && x < width && y >= 0 && y < height && !rows[y][x];
+      });
+    }
+
+    function spawn() {
+      if (!bag.length) bag = [...shapes];
+      const [shape] = bag.splice(Math.floor(Math.random() * bag.length), 1);
+      const size = Math.max(...shape.cells.map(([x]) => x)) + 1;
+      piece = { ...shape, x: Math.floor((width - size) / 2), y: 0 };
+      if (!fits(piece)) {
+        piece = null;
+        result = 'Поле заполнено';
+      }
+    }
+
+    function move(dx, dy) {
+      const candidate = { ...piece, x: piece.x + dx, y: piece.y + dy };
+      if (!fits(candidate)) return false;
+      piece = candidate;
+      return true;
+    }
+
+    function rotate() {
+      const bottom = Math.max(...piece.cells.map(([, y]) => y));
+      const cells = piece.cells.map(([x, y]) => [bottom - y, x]);
+      for (const offset of [0, -1, 1, -2, 2]) {
+        const candidate = { ...piece, x: piece.x + offset, cells };
+        if (!fits(candidate)) continue;
+        piece = candidate;
+        return;
+      }
+    }
+
+    function lock() {
+      for (const [dx, dy] of piece.cells) {
+        rows[piece.y + dy][piece.x + dx] = piece.color;
+      }
+      const remaining = rows.filter(row => row.includes(null));
+      const completed = height - remaining.length;
+      rows.splice(0, height, ...Array.from({ length: completed }, emptyRow), ...remaining);
+      cleared += completed;
+      score += completed * completed * 100;
+      spawn();
+    }
+
+    function tick() {
+      if (!move(0, 1)) lock();
+    }
+
+    function action(input) {
+      switch (input) {
+        case 'left': move(-1, 0); break;
+        case 'right': move(1, 0); break;
+        case 'up': rotate(); break;
+        case 'down': tick(); break;
+        case 'drop':
+          while (move(0, 1)) score += 1;
+          lock();
+          break;
+      }
+    }
+
+    spawn();
+    return {
+      width, height, tick, action,
+      get score() { return score; },
+      get result() { return result; },
+      get delay() { return Math.max(115, 650 - Math.floor(cleared / 4) * 55); },
+      draw() {
+        rows.forEach((row, y) => row.forEach((color, x) => {
+          if (color) drawCell(x, y, color);
+        }));
+        if (!piece) return;
+        for (const [dx, dy] of piece.cells) drawCell(piece.x + dx, piece.y + dy, piece.color);
+      }
+    };
+  }
+
+  function createSnake() {
+    const width = 16;
+    const height = 16;
+    const body = [[7, 8], [6, 8], [5, 8]];
+    const directions = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
+    const turns = [];
+    let direction = directions.right;
+    let score = 0;
+    let result;
+
+    const sameCell = ([x, y], [otherX, otherY]) => x === otherX && y === otherY;
+
+    function placeFood() {
+      const openCells = [];
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          const cell = [x, y];
+          if (!body.some(part => sameCell(part, cell))) openCells.push(cell);
+        }
+      }
+      return randomItem(openCells);
+    }
+
+    let food = placeFood();
+
+    function tick() {
+      direction = turns.shift() || direction;
+      const x = body[0][0] + direction[0];
+      const y = body[0][1] + direction[1];
+      const head = [x, y];
+      const eats = sameCell(head, food);
+      const occupied = eats ? body : body.slice(0, -1);
+      if (x < 0 || x >= width || y < 0 || y >= height || occupied.some(part => sameCell(part, head))) {
+        result = 'Столкновение';
+        return;
+      }
+      body.unshift(head);
+      if (eats) {
+        score += 10;
+        food = placeFood();
+        if (!food) result = 'Поле пройдено';
+      } else {
+        body.pop();
+      }
+    }
+
+    return {
+      width, height, tick,
+      get score() { return score; },
+      get result() { return result; },
+      get delay() { return Math.max(70, 180 - score / 5); },
+      action(input) {
+        const next = directions[input];
+        const previous = turns.at(-1) || direction;
+        if (next && turns.length < 2 && next[0] * previous[0] + next[1] * previous[1] === 0) {
+          turns.push(next);
+        }
+      },
+      draw() {
+        if (food) drawCell(...food, '#efb24f');
+        body.forEach(([x, y], index) => drawCell(x, y, index === 0 ? '#cadea4' : '#83a658'));
+      }
+    };
+  }
+
+  const factories = { blocks: createBlocks, snake: createSnake };
+  const descriptions = {
+    blocks: 'Заполняйте ряды падающими фигурами. ← → сдвиг, ↑ поворот, ↓ опускание, пробел — сброс.',
+    snake: 'Собирайте янтарные клетки. Стрелки меняют направление. Стены и собственный хвост завершают игру.'
+  };
+  const keyActions = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', ' ': 'drop' };
+  const records = {};
+  for (const name of Object.keys(factories)) {
+    try {
+      records[name] = Number(localStorage.getItem(`object6.leisure.${name}`)) || 0;
+    } catch {
+      records[name] = 0;
+    }
+  }
+
+  let selected = 'blocks';
+  let game;
+  let state;
+  let timer;
+
+  function draw() {
+    context.fillStyle = '#090e0b';
+    context.fillRect(0, 0, board.width, board.height);
+    context.fillStyle = '#243128';
+    for (let x = 1; x < game.width; x += 1) context.fillRect(x * cellSize, 0, 1, board.height);
+    for (let y = 1; y < game.height; y += 1) context.fillRect(0, y * cellSize, board.width, 1);
+    game.draw();
+    scoreLabel.textContent = game.score;
+    if (game.score > records[selected]) {
+      records[selected] = game.score;
+      try {
+        localStorage.setItem(`object6.leisure.${selected}`, game.score);
+      } catch {
+        // Keep the record in memory when storage is unavailable.
+      }
+    }
+    bestLabel.textContent = records[selected];
+  }
+
+  function setState(next) {
+    state = next;
+    const running = state === 'playing';
+    message.textContent = { ready: 'Готово к запуску', playing: '', paused: 'Пауза', ended: game.result }[state];
+    start.textContent = { ready: 'Начать', ended: 'Играть снова' }[state] || 'Заново';
+    pause.textContent = state === 'paused' ? 'Продолжить' : 'Пауза';
+    pause.disabled = !running && state !== 'paused';
+    controls.forEach(button => { button.disabled = !running; });
+  }
+
+  function reset(next = 'ready') {
+    clearTimeout(timer);
+    game = factories[selected]();
+    board.width = game.width * cellSize;
+    board.height = game.height * cellSize;
+    setState(next);
+    draw();
+  }
+
+  function select(name) {
+    if (selected === name) return;
+    selected = name;
+    configureGame();
+    reset();
+  }
+
+  function configureGame() {
+    const blocks = selected === 'blocks';
+    stage.dataset.game = selected;
+    for (const button of games) button.setAttribute('aria-pressed', button.dataset.game === selected);
+    rules.textContent = descriptions[selected] + ' P — пауза.';
+    up.textContent = blocks ? '↻' : '↑';
+    up.setAttribute('aria-label', blocks ? 'Повернуть фигуру' : 'Вверх');
+    drop.hidden = !blocks;
+  }
+
+  function update() {
+    draw();
+    if (game.result) {
+      clearTimeout(timer);
+      setState('ended');
+    }
+  }
+
+  function schedule() {
+    timer = setTimeout(() => {
+      if (!dialog.open || state !== 'playing') return;
+      game.tick();
+      update();
+      if (state === 'playing') schedule();
+    }, game.delay);
+  }
+
+  function playAction(action) {
+    if (state !== 'playing') return;
+    game.action(action);
+    update();
+  }
+
+  function togglePause() {
+    if (state === 'playing') {
+      clearTimeout(timer);
+      setState('paused');
+    } else if (state === 'paused') {
+      setState('playing');
+      schedule();
+    }
+  }
+
+  launcher.addEventListener('click', () => {
+    if (dialog.open) return;
+    reset();
+    dialog.showModal();
+    start.focus();
+  });
+  dialog.addEventListener('close', () => {
+    if (!dialog.open) clearTimeout(timer);
+  });
+  games.forEach(button => button.addEventListener('click', () => select(button.dataset.game)));
+  controls.forEach(button => button.addEventListener('click', () => playAction(button.dataset.action)));
+  start.addEventListener('click', () => {
+    reset('playing');
+    board.focus({ preventScroll: true });
+    schedule();
+  });
+  pause.addEventListener('click', togglePause);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && dialog.open && state === 'playing') togglePause();
+  });
+  dialog.addEventListener('keydown', event => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.code === 'KeyP') {
+      event.preventDefault();
+      if (!event.repeat) togglePause();
+      return;
+    }
+    const action = keyActions[event.key];
+    if (!action || state !== 'playing' || (action === 'drop' && selected !== 'blocks')) return;
+    if (action === 'drop' && event.target.closest('button')) return;
+    event.preventDefault();
+    if (event.repeat && (action === 'drop' || (selected === 'blocks' && action === 'up'))) return;
+    playAction(action);
+  });
+
+  configureGame();
+})();
