@@ -7,6 +7,7 @@
   <meta name="description" content="Единая сеть архивов Объекта №6">
   <title>Сеть Объекта №6</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="microreader.css">
   <link rel="stylesheet" href="logo.css">
   <link rel="stylesheet" href="keyboard.css">
 </head>
@@ -31,6 +32,7 @@
       <button class="nav-item" data-view="mail"><span>□</span><b>Почтовый узел</b><em>4</em></button>
       <button class="nav-item" data-view="projects"><span>◇</span><b>Проекты</b><em>7</em></button>
       <button class="nav-item" data-view="intercepts"><span>⌁</span><b>Перехваты</b><em class="alert-count">3</em></button>
+      <button class="nav-item microreader-link" id="microreaderButton"><span>▣</span><b>Микроридер</b><em>4</em></button>
       <a class="nav-item fourth-link" href="fourth.html?connect=1"><img class="nav-logo" src="assets/g4-logo-red-v1.png" alt=""><b>Четвёртая Передача</b><em>NEW</em></a>
       <div class="nav-label">КОНТУРЫ</div>
       <button class="node-filter active" data-node="all"><i class="amber"></i> Все узлы</button>
@@ -132,7 +134,27 @@
     </form>
   </dialog>
 
+  <dialog id="microreaderDialog" class="microreader-dialog" aria-labelledby="microreaderTitle">
+    <section class="microreader-machine">
+      <header>
+        <div><small>NODE-06 // PRESS ARCHIVE</small><h2 id="microreaderTitle">ОПТИЧЕСКИЙ МИКРОРИДЕР</h2></div>
+        <button id="closeMicroreader" type="button" aria-label="Закрыть микроридер">×</button>
+      </header>
+      <div class="microreader-status"><span><i></i> ЛАМПА: СТАБИЛЬНО</span><b id="clippingTitle">ВЫРЕЗКА 1</b><span id="clippingCounter">01 / 04</span></div>
+      <figure class="microreader-stage" aria-live="polite">
+        <div class="microreader-glass"><img id="clippingImage" src="assets/microreader/clipping-1.png" alt="Газетная вырезка 1 из 4"></div>
+        <figcaption id="clippingCaption">АРХИВНАЯ КОПИЯ // ЛИСТ 01</figcaption>
+      </figure>
+      <footer>
+        <button id="previousClipping" type="button">ПРЕДЫДУЩАЯ</button>
+        <div class="microreader-dots" id="clippingDots" aria-label="Выбор вырезки"></div>
+        <button id="nextClipping" type="button">СЛЕДУЮЩАЯ</button>
+      </footer>
+    </section>
+  </dialog>
+
   <script src="app.js"></script>
+  <script src="microreader.js"></script>
   <script src="keyboard.js"></script>
 </body>
 </html>
