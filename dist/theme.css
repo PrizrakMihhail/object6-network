@@ -1,0 +1,183 @@
+.theme-switch {
+  display: flex;
+  flex: 0 0 auto;
+  margin-inline: .5rem;
+  padding: 2px;
+  border: 1px solid var(--line2);
+  background: var(--bg);
+}
+
+.theme-switch button {
+  min-height: 2.15rem;
+  padding: .2rem clamp(.32rem, 1vw, .7rem);
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: 500 .72rem var(--mono);
+  cursor: pointer;
+}
+
+.theme-switch button[aria-pressed="true"] {
+  background: var(--panel2);
+  color: var(--amber);
+  box-shadow: inset 0 -1px var(--amber);
+}
+
+@media (min-width: 801px) and (max-width: 1100px) {
+  .topbar .system-line .desktop-only { display: none; }
+  .topbar .system-line { gap: .75rem; }
+}
+
+@media (max-width: 800px) {
+  .topbar .theme-switch { margin-inline: auto .35rem; }
+  .topbar .user-chip { min-width: 2.6rem; margin-left: 0; padding-inline: .7rem; }
+}
+
+@media (max-width: 400px) {
+  .topbar .brand { gap: .45rem; padding-inline: .55rem; }
+  .topbar .brand b { font-size: .875rem; letter-spacing: .08em; }
+  .topbar .brand-mark { width: 1.65rem; height: 1.65rem; }
+}
+
+html[data-theme="terminal"] {
+  --bg: #090603;
+  --panel: #140c04;
+  --panel2: #271708;
+  --line: #523314;
+  --line2: #875222;
+  --text: #f2bb78;
+  --muted: #bc8b56;
+  --amber: #ffb746;
+  --orange: #ee962f;
+  --green: #b7d67a;
+  --cyan: #82cabb;
+  --red: #ff7566;
+  --display: "IBM Plex Mono", monospace;
+  --mono: "IBM Plex Mono", monospace;
+  color-scheme: dark;
+  background: var(--bg);
+  color: var(--text);
+
+  body {
+    background: radial-gradient(ellipse at 50% 22%, #512c12 0, #211105 37%, #0a0603 76%);
+    color: var(--text);
+  }
+
+  .noise, .crt {
+    opacity: .23;
+    background: repeating-linear-gradient(0deg, transparent 0 3px, #07040188 3px 4px);
+  }
+
+  :is(.topbar, .sidebar, .terminal-status, .activity-panel) {
+    border-color: var(--line);
+  }
+
+  .topbar { background: #100903f5; }
+  .sidebar { background: #130b04f5; scrollbar-color: #875222 #130b04; }
+  .brand, .brand b, .hero-row h1, .section-head h2 { color: #ffbf6e; text-shadow: 0 0 .7rem #ed8f374d; }
+  .hero-row h1 span { color: #d98c40; }
+  .brand-mark { color: var(--amber); border-color: var(--line2); background: #281506; }
+  .network-seal { border-color: var(--line2); }
+  .network-seal::before, .network-seal::after { border-color: var(--line); }
+  .network-seal div { color: #b77a3f; }
+  .network-seal span { color: var(--green); }
+
+  :is(.lead, .nav-item, .node-filter, .nav-label, .user-chip, .terminal-status, .system-line,
+      .status-strip span, .status-strip small, .activity-feed p, .activity-feed time, .doc-title small,
+      .doc-date, .doc-level, .filters button, .log-button, .search input) {
+    color: var(--muted);
+  }
+  .search input::placeholder { color: var(--muted); }
+
+  .user-chip b { color: var(--amber); }
+  :is(.nav-item, .node-filter):is(:hover, .active, [aria-current]) { color: #ffd298; }
+  .sidebar.showing-leisure .nav-item.active:not(:hover) { color: var(--muted); }
+  .nav-item em { background: #2e1909; color: #db9c60; }
+  .nav-item .alert-count { color: var(--red); }
+  .meter, .terminal-status .meter { background: #34200b; }
+  .status-strip { background: #160d04; }
+  .status-strip b, .panel-title, .activity-feed b, .terminal-status b { color: #edb46c; }
+  .status-strip .warning b, .activity-feed .hot b, .doc-level.critical { color: var(--red); }
+  .activity-feed .cyan b { color: var(--cyan); }
+  .doc-row { border-bottom-color: var(--line); }
+  .doc-row[data-node] .doc-icon { color: #edb46c; border-color: var(--line2); }
+  .filters button.active, .segmented button.active { color: #ffd298; background: #2b190a; }
+  .filters button b { background: #311c0b; }
+  :is(.search, .doc-level, .log-button) { border-color: var(--line2); }
+
+  .routing-map {
+    background: linear-gradient(#d38a3226 1px, transparent 1px),
+      linear-gradient(90deg, #d38a3226 1px, transparent 1px),
+      radial-gradient(ellipse at center, #3a210c, #130b04 75%);
+    background-size: 24px 24px, 24px 24px, 100% 100%;
+  }
+  .routing-node { background: #1a0e05; border-left-color: var(--line2); color: var(--text); }
+  .routing-hub, .routing-node:is(:hover, :focus-visible) { background: #311b0a; }
+  .routing-node[data-condition="warn"] { border-left-color: var(--amber); }
+  .routing-node[data-condition="critical"] { border-left-color: var(--red); }
+  .routing-description, .routing-switch button { color: var(--muted); }
+  .routing-status { color: var(--green); }
+  .routing-node[data-condition="warn"] .routing-status { color: var(--amber); }
+  .routing-node[data-condition="critical"] .routing-status { color: var(--red); }
+  .routing-lines line { stroke: #90623b; }
+  .routing-lines .routing-line-warning { stroke: var(--amber); }
+
+  :is(.document-dialog, .access-dialog, .microreader-dialog, .leisure-dialog, .access-gate)::backdrop {
+    background: #080400d9;
+  }
+  :is(.doc-window, .access-dialog form, .microreader-machine, .leisure-dialog, .gate-frame) {
+    color: var(--text);
+    background: var(--panel);
+    border-color: var(--line2);
+    box-shadow: 0 0 .9rem #db812626, 0 1rem 4rem #000;
+  }
+  :is(.doc-window > header, .doc-window > footer, .microreader-machine > header, .leisure-header, .leisure-titlebar) {
+    background: linear-gradient(90deg, #382008, #1b1005);
+    border-color: var(--line2);
+    color: #ffbd6b;
+  }
+  :is(.doc-window article, .doc-window footer, .doc-meta, .access-dialog p:not(.eyebrow), .reactor-instructions) {
+    color: #d8a775;
+  }
+  .doc-window article h3 { border-color: var(--line2); color: #ffbf6e; }
+  :is(.doc-meta b, .gate-kicker, .gate-copy) { color: var(--text); }
+  :is(dialog button, .gate-cancel, .leisure-card button) { border-color: var(--line2); color: #ffd197; background: #291708; }
+  :is(dialog button, .leisure-card button):not(:disabled):hover { background: #44270f; color: #ffe3b8; }
+  .access-dialog form button { background: #db8d37; color: #130803; }
+  :is(.access-dialog label, .doc-meta, .microreader-status, .microreader-machine > footer) { border-color: var(--line); }
+  .routing-access h2, .reactor-emergency { color: var(--red); }
+  .microreader-stage { background: #160c04; }
+  .microreader-glass { background: #100903; }
+  .microreader-glass img { filter: sepia(.35) brightness(.9); }
+  .microreader-status, .microreader-stage figcaption { color: #d7a168; }
+
+  :is(#leisure, .leisure-dialog) {
+    --window-face: #241407;
+    --window-inset: #140b04;
+    --window-raised: #925b2c #090502 #090502 #925b2c;
+    --window-sunken: #090502 #73451f #73451f #090502;
+    --window-muted: #c5976b;
+    color: var(--text);
+    background: var(--window-face);
+  }
+  .leisure-card h2 { color: #f6b665; }
+  .leisure-icon { filter: sepia(1) saturate(1.8); }
+  .mines-grid button:is([data-state="open"], [data-state="mine"]) { background: #1b0e05; color: #ffd396; }
+  .mines-grid button[data-state="mine"] { color: var(--red); }
+  .reactor-rotors { border-color: var(--line2); background: repeating-linear-gradient(0deg, #180d04 0 7px, #201205 7px 8px); }
+  .reactor-disc { border-color: #936633; background: repeating-conic-gradient(#a57b50 0deg 1deg, #4b2d13 1deg 15deg); }
+  .reactor-rotor { border-color: #936633; background: #211006; }
+  .reactor-face { background: radial-gradient(circle at 38% 27%, #624220, #211104 72%); }
+  :is(.reactor-terminal-body, .reactor-layer-mark, .reactor-readout dl div) { color: var(--text); border-color: var(--line2); background: #2b180a; }
+  :is(.reactor-terminal-label, .reactor-readout dt) { color: #d3a571; }
+  :is(.reactor-outcome, .reactor-readout dd) { color: var(--cyan); }
+
+  :is(.hack-view, .vault, .mail-message, .hack-head, .vault-head, .gate-actions, .password-panel) {
+    border-color: var(--line2);
+    color: var(--text);
+    background-color: var(--panel);
+  }
+  :is(.hack-head h1, .vault-head h1, .mail-message h2, .mail-body, .mail-body p, .gate-frame h1) { color: var(--text); }
+  .keyboard-help, .keyboard-help-toggle { background: var(--bg); color: var(--amber); border-color: var(--line2); }
+  :focus-visible { outline-color: var(--amber) !important; }
+}

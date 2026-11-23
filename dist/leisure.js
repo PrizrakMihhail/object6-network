@@ -54,9 +54,17 @@
   const randomItem = items => items[Math.floor(Math.random() * items.length)];
 
   function drawCell(x, y, color) {
-    context.fillStyle = color;
+    context.fillStyle = document.documentElement.dataset.theme === 'terminal'
+      ? terminalPieces[color] || color
+      : color;
     context.fillRect(x * cellSize + 1, y * cellSize + 1, cellSize - 2, cellSize - 2);
   }
+
+  const terminalPieces = {
+    '#75bfc0': '#f1b361', '#e0b05d': '#e5a14f', '#db8a64': '#c68445',
+    '#899bc9': '#df9541', '#b299ca': '#cf9a60', '#a5c879': '#efc381',
+    '#d97e81': '#b77238', '#efb24f': '#ffd892', '#cadea4': '#f2b364', '#83a658': '#ad692f'
+  };
 
   const shapes = [
     { cells: [[0, 0], [1, 0], [2, 0], [3, 0]], color: '#75bfc0' }, // I
@@ -333,9 +341,10 @@
       minesFlags.textContent = game.flagsLeft;
       return;
     }
-    context.fillStyle = '#090e0b';
+    const terminal = document.documentElement.dataset.theme === 'terminal';
+    context.fillStyle = terminal ? '#100903' : '#090e0b';
     context.fillRect(0, 0, board.width, board.height);
-    context.fillStyle = '#243128';
+    context.fillStyle = terminal ? '#422610' : '#243128';
     for (let x = 1; x < game.width; x += 1) context.fillRect(x * cellSize, 0, 1, board.height);
     for (let y = 1; y < game.height; y += 1) context.fillRect(0, y * cellSize, board.width, 1);
     game.draw();
