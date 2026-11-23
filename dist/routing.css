@@ -129,6 +129,34 @@
   margin-top: .65rem;
 }
 
+.routing-access form {
+  text-align: center;
+}
+
+.routing-access-icon {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: end center;
+  width: 3rem;
+  height: 2.65rem;
+  margin: 0 auto .75rem;
+  padding-bottom: .18rem;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: #e67965;
+  color: #ffc0a8;
+  font: 600 1.35rem/1 var(--mono);
+}
+
+.routing-access-icon::before {
+  content: "";
+  position: absolute;
+  inset: 4px 4px 2px;
+  z-index: -1;
+  clip-path: inherit;
+  background: #261817;
+}
+
 .routing-access h2 {
   color: #ef8278;
 }
