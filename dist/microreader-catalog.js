@@ -38,15 +38,5 @@ window.MICROREADER_SLIDES=[
     "src": "assets/microreader/clipping-8.png",
     "title": "ВЫРЕЗКА 8",
     "caption": "АРХИВНАЯ КОПИЯ // ЛИСТ 08"
-  },
-  {
-    "src": "assets/microreader/clipping-9.png",
-    "title": "ВЫРЕЗКА 9",
-    "caption": "АРХИВНАЯ КОПИЯ // ЛИСТ 09"
-  },
-  {
-    "src": "assets/microreader/clipping-10.png",
-    "title": "ВЫРЕЗКА 10",
-    "caption": "АРХИВНАЯ КОПИЯ // ЛИСТ 10"
   }
 ];

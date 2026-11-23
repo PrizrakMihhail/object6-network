@@ -6,5 +6,5 @@ export async function catalog(directory){return (await readdir(directory,{withFi
 const slides=await catalog(new URL('assets/microreader/',dist));
 await writeFile(new URL('microreader-catalog.js',dist),'window.MICROREADER_SLIDES='+JSON.stringify(slides,null,2)+';\n');
 const page=new URL('index.html',dist),html=await readFile(page,'utf8'),total=String(slides.length).padStart(2,'0');
-await writeFile(page,html.replace(/(id="microreaderButton"[^\n]*?<em>)\d+(<\/em>)/,'$1'+slides.length+'$2').replace(/(id="clippingCounter">)[^<]*/,'$1'+(slides.length?'01':'00')+' / '+total));
+await writeFile(page,html.replace(/(id="microreaderButton"[^\n]*?<em>)\d+(<\/em>)/,(_,a,b)=>a+slides.length+b).replace(/(id="clippingCounter">)[^<]*/,(_,a)=>a+(slides.length?'01':'00')+' / '+total).replace(/alt="Газетная вырезка \d+ из \d+"/,`alt="Газетная вырезка 1 из ${slides.length}"`));
 console.log(`Microreader: ${slides.length} images`);
