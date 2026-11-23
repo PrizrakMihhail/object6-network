@@ -326,6 +326,96 @@
   let game;
   let state;
   let timer;
+  const leaderboard = document.getElementById('leisureLeaderboard');
+  const leaderboardStatus = document.getElementById('leaderboardStatus');
+  const leaderboardRows = document.getElementById('leaderboardRows');
+  const scoreDialog = document.getElementById('scoreDialog');
+  const scoreForm = document.getElementById('scoreForm');
+  const scoreName = document.getElementById('scoreName');
+  const scoreError = document.getElementById('scoreError');
+  const scoreSave = document.getElementById('scoreSave');
+  const scoreSkip = document.getElementById('scoreSkip');
+  let leaderboardRequest = 0;
+  let offeredRound;
+  let pendingScore;
+
+  function renderLeaderboard(rows) {
+    leaderboardRows.replaceChildren(...rows.map(({ player_name, score }, index) => {
+      const row = document.createElement('tr');
+      for (const value of [index + 1, player_name, score]) row.insertCell().textContent = value;
+      return row;
+    }));
+    leaderboardStatus.textContent = rows.length ? '' : 'Результатов пока нет.';
+  }
+
+  function qualifies(rows, score) {
+    return rows.length < 5 || score > rows[4].score;
+  }
+
+  async function loadLeaderboard(checkRound) {
+    if (selected === 'mines') return;
+    const requestId = ++leaderboardRequest;
+    const gameName = selected;
+    leaderboardStatus.textContent = 'Загрузка…';
+    try {
+      const api = await import('./scores.js');
+      const rows = await api.topScores(gameName);
+      if (requestId !== leaderboardRequest || !dialog.open) return;
+      renderLeaderboard(rows);
+      if (checkRound && game === checkRound && offeredRound !== checkRound && qualifies(rows, checkRound.score)) {
+        offeredRound = checkRound;
+        pendingScore = { game: gameName, score: checkRound.score };
+        scoreForm.reset();
+        scoreError.textContent = '';
+        document.getElementById('scoreToSave').textContent = checkRound.score;
+        scoreDialog.showModal();
+      }
+    } catch {
+      if (requestId === leaderboardRequest && dialog.open) {
+        leaderboardStatus.textContent = 'Таблица недоступна. Попробуйте обновить.';
+      }
+    }
+  }
+
+  document.getElementById('leaderboardRefresh').addEventListener('click', () => {
+    loadLeaderboard(state === 'ended' ? game : null);
+  });
+  scoreSkip.addEventListener('click', () => scoreDialog.close());
+  scoreDialog.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && scoreSave.disabled) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+  scoreForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (scoreSave.disabled || !pendingScore) return;
+    const name = scoreName.value.trim();
+    if (!name || Array.from(name).length > 5) {
+      scoreError.textContent = 'Введите имя длиной от 1 до 5 символов.';
+      return;
+    }
+    const entry = pendingScore;
+    scoreSave.disabled = scoreSkip.disabled = true;
+    scoreError.textContent = 'Сохранение…';
+    try {
+      const api = await import('./scores.js');
+      const rows = await api.topScores(entry.game);
+      if (!qualifies(rows, entry.score)) {
+        renderLeaderboard(rows);
+        scoreError.textContent = 'Этот результат уже вне топ‑5.';
+        return;
+      }
+      await api.saveScore(entry.game, entry.score, name);
+      pendingScore = null;
+      scoreDialog.close();
+      if (dialog.open && selected === entry.game) loadLeaderboard();
+    } catch {
+      scoreError.textContent = 'Не удалось сохранить результат. Попробуйте ещё раз.';
+    } finally {
+      scoreSave.disabled = scoreSkip.disabled = false;
+    }
+  });
 
   function draw() {
     if (selected === 'mines') {
@@ -363,15 +453,15 @@
   function setState(next) {
     state = next;
     const running = state === 'playing';
-    message.textContent = { playing: '', paused: 'Пауза', ended: game.result }[state];
-    start.textContent = state === 'ended' ? 'Играть снова' : 'Заново';
+    message.textContent = { ready: 'Игра не началась', playing: '', paused: 'Пауза', ended: game.result }[state];
+    start.textContent = state === 'ready' || state === 'ended' ? 'Начать игру' : 'Заново';
     pause.textContent = state === 'paused' ? 'Продолжить' : 'Пауза';
     pause.disabled = !running && state !== 'paused';
     controls.forEach(button => { button.disabled = !running; });
     flagMode.disabled = !running;
   }
 
-  function reset() {
+  function reset(next) {
     clearTimeout(timer);
     game = factories[selected]();
     if (selected === 'mines') {
@@ -380,7 +470,7 @@
       board.width = game.width * cellSize;
       board.height = game.height * cellSize;
     }
-    setState('playing');
+    setState(next);
     draw();
   }
 
@@ -392,6 +482,9 @@
     board.hidden = mines;
     minesGrid.hidden = !mines;
     minesTools.hidden = !mines;
+    leaderboard.hidden = mines;
+    leaderboardRows.replaceChildren();
+    leaderboardStatus.textContent = '';
     title.textContent = titles[selected];
     rules.textContent = descriptions[selected] + (mines ? '' : ' P — пауза.');
     up.textContent = blocks ? '↻' : '↑';
@@ -404,6 +497,7 @@
     if (game.result) {
       clearTimeout(timer);
       setState('ended');
+      loadLeaderboard(game);
     }
   }
 
@@ -479,17 +573,20 @@
     if (dialog.open) return;
     selected = button.dataset.launch;
     configureGame();
-    reset();
+    reset('ready');
     dialog.showModal();
-    focusGame();
-    schedule();
+    start.focus();
+    loadLeaderboard();
   }));
   dialog.addEventListener('close', () => {
-    if (!dialog.open) clearTimeout(timer);
+    if (!dialog.open) {
+      clearTimeout(timer);
+      leaderboardRequest++;
+    }
   });
   controls.forEach(button => button.addEventListener('click', () => playAction(button.dataset.action)));
   start.addEventListener('click', () => {
-    reset();
+    reset('playing');
     focusGame();
     schedule();
   });

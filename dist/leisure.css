@@ -185,7 +185,7 @@
 .leisure-stage canvas[hidden],
 .mines-grid[hidden],
 .mines-tools[hidden],
-.leisure-dialog[data-game="mines"] :is(.leisure-stats, .leisure-controls, #leisurePause) {
+.leisure-dialog[data-game="mines"] :is(.leisure-stats, .leisure-control-panel, #leisurePause) {
   display: none;
 }
 
@@ -342,7 +342,26 @@
 }
 
 .leisure-controls {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 2.4rem));
+  justify-content: start;
+  gap: .25rem;
+}
+
+.leisure-control-panel, .leisure-leaderboard {
+  padding: .55rem .65rem;
+  border: 1px solid var(--line2);
+  background: var(--window-inset);
+}
+
+.leisure-control-panel h3, .leisure-leaderboard h3 {
+  margin: 0 0 .4rem;
+  font-size: .875rem;
+  color: var(--text);
+}
+
+.leisure-controls button {
+  min-height: 2rem;
+  padding: .2rem .35rem;
 }
 
 .leisure-controls [data-action="down"] {
@@ -358,6 +377,32 @@
   color: var(--window-muted);
   font-size: .875rem;
   line-height: 1.5;
+}
+
+.leisure-leaderboard > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.leisure-leaderboard > div button { min-height: 1.85rem; padding: .15rem .45rem; }
+.leisure-leaderboard table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.leisure-leaderboard :is(th, td) { padding: .3rem .2rem; text-align: left; border-bottom: 1px solid var(--line); }
+.leisure-leaderboard :is(th, td):last-child { text-align: right; }
+.leisure-leaderboard th, #leaderboardStatus, #scoreError { font-size: .75rem; color: var(--window-muted); }
+:is(#leaderboardStatus, #scoreError):empty { display: none; }
+
+.leisure-score-dialog { width: min(22rem, calc(100% - 1.5rem)); }
+.leisure-score-dialog form { display: grid; gap: .55rem; padding: .85rem; }
+.leisure-score-dialog p { margin: 0; }
+.leisure-score-dialog input {
+  width: 100%;
+  min-height: 2.4rem;
+  padding: .3rem .5rem;
+  border: 1px solid var(--line2);
+  background: var(--window-inset);
+  color: var(--text);
 }
 
 @media (max-width: 800px) {
@@ -396,7 +441,7 @@
   }
 
   .leisure-controls {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 2.4rem));
   }
 
   .leisure-controls [data-action="down"] {

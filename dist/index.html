@@ -373,23 +373,48 @@
           <div><dt>Рекорд</dt><dd id="leisureBest">0</dd></div>
         </dl>
         <div class="leisure-actions">
-          <button type="button" id="leisureStart">Заново</button>
+          <button type="button" id="leisureStart">Начать игру</button>
           <button type="button" id="leisurePause" disabled>Пауза</button>
         </div>
-        <div class="leisure-controls" role="group" aria-label="Управление игрой">
+        <section class="leisure-control-panel" aria-label="Управление игрой">
+          <h3>Управление</h3>
+          <div class="leisure-controls">
           <button type="button" data-action="left" aria-label="Влево">←</button>
           <button type="button" data-action="up" id="leisureUp" aria-label="Повернуть фигуру">↻</button>
           <button type="button" data-action="right" aria-label="Вправо">→</button>
           <button type="button" data-action="down" aria-label="Вниз">↓</button>
           <button type="button" data-action="drop">Сбросить</button>
-        </div>
+          </div>
+        </section>
         <div id="minesTools" class="mines-tools" hidden>
           <span>Флажков осталось: <b id="minesFlags">10</b></span>
           <button type="button" id="minesFlagMode" aria-pressed="false">Режим флажков</button>
         </div>
         <p class="leisure-rules" id="leisureRules"></p>
+        <section class="leisure-leaderboard" id="leisureLeaderboard" aria-labelledby="leaderboardTitle" hidden>
+          <div><h3 id="leaderboardTitle">Таблица лидеров</h3><button type="button" id="leaderboardRefresh" aria-label="Обновить таблицу лидеров">↻</button></div>
+          <p id="leaderboardStatus" role="status"></p>
+          <table aria-labelledby="leaderboardTitle">
+            <thead><tr><th scope="col">Место</th><th scope="col">Имя</th><th scope="col">Счёт</th></tr></thead>
+            <tbody id="leaderboardRows"></tbody>
+          </table>
+        </section>
       </div>
     </div>
+  </dialog>
+
+  <dialog id="scoreDialog" class="leisure-dialog leisure-score-dialog" aria-labelledby="scoreDialogTitle">
+    <header class="leisure-header"><h2 id="scoreDialogTitle">Вы в топ‑5</h2></header>
+    <form id="scoreForm">
+      <p>Результат: <b id="scoreToSave"></b></p>
+      <label for="scoreName">Имя до 5 символов</label>
+      <input id="scoreName" name="name" maxlength="5" required autocomplete="off" autofocus>
+      <p id="scoreError" role="status"></p>
+      <div class="leisure-actions">
+        <button type="submit" id="scoreSave">Сохранить</button>
+        <button type="button" id="scoreSkip">Пропустить</button>
+      </div>
+    </form>
   </dialog>
 
   <script src="app.js"></script>
