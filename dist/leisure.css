@@ -343,7 +343,7 @@
 
 .leisure-controls {
   grid-template-columns: repeat(3, minmax(0, 2.4rem));
-  justify-content: start;
+  justify-content: center;
   gap: .25rem;
 }
 
