@@ -176,6 +176,77 @@
   box-shadow: inset 0 0 0 2px #151d17;
 }
 
+.leisure-icon-mines {
+  color: #e8bd74;
+  text-align: center;
+  font: 1.75rem/2rem system-ui, sans-serif;
+}
+
+.leisure-stage canvas[hidden],
+.mines-grid[hidden],
+.mines-tools[hidden],
+.leisure-dialog[data-game="mines"] :is(.leisure-stats, .leisure-controls, #leisurePause) {
+  display: none;
+}
+
+.leisure-dialog[data-game="mines"] .leisure-actions {
+  grid-template-columns: 1fr;
+}
+
+.leisure-stage[data-game="mines"] .leisure-message {
+  grid-area: 2 / 1;
+  margin-top: .5rem;
+}
+
+.leisure-stage[data-game="mines"] .leisure-message:empty {
+  display: none;
+}
+
+.mines-grid {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  width: 100%;
+  border: 2px solid;
+  border-color: var(--window-sunken);
+  background: var(--window-inset);
+}
+
+.mines-grid button {
+  min-height: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  line-height: 1;
+}
+
+.mines-grid button:is([data-state="open"], [data-state="mine"]) {
+  border: 1px solid var(--line);
+  background: #101612;
+  color: #bfdbad;
+  cursor: default;
+}
+
+.mines-grid button[data-state="mine"] {
+  color: #ff9289;
+}
+
+.mines-grid button[data-state="flagged"] {
+  color: #e8bd74;
+}
+
+.mines-tools {
+  display: grid;
+  gap: .5rem;
+  color: var(--window-muted);
+  font-size: .875rem;
+}
+
+#minesFlagMode[aria-pressed="true"] {
+  border-color: var(--window-sunken);
+  color: #e8bd74;
+  background: #3c3424;
+}
+
 .leisure-card button:hover,
 .leisure-dialog button:not(:disabled):hover {
   background: linear-gradient(#414b39, #293226);

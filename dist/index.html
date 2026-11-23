@@ -135,6 +135,12 @@
             <button type="button" data-launch="snake" aria-haspopup="dialog" aria-describedby="snakeTitle">Играть</button>
           </section>
           <section class="leisure-card">
+            <span class="leisure-icon leisure-icon-mines" aria-hidden="true">⚑</span>
+            <h2 id="minesTitle">Сапёр</h2>
+            <p>Откройте безопасные клетки на поле 9×9.</p>
+            <button type="button" data-launch="mines" aria-haspopup="dialog" aria-describedby="minesTitle">Играть</button>
+          </section>
+          <section class="leisure-card">
             <span class="leisure-icon leisure-icon-reader" aria-hidden="true"></span>
             <h2 id="microreaderCardTitle">Микроридер</h2>
             <p>Просматривайте газетные вырезки из архива.</p>
@@ -192,6 +198,7 @@
     <div class="leisure-layout">
       <div class="leisure-stage" data-game="blocks">
         <canvas id="leisureBoard" tabindex="0" aria-label="Игровое поле" aria-describedby="leisureRules"></canvas>
+        <div id="minesGrid" class="mines-grid" role="group" aria-label="Поле сапёра, 9 на 9" aria-describedby="leisureRules" hidden></div>
         <div id="leisureMessage" class="leisure-message" role="status"></div>
       </div>
       <div class="leisure-console">
@@ -209,6 +216,10 @@
           <button type="button" data-action="right" aria-label="Вправо">→</button>
           <button type="button" data-action="down" aria-label="Вниз">↓</button>
           <button type="button" data-action="drop">Сбросить</button>
+        </div>
+        <div id="minesTools" class="mines-tools" hidden>
+          <span>Флажков осталось: <b id="minesFlags">10</b></span>
+          <button type="button" id="minesFlagMode" aria-pressed="false">Режим флажков</button>
         </div>
         <p class="leisure-rules" id="leisureRules"></p>
       </div>
