@@ -36,11 +36,13 @@
       <button class="nav-item" data-view="intercepts"><span>⌁</span><b>Перехваты</b><em class="alert-count">3</em></button>
       <a class="nav-item fourth-link" href="fourth.html?connect=1"><img class="nav-logo" src="assets/g4-logo-red-v1.png" alt=""><b>Четвёртая Передача</b><em>OUT</em></a>
       <a class="nav-item leisure-link" id="leisureTab" href="#leisure" aria-controls="leisure"><span aria-hidden="true">▦</span><b>Досуг</b></a>
-      <div class="nav-label">КОНТУРЫ</div>
-      <button class="node-filter active" data-node="all"><i class="amber"></i> Все узлы</button>
-      <button class="node-filter" data-node="maztech"><i class="orange"></i> MAZTECH</button>
-      <button class="node-filter" data-node="matsumoto"><i class="cyan"></i> MATSUMOTO</button>
-      <button class="node-filter" data-node="field"><i class="green"></i> ПОЛЕВЫЕ</button>
+      <div class="network-contours">
+        <div class="nav-label">КОНТУРЫ</div>
+        <button class="node-filter active" data-node="all"><i class="amber"></i> Все узлы</button>
+        <button class="node-filter" data-node="maztech"><i class="orange"></i> MAZTECH</button>
+        <button class="node-filter" data-node="matsumoto"><i class="cyan"></i> MATSUMOTO</button>
+        <button class="node-filter" data-node="field"><i class="green"></i> ПОЛЕВЫЕ</button>
+      </div>
       <div class="terminal-status">
         <small>СОЕДИНЕНИЕ</small><b><i></i> СТАБИЛЬНО</b>
         <div class="meter"><span></span></div>
@@ -116,19 +118,22 @@
       </section>
       </div>
       <section id="leisure" aria-labelledby="leisureHeading" hidden>
-        <div class="hero-row"><h1 id="leisureHeading" tabindex="-1">ДОСУГ</h1></div>
+        <header class="leisure-titlebar"><h1 id="leisureHeading" tabindex="-1">Досуг</h1></header>
         <div class="leisure-games">
           <section class="leisure-card">
+            <span class="leisure-icon leisure-icon-blocks" aria-hidden="true"></span>
             <h2 id="blocksTitle">Блоки</h2>
             <p>Вращайте падающие фигуры и заполняйте ряды.</p>
             <button type="button" data-launch="blocks" aria-haspopup="dialog" aria-describedby="blocksTitle">Играть</button>
           </section>
           <section class="leisure-card">
+            <span class="leisure-icon leisure-icon-snake" aria-hidden="true"></span>
             <h2 id="snakeTitle">Змейка</h2>
             <p>Собирайте янтарные клетки и избегайте столкновений.</p>
             <button type="button" data-launch="snake" aria-haspopup="dialog" aria-describedby="snakeTitle">Играть</button>
           </section>
           <section class="leisure-card">
+            <span class="leisure-icon leisure-icon-reader" aria-hidden="true"></span>
             <h2 id="microreaderCardTitle">Микроридер</h2>
             <p>Просматривайте газетные вырезки из архива.</p>
             <button type="button" id="microreaderButton" aria-haspopup="dialog" aria-describedby="microreaderCardTitle">Открыть</button>
