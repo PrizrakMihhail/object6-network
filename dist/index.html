@@ -268,32 +268,28 @@
       </header>
       <div class="reactor-panel">
         <section id="reactorPuzzle" aria-label="Восстановление цепи">
-          <p class="reactor-instructions">Поворачивайте роторы на четверть оборота. Совместите наконечник каждой жилы с янтарным контактом справа, чтобы замкнуть цепь от I до III.</p>
-          <div class="reactor-rotors" role="group" aria-label="Три ротора">
-            <button type="button" class="reactor-rotor" data-rotor="0" aria-describedby="rotorCoupling0">
-              <span class="reactor-bezel" aria-hidden="true">
-                <span class="reactor-contact"></span>
-                <span class="reactor-face"><span class="reactor-wire"></span></span>
-              </span>
-              <span class="reactor-rotor-name">Ротор I</span>
-              <span class="reactor-coupling" id="rotorCoupling0">Связан с II</span>
-            </button>
-            <button type="button" class="reactor-rotor" data-rotor="1" aria-describedby="rotorCoupling1">
-              <span class="reactor-bezel" aria-hidden="true">
-                <span class="reactor-contact"></span>
-                <span class="reactor-face"><span class="reactor-wire"></span></span>
-              </span>
-              <span class="reactor-rotor-name">Ротор II</span>
-              <span class="reactor-coupling" id="rotorCoupling1">Связан с III</span>
-            </button>
-            <button type="button" class="reactor-rotor" data-rotor="2" aria-describedby="rotorCoupling2">
-              <span class="reactor-bezel" aria-hidden="true">
-                <span class="reactor-contact"></span>
-                <span class="reactor-face"><span class="reactor-wire"></span></span>
-              </span>
-              <span class="reactor-rotor-name">Ротор III</span>
-              <span class="reactor-coupling" id="rotorCoupling2">Независимый</span>
-            </button>
+          <p class="reactor-instructions">Нажимайте на слои диска, чтобы повернуть их на четверть оборота. Соедините жилы от центра до янтарного контакта справа.</p>
+          <div class="reactor-rotors">
+            <div class="reactor-disc" role="group" aria-label="Три слоя диска реактора">
+              <span class="reactor-contact" aria-hidden="true"></span>
+              <button type="button" class="reactor-rotor" data-rotor="0" aria-label="Ротор I" aria-describedby="rotorCoupling0">
+                <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"></span></span>
+                <span class="reactor-layer-mark" aria-hidden="true">I</span>
+              </button>
+              <button type="button" class="reactor-rotor" data-rotor="1" aria-label="Ротор II" aria-describedby="rotorCoupling1">
+                <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"></span></span>
+                <span class="reactor-layer-mark" aria-hidden="true">II</span>
+              </button>
+              <button type="button" class="reactor-rotor" data-rotor="2" aria-label="Ротор III" aria-describedby="rotorCoupling2">
+                <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"></span></span>
+                <span class="reactor-layer-mark" aria-hidden="true">III</span>
+              </button>
+            </div>
+            <ul class="reactor-couplings">
+              <li id="rotorCoupling0"><b>I</b> Связан с II</li>
+              <li id="rotorCoupling1"><b>II</b> Связан с III</li>
+              <li id="rotorCoupling2"><b>III</b> Независимый</li>
+            </ul>
           </div>
         </section>
         <p id="reactorOutcome" class="reactor-outcome" role="status" hidden></p>

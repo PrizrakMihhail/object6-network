@@ -12,6 +12,7 @@
   const retry = document.getElementById('reactorRetry');
   const closeButton = dialog.querySelector('button[type="submit"]');
   const rotors = [...puzzle.querySelectorAll('[data-rotor]')];
+  const rotorNames = rotors.map(rotor => rotor.getAttribute('aria-label'));
 
   const storageKey = 'object6.reactor.stableUntil';
   const stabilityDuration = 5 * 60 * 1000;
@@ -38,7 +39,8 @@
 
   function showView(next) {
     view = next;
-    puzzle.hidden = next !== 'puzzle' && next !== 'complete';
+    puzzle.hidden = next === 'expired';
+    puzzle.dataset.mode = next;
     readout.hidden = next !== 'stable' && next !== 'complete';
     retry.hidden = next !== 'expired';
     outcome.textContent = {
@@ -46,6 +48,10 @@
       expired: 'Цепь реактора снова разомкнута'
     }[next] || '';
     outcome.hidden = !outcome.textContent;
+    if (next === 'stable') {
+      turns = rotors.map(() => 0);
+      renderAtRest();
+    }
   }
 
   function updateTelemetry(remaining) {
@@ -89,10 +95,19 @@
       conducting = conducting && position === 0;
       rotor.style.setProperty('--rotor-angle', `${turns[index] * 90}deg`);
       rotor.classList.toggle('reactor-conducting', conducting);
-      rotor.setAttribute('aria-label', `${rotor.querySelector('.reactor-rotor-name').textContent}, наконечник ${positions[position]}${conducting ? ', ток проходит' : ''}`);
+      rotor.setAttribute('aria-label', `${rotorNames[index]}, наконечник ${positions[position]}${conducting ? ', ток проходит' : ''}`);
       rotor.setAttribute('aria-disabled', String(view !== 'puzzle'));
+      rotor.tabIndex = view === 'puzzle' ? 0 : -1;
     });
     return conducting;
+  }
+
+  function renderAtRest() {
+    puzzle.classList.add('reactor-resetting');
+    renderRotors();
+    // Commit the angles before allowing transitions for player input.
+    void puzzle.offsetWidth;
+    puzzle.classList.remove('reactor-resetting');
   }
 
   function startRound() {
@@ -102,11 +117,7 @@
     }
     previousStart = [...turns];
     showView('puzzle');
-    puzzle.classList.add('reactor-resetting');
-    renderRotors();
-    // Commit the starting angles before allowing transitions for player input.
-    void puzzle.offsetWidth;
-    puzzle.classList.remove('reactor-resetting');
+    renderAtRest();
   }
 
   rotors.forEach((rotor, index) => rotor.addEventListener('click', () => {
@@ -114,7 +125,7 @@
     for (const linkedIndex of linkedRotors[index]) turns[linkedIndex]++;
     if (!renderRotors()) return;
     showView('complete');
-    rotors.forEach(control => control.setAttribute('aria-disabled', 'true'));
+    renderRotors();
     stableUntil = Date.now() + stabilityDuration;
     try {
       localStorage.setItem(storageKey, String(stableUntil));

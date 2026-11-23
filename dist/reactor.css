@@ -1,5 +1,6 @@
 .reactor-window {
   width: min(43rem, calc(100vw - 30px));
+  scrollbar-color: #4c6254 #121a15;
 }
 
 .reactor-panel {
@@ -16,72 +17,99 @@
 
 .reactor-rotors {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(.3rem, 2vw, 1rem);
-  padding: clamp(.4rem, 2.8vw, 1.125rem);
+  justify-items: center;
+  gap: .75rem;
+  padding: clamp(.65rem, 2.8vw, 1rem);
   border: 1px solid #36463d;
   background: repeating-linear-gradient(0deg, #0d1410 0 7px, #111a15 7px 8px);
   box-shadow: inset 0 0 1.25rem #050806;
 }
 
+.reactor-disc {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 16rem);
+  aspect-ratio: 1;
+  border: 1px solid #61746a;
+  border-radius: 50%;
+  background: repeating-conic-gradient(#72837a 0deg 1deg, #26372e 1deg 15deg);
+  box-shadow: 0 .55rem 1.1rem #000a, inset 0 0 .75rem #030605;
+}
+
+.reactor-contact {
+  position: absolute;
+  top: 50%;
+  right: .5%;
+  z-index: 4;
+  width: 4.5%;
+  aspect-ratio: 1;
+  border: 1px solid #fff1bf;
+  border-radius: 50%;
+  background: #eebd73;
+  box-shadow: 0 0 .4rem #f3bf65a6;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
 .reactor-rotor {
-  display: grid;
-  align-content: start;
-  justify-items: center;
-  gap: .3rem;
-  min-width: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: var(--layer-size);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid #53685c;
+  border-radius: 50%;
   padding: 0;
-  border: 0;
-  background: transparent;
+  background: #15201a;
   color: var(--text);
-  text-align: center;
+  box-shadow: 0 0 .35rem #000c, inset 0 0 0 2px #0b110e;
+  transform: translate(-50%, -50%);
   cursor: pointer;
   touch-action: manipulation;
+}
+
+.reactor-rotor[data-rotor="0"] {
+  --layer-size: 35%;
+  z-index: 3;
+}
+
+.reactor-rotor[data-rotor="1"] {
+  --layer-size: 63%;
+  z-index: 2;
+}
+
+.reactor-rotor[data-rotor="2"] {
+  --layer-size: 92%;
+  z-index: 1;
 }
 
 .reactor-rotor[aria-disabled="true"] {
   cursor: default;
 }
 
-.reactor-bezel {
-  position: relative;
-  display: block;
-  width: min(100%, 10.5rem);
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 1px solid #4c6558;
-  border-radius: 50%;
-  background: radial-gradient(circle, transparent 58%, #0009 59%, transparent 71%),
-    repeating-conic-gradient(#607268 0deg 1deg, #26372e 1deg 15deg);
-  box-shadow: 0 .35rem 1rem #0009, inset 0 0 .5rem #030605;
-}
-
-.reactor-rotor:not([aria-disabled="true"]):hover .reactor-bezel,
-.reactor-rotor:focus-visible .reactor-bezel {
-  border-color: #bd9b63;
-}
-
-.reactor-contact {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    radial-gradient(circle at 50% 7%, #75847b 0 2%, transparent 2.6%),
-    radial-gradient(circle at 50% 93%, #75847b 0 2%, transparent 2.6%),
-    radial-gradient(circle at 7% 50%, #75847b 0 2%, transparent 2.6%),
-    radial-gradient(circle at 93% 50%, #ffd487 0 2.5%, #8b6d36 3%, transparent 4.5%);
-  pointer-events: none;
+.reactor-rotor:not([aria-disabled="true"]):hover,
+.reactor-rotor:focus-visible {
+  border-color: #e4b671;
 }
 
 .reactor-face {
   position: absolute;
-  inset: 12%;
-  border: 1px solid #5e6d5e;
+  inset: 0;
+  overflow: hidden;
   border-radius: 50%;
-  background: radial-gradient(circle at center, #5b6457 0 8%, #222b23 9% 19%, transparent 20%),
-    radial-gradient(circle at 42% 32%, #38473c, #121b16 68%);
-  box-shadow: inset 0 0 0 .25rem #0e1512, 0 0 .4rem #0a0f0b;
+  background: radial-gradient(circle, #5b6457 0 6%, #222b23 7% 12%, transparent 13%),
+    radial-gradient(circle at 40% 28%, #42544a, #19261f 66%, #101914);
   transform: rotate(var(--rotor-angle, 0deg));
+}
+
+.reactor-face::before {
+  content: "";
+  position: absolute;
+  inset: 4%;
+  border: 1px dashed #91a19644;
+  border-radius: 50%;
 }
 
 .reactor-wire {
@@ -90,13 +118,17 @@
   --wire-bottom: #70472d;
   position: absolute;
   top: 50%;
-  left: 3%;
-  right: -9%;
-  height: 16%;
-  clip-path: polygon(0 15%, 81% 15%, 81% 0, 100% 50%, 81% 100%, 81% 85%, 0 85%);
-  background: linear-gradient(var(--wire-top) 10%, var(--wire-mid) 31%, var(--wire-bottom) 43%,
+  left: 48%;
+  right: -1%;
+  height: clamp(.55rem, 2vw, .86rem);
+  border-radius: 2px;
+  background: linear-gradient(var(--wire-top) 8%, var(--wire-mid) 29%, var(--wire-bottom) 43%,
     var(--wire-mid) 53%, var(--wire-top) 65%, var(--wire-bottom) 88%);
   transform: translateY(-50%);
+}
+
+.reactor-rotor[data-rotor="2"] .reactor-wire {
+  clip-path: polygon(0 12%, 89% 12%, 89% 0, 100% 50%, 89% 100%, 89% 88%, 0 88%);
 }
 
 .reactor-conducting .reactor-wire {
@@ -105,21 +137,52 @@
   --wire-bottom: #4d9eb8;
 }
 
-.reactor-conducting .reactor-contact {
-  background: radial-gradient(circle at 93% 50%, #fbffff 0 2.5%, #96ebff 3%, transparent 5.5%);
+.reactor-disc:has(.reactor-rotor[data-rotor="2"].reactor-conducting) .reactor-contact {
+  background: #c7f4ff;
+  border-color: #fff;
+  box-shadow: 0 0 .55rem #9de8ff;
 }
 
-.reactor-rotor-name {
-  margin-top: .25rem;
-  font: 500 1rem var(--display);
+.reactor-layer-mark {
+  position: absolute;
+  left: 34%;
+  bottom: 7%;
+  min-width: 1.2rem;
+  padding: 0 .18rem;
+  border-radius: 2px;
+  background: #101a14;
+  color: #c4d2c8;
+  font: 500 .75rem/1.2 var(--mono);
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
-.reactor-coupling {
+.reactor-rotor[data-rotor="0"] .reactor-layer-mark {
+  left: 27%;
+  bottom: 13%;
+}
+
+.reactor-couplings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .375rem .9rem;
+  margin: 0;
+  padding: 0;
   color: #a5b4a9;
   font-size: .75rem;
   line-height: 1.35;
-  overflow-wrap: anywhere;
+  list-style: none;
 }
+
+.reactor-couplings b {
+  color: #e5bf83;
+}
+
+#reactorPuzzle:not([data-mode="puzzle"]) :is(.reactor-instructions, .reactor-couplings) {
+  display: none;
+}
+
 
 .reactor-outcome {
   margin: 1rem 0 0;
@@ -177,7 +240,7 @@
   }
 
   .reactor-conducting .reactor-wire,
-  .reactor-conducting .reactor-contact {
+  .reactor-disc:has(.reactor-rotor[data-rotor="2"].reactor-conducting) .reactor-contact {
     animation: reactor-pulse 1.2s ease-in-out infinite;
   }
 
