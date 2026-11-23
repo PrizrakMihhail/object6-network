@@ -61,6 +61,11 @@
   left: 50%;
 }
 
+.reactor-terminal-in,
+.reactor-contact-in {
+  --rail-color: #9de8ff;
+}
+
 .reactor-terminal-out::before {
   right: 50%;
 }
@@ -159,7 +164,7 @@
   touch-action: manipulation;
 }
 
-.reactor-rotor[data-rotor="0"] {
+.reactor-rotor[data-rotor="2"] {
   --layer-size: 35%;
   z-index: 3;
 }
@@ -169,7 +174,7 @@
   z-index: 2;
 }
 
-.reactor-rotor[data-rotor="2"] {
+.reactor-rotor[data-rotor="0"] {
   --layer-size: 92%;
   z-index: 1;
 }
@@ -202,24 +207,29 @@
 }
 
 .reactor-wire {
-  --wire-top: #f2bf79;
-  --wire-mid: #b67e44;
-  --wire-bottom: #70472d;
   position: absolute;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   top: 50%;
   left: -1%;
   right: -1%;
   height: var(--wire-height);
-  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.reactor-wire > span {
+  --wire-top: #f2bf79;
+  --wire-mid: #b67e44;
+  --wire-bottom: #70472d;
   background: linear-gradient(var(--wire-top) 8%, var(--wire-mid) 29%, var(--wire-bottom) 43%,
     var(--wire-mid) 53%, var(--wire-top) 65%, var(--wire-bottom) 88%);
-  transform: translateY(-50%);
 }
 
 .reactor-wire::before,
 .reactor-wire::after {
   content: "";
   position: absolute;
+  z-index: 1;
   top: 50%;
   height: 70%;
   aspect-ratio: 1;
@@ -236,14 +246,20 @@
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
-.reactor-conducting .reactor-wire {
+.reactor-wire .reactor-wire-in,
+.reactor-wire .reactor-wire-out {
+  min-width: 0;
+}
+
+.reactor-conducting .reactor-wire > .reactor-wire-in,
+.reactor-powered .reactor-wire > .reactor-wire-out {
   --wire-top: #fff;
   --wire-mid: #9de8ff;
   --wire-bottom: #4d9eb8;
 }
 
 .reactor-conducting .reactor-wire::before,
-.reactor-conducting .reactor-wire::after {
+.reactor-powered .reactor-wire::after {
   background: #275a73;
 }
 
@@ -266,7 +282,7 @@
   pointer-events: none;
 }
 
-.reactor-rotor[data-rotor="0"] .reactor-layer-mark {
+.reactor-rotor[data-rotor="2"] .reactor-layer-mark {
   left: 27%;
   bottom: 13%;
 }
@@ -297,6 +313,16 @@
   margin: 1rem 0 0;
   color: #b6efff;
   font-weight: 600;
+}
+
+.reactor-emergency {
+  color: #ff8d83;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+#reactorNode[data-condition="ok"] .reactor-emergency {
+  display: none;
 }
 
 .reactor-readout:not([hidden]) dl {
@@ -348,11 +374,12 @@
     transition: none;
   }
 
-  .reactor-conducting .reactor-wire {
+  .reactor-conducting .reactor-wire-in,
+  .reactor-emergency {
     animation: reactor-pulse 1.2s ease-in-out infinite;
   }
 
-  .reactor-powered :is(.reactor-wire, .reactor-contact),
+  .reactor-powered :is(.reactor-wire-in, .reactor-wire-out, .reactor-contact),
   .reactor-powered .reactor-terminal::before {
     animation: reactor-network-pulse 1.2s ease-in-out infinite;
   }

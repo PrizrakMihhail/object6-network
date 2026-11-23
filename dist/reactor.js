@@ -9,6 +9,9 @@
   const outcome = document.getElementById('reactorOutcome');
   const readout = document.getElementById('reactorReadout');
   const power = document.getElementById('reactorPower');
+  const emergency = document.getElementById('reactorEmergency');
+  const emergencyPower = document.getElementById('reactorEmergencyPower');
+  const emergencyMap = document.getElementById('reactorEmergencyMap');
   const countdown = document.getElementById('reactorCountdown');
   const retry = document.getElementById('reactorRetry');
   const closeButton = dialog.querySelector('button[type="submit"]');
@@ -57,7 +60,7 @@
 
   function updateTelemetry(remaining) {
     const elapsed = (stabilityDuration - remaining) / 1000;
-    power.textContent = `${powerFormat.format(84 + 3 * Math.sin(elapsed / 14))} МВт`;
+    power.textContent = `${powerFormat.format(25.5 + .5 * Math.sin(elapsed / 14))} МВт`;
     const seconds = Math.ceil(remaining / 1000);
     countdown.textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
   }
@@ -66,6 +69,7 @@
     clearTimeout(timer);
     const remaining = stableUntil - Date.now();
     const stable = remaining > 0;
+    emergency.hidden = stable;
     const condition = stable ? 'ok' : 'critical';
     if (node.dataset.condition !== condition) {
       node.dataset.condition = condition;
@@ -78,6 +82,10 @@
         showView('expired');
         retry.focus();
       }
+      const generatorOutput = `${5 + (Math.floor(Date.now() / 2000) % 6)} кВт`;
+      emergencyPower.textContent = generatorOutput;
+      emergencyMap.textContent = generatorOutput;
+      timer = setTimeout(refresh, 2000);
       return;
     }
 

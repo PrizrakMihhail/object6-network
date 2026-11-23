@@ -98,6 +98,7 @@
                 <span class="routing-name">Электроэнергия</span>
                 <span class="routing-status">Критический</span>
                 <span class="routing-description">Цепь реактора разомкнута. Требуется синхронизация роторов.</span>
+                <span class="reactor-emergency">Генераторы · <span id="reactorEmergencyMap">5 кВт</span></span>
               </button>
               <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
                 <span class="routing-name">Связь с внешним миром</span>
@@ -268,7 +269,7 @@
       </header>
       <div class="reactor-panel">
         <section id="reactorPuzzle" aria-label="Восстановление цепи">
-          <p class="reactor-instructions">Поворачивайте слои на четверть оборота. На каждом слое квадратный наконечник должен смотреть к входу слева, а стрелка — к выходу справа.</p>
+          <p class="reactor-instructions">Замкните цепь от внешнего слоя I к внутреннему III. На каждом слое поверните квадрат к входу слева, а стрелку к выходу справа.</p>
           <div class="reactor-rotors">
             <div class="reactor-assembly">
               <div class="reactor-terminal reactor-terminal-in">
@@ -279,15 +280,15 @@
                 <span class="reactor-contact reactor-contact-in" aria-hidden="true"></span>
                 <span class="reactor-contact reactor-contact-out" aria-hidden="true"></span>
                 <button type="button" class="reactor-rotor" data-rotor="0" aria-label="Ротор I" aria-describedby="rotorCoupling0">
-                  <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"></span></span>
+                  <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"><span class="reactor-wire-in"></span><span class="reactor-wire-out"></span></span></span>
                   <span class="reactor-layer-mark" aria-hidden="true">I</span>
                 </button>
                 <button type="button" class="reactor-rotor" data-rotor="1" aria-label="Ротор II" aria-describedby="rotorCoupling1">
-                  <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"></span></span>
+                  <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"><span class="reactor-wire-in"></span><span class="reactor-wire-out"></span></span></span>
                   <span class="reactor-layer-mark" aria-hidden="true">II</span>
                 </button>
                 <button type="button" class="reactor-rotor" data-rotor="2" aria-label="Ротор III" aria-describedby="rotorCoupling2">
-                  <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"></span></span>
+                  <span class="reactor-face" aria-hidden="true"><span class="reactor-wire"><span class="reactor-wire-in"></span><span class="reactor-wire-out"></span></span></span>
                   <span class="reactor-layer-mark" aria-hidden="true">III</span>
                 </button>
               </div>
@@ -304,6 +305,7 @@
           </div>
         </section>
         <p id="reactorOutcome" class="reactor-outcome" role="status" hidden></p>
+        <p id="reactorEmergency" class="reactor-emergency" hidden>Мощность аварийных генераторов · <b id="reactorEmergencyPower">5 кВт</b></p>
         <section id="reactorReadout" class="reactor-readout" aria-label="Показания реактора" hidden>
           <dl>
             <div><dt>Текущая мощность</dt><dd id="reactorPower"></dd></div>
