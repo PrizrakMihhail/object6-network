@@ -1,0 +1,11 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import vm from 'node:vm';
+const dist=new URL('../dist/',import.meta.url);
+const source=await readFile(new URL('fourth.js',dist),'utf8');
+const letter=vm.runInNewContext(source.slice(0,source.indexOf("const title=document"))+';files.letter');
+let html=await readFile(new URL('secure.html',dist),'utf8');
+html=html.replace('СЛОВО ИЗ 8','СЛОВО ИЗ 5').replace('■ ■ ■ ■ ■','■ ■ ■ ■');
+html=html.replace(/<main id="vaultView"[\s\S]*?<\/main>/,`<main id="vaultView" class="vault hidden"><header class="vault-head"><div><small>G4://CLASSIFIED/DISPATCH_21-06.MSG</small><h1>${letter.title}</h1></div><a href="fourth.html">[ ЗАКРЫТЬ ПИСЬМО ]</a></header><article class="vault-doc">${letter.body}</article></main>`);
+html=html.replace('G4 // Закрытый архив','G4 // Письмо Барона').replace('ЗАКРЫТЫЙ АРХИВ</h1>','ПИСЬМО БАРОНА</h1>');
+await writeFile(new URL('letter.html',dist),html);
+console.log('Protected Baron letter generated');

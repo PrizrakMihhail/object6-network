@@ -1,5 +1,6 @@
 import {readdir,readFile,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
+import './build-letter.mjs';
 const root=new URL('../',import.meta.url),dist=new URL('dist/',root);
 export async function catalog(directory){return (await readdir(directory,{withFileTypes:true})).filter(x=>x.isFile()&&/\.(png|jpe?g|webp|gif|avif)$/i.test(x.name)).map(x=>x.name).sort(new Intl.Collator('ru',{numeric:true,sensitivity:'base'}).compare).map((name,i)=>({src:'assets/microreader/'+encodeURIComponent(name),title:name.replace(/\.[^.]+$/,'').replace(/^clipping-(\d+)$/i,'ВЫРЕЗКА $1').replace(/[_-]+/g,' '),caption:`АРХИВНАЯ КОПИЯ // ЛИСТ ${String(i+1).padStart(2,'0')}`}))}
 const slides=await catalog(new URL('assets/microreader/',dist));

@@ -1,5 +1,6 @@
-const PASSWORD='FORTRESS',ARCHIVE_PASSWORD='baron',MAX_ATTEMPTS=5,ROW_WIDTH=12;
-const candidates=['FORTRESS','FORESTER','FORTUNES','FOSTERED','SHORTENS','SORTABLE','FORMLESS','FEARLESS','RESTORES','FIREWALL','PASSWORD','STRONGER'];
+const isLetter=location.pathname.endsWith('letter.html');
+const PASSWORD=isLetter?'RECON':'FORTRESS',ARCHIVE_PASSWORD='baron',MAX_ATTEMPTS=isLetter?4:5,ROW_WIDTH=12;
+const candidates=isLetter?['RECON','REACT','RELAY','REBEL','REIGN','RECAP','BACON','BEGUN','DECOY','RAVEN','SCOUT','RACER']:['FORTRESS','FORESTER','FORTUNES','FOSTERED','SHORTENS','SORTABLE','FORMLESS','FEARLESS','RESTORES','FIREWALL','PASSWORD','STRONGER'];
 const junk=['!','@','#','$','%','^','&','*','-','+','=','?','/','\\',';',':','.'];
 let attempts=MAX_ATTEMPTS,used=new Set(),duds=new Set(),revealed=new Set(),hintUses={remove:0,reveal:0,trap:0},dumpRefreshed=false,accessGranted=false;
 const dump=document.getElementById('memoryDump'),log=document.getElementById('hackLog'),blocks=document.getElementById('attemptBlocks');
