@@ -10,3 +10,5 @@
 .microreader-machine.lamp-failure #lampStatus{color:#d66255}
 .microreader-machine.lamp-failure .microreader-status i{background:#cf4138;box-shadow:0 0 10px #cf4138;animation:lamp-fault .28s steps(2,end) infinite}
 @keyframes lamp-fault{50%{opacity:.18}}
+.microreader-machine.lamp-recovery .microreader-glass img{animation:projector-slip 2s linear reverse both;transition:none}
+.microreader-machine.lamp-recovery .microreader-glass:after{position:absolute;inset:0;z-index:2;background:repeating-linear-gradient(0deg,#050705 0 7px,#37402f 8px 9px,#10140e 10px 18px);animation:projector-shutter 2s linear reverse both}
