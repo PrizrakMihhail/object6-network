@@ -42,8 +42,11 @@ routingModes.forEach(button => button.addEventListener('click', () => {
   }
 }));
 const routingAccess = document.getElementById('routingAccessDialog');
-document.querySelectorAll('.routing-node').forEach(node => {
+document.querySelectorAll('.routing-node:not(#plazaNode, #reactorNode)').forEach(node => {
   node.addEventListener('click', () => routingAccess.showModal());
+});
+document.getElementById('plazaNode').addEventListener('click', () => {
+  document.getElementById('plazaDialog').showModal();
 });
 const routingObserver = new ResizeObserver(entries => {
   for (const { target: graph } of entries) {
@@ -63,6 +66,7 @@ const routingObserver = new ResizeObserver(entries => {
       line.setAttribute('x2', destination.x);
       line.setAttribute('y2', destination.y);
       line.classList.toggle('routing-line-warning', node.dataset.condition === 'warn');
+      if (node.id === 'reactorNode') line.classList.add('routing-line-reactor');
       return line;
     });
     svg.replaceChildren(...lines);

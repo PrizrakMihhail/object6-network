@@ -40,8 +40,15 @@
   stroke-dasharray: 5 5;
 }
 
+#routing-systems:has(#reactorNode[data-condition="critical"]) .routing-line-reactor {
+  stroke: #ef8278;
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .routing-line-warning {
+  .routing-line-warning,
+  #routing-systems:has(#reactorNode[data-condition="critical"]) .routing-line-reactor {
     animation: routing-blink 1.8s ease-in-out infinite;
   }
 
@@ -73,6 +80,10 @@
   border-left-color: var(--amber);
 }
 
+.routing-node[data-condition="critical"] {
+  border-left-color: var(--red);
+}
+
 .routing-node:hover,
 .routing-node:focus-visible {
   border-color: #d7a354;
@@ -85,8 +96,7 @@
 }
 
 .routing-description,
-.routing-status,
-.routing-subnodes {
+.routing-status {
   color: #a4ada4;
   font-size: .75rem;
   line-height: 1.45;
@@ -101,6 +111,10 @@
   color: #e8bd74;
 }
 
+.routing-node[data-condition="critical"] .routing-status {
+  color: #ef8278;
+}
+
 .routing-hub {
   grid-column: 1 / -1;
   justify-self: center;
@@ -111,22 +125,20 @@
   text-align: center;
 }
 
-.routing-subnodes {
-  margin-top: 1rem;
-  padding-top: .65rem;
-  border-top: 1px solid var(--line2);
-}
-
-.routing-subnodes summary {
-  color: #e8bd74;
-  cursor: pointer;
+.plaza-window {
+  width: min(36rem, calc(100vw - 30px));
 }
 
 .routing-plaza-rooms {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-  gap: .6rem;
-  margin-top: .65rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: .75rem;
+  padding: clamp(.75rem, 3vw, 1.5rem);
+}
+
+.routing-plaza-rooms .routing-node {
+  align-content: start;
+  padding: .85rem;
 }
 
 .routing-access form {

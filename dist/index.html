@@ -8,6 +8,7 @@
   <title>Сеть Объекта №6</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="routing.css">
+  <link rel="stylesheet" href="reactor.css">
   <link rel="stylesheet" href="sidebar-fixed.css">
   <link rel="stylesheet" href="network-signal.css">
   <link rel="stylesheet" href="microreader.css">
@@ -93,10 +94,10 @@
                 <span class="routing-name">Водоснабжение</span>
                 <span class="routing-status">Восстановлено</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="ok">
+              <button type="button" aria-haspopup="dialog" aria-controls="reactorDialog" class="routing-node" id="reactorNode" data-condition="critical">
                 <span class="routing-name">Электроэнергия</span>
-                <span class="routing-status">Восстановлено</span>
-                <span class="routing-description">Работает без перебоев</span>
+                <span class="routing-status">Критический</span>
+                <span class="routing-description">Цепь реактора разомкнута. Требуется синхронизация роторов.</span>
               </button>
               <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
                 <span class="routing-name">Связь с внешним миром</span>
@@ -121,7 +122,7 @@
                 <span class="routing-status">Хорошее состояние</span>
                 <span class="routing-description">Повреждения минимальные.</span>
               </button>
-              <button type="button" aria-haspopup="dialog" class="routing-node" data-condition="warn">
+              <button type="button" aria-haspopup="dialog" aria-controls="plazaDialog" class="routing-node" id="plazaNode" data-condition="warn">
                 <span class="routing-name">Плаза</span>
                 <span class="routing-status">Среднее состояние</span>
                 <span class="routing-description">Взрывы и пожары повредили часть помещений.</span>
@@ -157,15 +158,6 @@
                 <span class="routing-description">Повреждения от пожара.</span>
               </button>
             </div>
-            <details class="routing-subnodes">
-              <summary>Помещения Плазы</summary>
-              <div class="routing-plaza-rooms">
-                <button class="routing-node" type="button" aria-haspopup="dialog"><span class="routing-name">Бар</span><span class="routing-description">Практически не пострадал.</span></button>
-                <button class="routing-node" type="button" aria-haspopup="dialog"><span class="routing-name">Казино</span><span class="routing-description">Стены целы. Интерьер пострадал от взрыва и пожара.</span></button>
-                <button class="routing-node" type="button" aria-haspopup="dialog"><span class="routing-name">Покои Барона</span><span class="routing-description">Стены целы. Интерьер критически пострадал от взрыва и пожара.</span></button>
-                <button class="routing-node" type="button" aria-haspopup="dialog"><span class="routing-name">База Четвёртой Передачи</span><span class="routing-description">Стены целы. Интерьер пострадал от взрыва, пожар не начался.</span></button>
-              </div>
-            </details>
           </section>
 
           <div class="section-head docs-head">
@@ -235,6 +227,84 @@
       <div class="doc-meta" id="docMeta"></div>
       <article id="docBody"></article>
       <footer><span>ЦЕЛОСТНОСТЬ: <b id="docIntegrity">100%</b></span><button id="markButton">ДОБАВИТЬ В ИЗБРАННОЕ</button></footer>
+    </div>
+  </dialog>
+
+  <dialog id="plazaDialog" class="document-dialog" aria-labelledby="plazaTitle">
+    <div class="doc-window plaza-window">
+      <header>
+        <div><small>МАРШРУТИЗАЦИЯ / СТРУКТУРЫ</small><h2 id="plazaTitle">ПЛАЗА</h2></div>
+        <form method="dialog"><button type="submit" aria-label="Закрыть окно Плазы">×</button></form>
+      </header>
+      <div class="routing-plaza-rooms">
+        <button type="button" class="routing-node" data-condition="ok" aria-haspopup="dialog">
+          <span class="routing-name">Бар</span>
+          <span class="routing-status">Почти не пострадал</span>
+        </button>
+        <button type="button" class="routing-node" data-condition="warn" aria-haspopup="dialog">
+          <span class="routing-name">Казино</span>
+          <span class="routing-status">Интерьер повреждён</span>
+          <span class="routing-description">Стены целы. Интерьер пострадал от взрыва и пожара.</span>
+        </button>
+        <button type="button" class="routing-node" data-condition="critical" aria-haspopup="dialog">
+          <span class="routing-name">Покои Барона</span>
+          <span class="routing-status">Интерьер повреждён критически</span>
+          <span class="routing-description">Стены целы. Интерьер критически пострадал от взрыва и пожара.</span>
+        </button>
+        <button type="button" class="routing-node" data-condition="warn" aria-haspopup="dialog">
+          <span class="routing-name">База Четвёртой Передачи</span>
+          <span class="routing-status">Интерьер повреждён</span>
+          <span class="routing-description">Стены целы. Интерьер пострадал от взрыва, пожар не начался.</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="reactorDialog" class="document-dialog" aria-labelledby="reactorTitle">
+    <div class="doc-window reactor-window">
+      <header>
+        <div><small>ЭЛЕКТРОЭНЕРГИЯ / УПРАВЛЕНИЕ РОТОРАМИ</small><h2 id="reactorTitle">РЕАКТОР ОБЪЕКТА №6</h2></div>
+        <form method="dialog"><button type="submit" aria-label="Закрыть панель реактора">×</button></form>
+      </header>
+      <div class="reactor-panel">
+        <section id="reactorPuzzle" aria-label="Восстановление цепи">
+          <p class="reactor-instructions">Поворачивайте роторы на четверть оборота. Совместите наконечник каждой жилы с янтарным контактом справа, чтобы замкнуть цепь от I до III.</p>
+          <div class="reactor-rotors" role="group" aria-label="Три ротора">
+            <button type="button" class="reactor-rotor" data-rotor="0" aria-describedby="rotorCoupling0">
+              <span class="reactor-bezel" aria-hidden="true">
+                <span class="reactor-contact"></span>
+                <span class="reactor-face"><span class="reactor-wire"></span></span>
+              </span>
+              <span class="reactor-rotor-name">Ротор I</span>
+              <span class="reactor-coupling" id="rotorCoupling0">Связан с II</span>
+            </button>
+            <button type="button" class="reactor-rotor" data-rotor="1" aria-describedby="rotorCoupling1">
+              <span class="reactor-bezel" aria-hidden="true">
+                <span class="reactor-contact"></span>
+                <span class="reactor-face"><span class="reactor-wire"></span></span>
+              </span>
+              <span class="reactor-rotor-name">Ротор II</span>
+              <span class="reactor-coupling" id="rotorCoupling1">Связан с III</span>
+            </button>
+            <button type="button" class="reactor-rotor" data-rotor="2" aria-describedby="rotorCoupling2">
+              <span class="reactor-bezel" aria-hidden="true">
+                <span class="reactor-contact"></span>
+                <span class="reactor-face"><span class="reactor-wire"></span></span>
+              </span>
+              <span class="reactor-rotor-name">Ротор III</span>
+              <span class="reactor-coupling" id="rotorCoupling2">Независимый</span>
+            </button>
+          </div>
+        </section>
+        <p id="reactorOutcome" class="reactor-outcome" role="status" hidden></p>
+        <section id="reactorReadout" class="reactor-readout" aria-label="Показания реактора" hidden>
+          <dl>
+            <div><dt>Текущая мощность</dt><dd id="reactorPower"></dd></div>
+            <div><dt>До сброса цепи</dt><dd id="reactorCountdown"></dd></div>
+          </dl>
+        </section>
+        <button id="reactorRetry" class="reactor-retry" type="button" hidden>Восстановить цепь</button>
+      </div>
     </div>
   </dialog>
 
@@ -313,6 +383,7 @@
   </dialog>
 
   <script src="app.js"></script>
+  <script src="reactor.js"></script>
   <script src="network-signal.js"></script>
   <script src="microreader-catalog.js"></script>
   <script src="microreader.js"></script>

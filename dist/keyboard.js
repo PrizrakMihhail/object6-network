@@ -9,7 +9,7 @@
   if(e.key==='?'||e.key==='F1'){e.preventDefault();toggleHelp();return}
   if(document.getElementById('connectionOverlay')){window.TerminalAudio?.unlock();return}
   if(e.key==='Escape'){const dlg=[...document.querySelectorAll('dialog[open]')].at(-1);if(dlg){e.preventDefault();if(dlg.id==='accessDialog'&&document.getElementById('hackView'))location.href='fourth.html';else dlg.close();return}if(location.pathname.endsWith('fourth.html')||location.pathname.endsWith('secure.html')){location.href=location.pathname.endsWith('secure.html')?'fourth.html':'index.html';return}}
-  if(document.getElementById('leisureDialog')?.open||isTyping()){return}
+  if(document.querySelector('#leisureDialog[open], #plazaDialog[open], #reactorDialog[open], #routingAccessDialog[open]')||isTyping()){return}
   const fileLinks=document.querySelectorAll('.file-link');if(fileLinks.length){if(/^[1-4]$/.test(e.key)){e.preventDefault();fileLinks[Number(e.key)-1]?.click();return}if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();move(fileLinks,e.key==='ArrowDown'?1:-1);return}}
   const access=document.getElementById('accessDialog');if(access?.open&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();move(access.querySelectorAll('button'),e.key==='ArrowRight'?1:-1);return}
   const hack=document.getElementById('hackView');if(hack&&!hack.classList.contains('hidden')){const opts=hack.querySelectorAll('.word:not(.used),.bracket:not(.used)');if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();const delta=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:e.key==='ArrowUp'?-2:2;move(opts,delta);return}if(e.key.toLowerCase()==='r'){e.preventDefault();document.getElementById('restartHack')?.click();return}}
