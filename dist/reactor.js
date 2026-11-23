@@ -5,6 +5,7 @@
   const criticalDescription = nodeDescription.textContent;
   const dialog = document.getElementById('reactorDialog');
   const puzzle = document.getElementById('reactorPuzzle');
+  const assembly = puzzle.querySelector('.reactor-assembly');
   const outcome = document.getElementById('reactorOutcome');
   const readout = document.getElementById('reactorReadout');
   const power = document.getElementById('reactorPower');
@@ -95,10 +96,11 @@
       conducting = conducting && position === 0;
       rotor.style.setProperty('--rotor-angle', `${turns[index] * 90}deg`);
       rotor.classList.toggle('reactor-conducting', conducting);
-      rotor.setAttribute('aria-label', `${rotorNames[index]}, наконечник ${positions[position]}${conducting ? ', ток проходит' : ''}`);
+      rotor.setAttribute('aria-label', `${rotorNames[index]}, стрелка ${positions[position]}${conducting ? ', ток проходит' : ''}`);
       rotor.setAttribute('aria-disabled', String(view !== 'puzzle'));
       rotor.tabIndex = view === 'puzzle' ? 0 : -1;
     });
+    assembly.classList.toggle('reactor-powered', conducting);
     return conducting;
   }
 

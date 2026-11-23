@@ -25,10 +25,93 @@
   box-shadow: inset 0 0 1.25rem #050806;
 }
 
+.reactor-assembly {
+  --wire-height: clamp(.45rem, 2vw, .86rem);
+  --rail-color: #a78051;
+  --terminal-color: #f1c47d;
+  display: grid;
+  width: min(100%, 34rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.35fr) minmax(0, 1fr);
+  align-items: center;
+  padding-block: .375rem;
+}
+
+.reactor-assembly.reactor-powered {
+  --rail-color: #9de8ff;
+  --terminal-color: #e2faff;
+}
+
+.reactor-terminal {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.reactor-terminal::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  inset-inline: 0;
+  height: var(--wire-height);
+  background: linear-gradient(#0008, transparent 36% 60%, #0008), var(--rail-color);
+  transform: translateY(-50%);
+}
+
+.reactor-terminal-in::before {
+  left: 50%;
+}
+
+.reactor-terminal-out::before {
+  right: 50%;
+}
+
+.reactor-terminal-body {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(85%, 5.5rem);
+  height: clamp(1.75rem, 5vw, 3.25rem);
+  border: 1px solid #66766a;
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 12% 22%, #809284 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 22%, #809284 0 1px, transparent 2px),
+    radial-gradient(circle at 12% 78%, #809284 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 78%, #809284 0 1px, transparent 2px),
+    linear-gradient(#39483f, #15211a);
+  box-shadow: 0 3px 7px #000b, inset 0 0 0 2px #15201a;
+}
+
+.reactor-terminal-body::after {
+  content: "";
+  width: clamp(.45rem, 1.65vw, 1rem);
+  aspect-ratio: 1;
+  background: var(--terminal-color);
+}
+
+.reactor-terminal-out .reactor-terminal-body::after {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.reactor-terminal-label {
+  position: absolute;
+  top: calc(100% + .35rem);
+  width: 100%;
+  color: #b6c3ba;
+  font: 500 clamp(.5rem, 1.5vw, .7rem)/1.3 var(--mono);
+  text-align: center;
+}
+
+.reactor-terminal-label b {
+  display: block;
+  color: var(--terminal-color);
+  text-transform: uppercase;
+}
+
 .reactor-disc {
   position: relative;
   isolation: isolate;
-  width: min(100%, 16rem);
+  width: 100%;
   aspect-ratio: 1;
   border: 1px solid #61746a;
   border-radius: 50%;
@@ -39,16 +122,22 @@
 .reactor-contact {
   position: absolute;
   top: 50%;
-  right: .5%;
   z-index: 4;
-  width: 4.5%;
-  aspect-ratio: 1;
-  border: 1px solid #fff1bf;
-  border-radius: 50%;
-  background: #eebd73;
-  box-shadow: 0 0 .4rem #f3bf65a6;
+  width: 5.25%;
+  height: var(--wire-height);
+  border: 1px solid var(--terminal-color);
+  background: var(--rail-color);
   transform: translateY(-50%);
   pointer-events: none;
+}
+
+.reactor-contact-in {
+  left: 0;
+}
+
+.reactor-contact-out {
+  right: 0;
+  clip-path: polygon(0 0, 100% 33%, 100% 67%, 0 100%);
 }
 
 .reactor-rotor {
@@ -118,17 +207,33 @@
   --wire-bottom: #70472d;
   position: absolute;
   top: 50%;
-  left: 48%;
+  left: -1%;
   right: -1%;
-  height: clamp(.55rem, 2vw, .86rem);
+  height: var(--wire-height);
   border-radius: 2px;
   background: linear-gradient(var(--wire-top) 8%, var(--wire-mid) 29%, var(--wire-bottom) 43%,
     var(--wire-mid) 53%, var(--wire-top) 65%, var(--wire-bottom) 88%);
   transform: translateY(-50%);
 }
 
-.reactor-rotor[data-rotor="2"] .reactor-wire {
-  clip-path: polygon(0 12%, 89% 12%, 89% 0, 100% 50%, 89% 100%, 89% 88%, 0 88%);
+.reactor-wire::before,
+.reactor-wire::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  height: 70%;
+  aspect-ratio: 1;
+  background: #352316;
+  transform: translateY(-50%);
+}
+
+.reactor-wire::before {
+  left: 5%;
+}
+
+.reactor-wire::after {
+  right: 5%;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 .reactor-conducting .reactor-wire {
@@ -137,10 +242,14 @@
   --wire-bottom: #4d9eb8;
 }
 
-.reactor-disc:has(.reactor-rotor[data-rotor="2"].reactor-conducting) .reactor-contact {
-  background: #c7f4ff;
-  border-color: #fff;
-  box-shadow: 0 0 .55rem #9de8ff;
+.reactor-conducting .reactor-wire::before,
+.reactor-conducting .reactor-wire::after {
+  background: #275a73;
+}
+
+.reactor-powered .reactor-contact,
+.reactor-powered .reactor-terminal-body::after {
+  box-shadow: 0 0 .5rem #9de8ff;
 }
 
 .reactor-layer-mark {
@@ -197,7 +306,7 @@
   margin: 0;
 }
 
-.reactor-outcome:not([hidden]) + .reactor-readout:not([hidden]) {
+.reactor-readout:not([hidden]) {
   margin-top: 1rem;
 }
 
@@ -239,12 +348,20 @@
     transition: none;
   }
 
-  .reactor-conducting .reactor-wire,
-  .reactor-disc:has(.reactor-rotor[data-rotor="2"].reactor-conducting) .reactor-contact {
+  .reactor-conducting .reactor-wire {
     animation: reactor-pulse 1.2s ease-in-out infinite;
+  }
+
+  .reactor-powered :is(.reactor-wire, .reactor-contact),
+  .reactor-powered .reactor-terminal::before {
+    animation: reactor-network-pulse 1.2s ease-in-out infinite;
   }
 
   @keyframes reactor-pulse {
     50% { filter: brightness(.55); }
+  }
+
+  @keyframes reactor-network-pulse {
+    50% { filter: brightness(.68); }
   }
 }
