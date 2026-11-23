@@ -417,7 +417,11 @@
     </form>
     <ul id="inboxList" class="inbox-list"></ul>
     <section id="messageDetail" hidden>
-      <button type="button" id="backToInbox">К списку</button>
+      <div class="network-actions">
+        <button type="button" id="backToInbox">К списку</button>
+        <button type="button" id="replyMessage">Ответить</button>
+        <button type="button" id="deleteMessage">Удалить</button>
+      </div>
       <h3 id="messageTitle" tabindex="-1"></h3>
       <p id="messageMeta" class="network-muted"></p>
       <div id="messageBody"></div>

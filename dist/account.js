@@ -49,6 +49,10 @@ let readMessages = new Set();
 let unreadMessages = new Set();
 let inboxLoaded = false;
 let mailView = 'inbox';
+let openedMessage = null;
+const replyButton = byId('replyMessage');
+const deleteButton = byId('deleteMessage');
+const recipientInput = composeForm.elements.namedItem('to');
 
 async function rpc(name, params) {
   if (!config) throw new Error('service_unavailable');
@@ -104,6 +108,7 @@ function setSession(token, user = null) {
   if (!token) {
     pendingSend = null;
     composeForm.reset();
+    recipientInput.readOnly = false;
     clearInbox();
   }
 }
@@ -325,6 +330,7 @@ onSubmit(composeForm, inboxStatus, async data => {
     if (token !== sessionToken) return;
     pendingSend = null;
     composeForm.reset();
+    recipientInput.readOnly = false;
     if (inboxDialog.open && mailView === 'compose') selectMailView('sent');
     showNotice('Сообщение отправлено.');
   } catch (error) {
@@ -364,6 +370,7 @@ function inboxItem(message, sent) {
 function clearInbox() {
   inboxVersion++;
   activeMessageButton = null;
+  openedMessage = null;
   inboxList.replaceChildren();
   inboxList.hidden = false;
   messageDetail.hidden = true;
@@ -376,14 +383,25 @@ function openMail(messageUuid) {
   selectMailView('inbox', messageUuid);
 }
 
-async function selectMailView(view, messageUuid) {
+async function selectMailView(view, messageUuid, reply) {
   clearInbox();
   mailView = view;
   for (const tab of mailTabs) tab.setAttribute('aria-pressed', String(tab.dataset.mailView === view));
   composeForm.hidden = view !== 'compose';
   if (!composeForm.hidden) {
     inboxList.hidden = true;
-    composeForm.elements.namedItem('to').focus();
+    if (reply) {
+      composeForm.reset();
+      recipientInput.value = reply.sender;
+      recipientInput.readOnly = true;
+      const originalTitle = Array.from(reply.title || 'Без темы').slice(0, 116).join('');
+      composeForm.elements.namedItem('title').value = `Re: ${originalTitle}`;
+      composeForm.elements.namedItem('message').focus();
+    } else {
+      if (recipientInput.readOnly) composeForm.reset();
+      recipientInput.readOnly = false;
+      recipientInput.focus();
+    }
     return;
   }
   const sent = view === 'sent';
@@ -433,6 +451,8 @@ async function openMessage(message, button, meta) {
 
 function showMessageDetail(detail, button) {
   activeMessageButton = button;
+  openedMessage = detail;
+  replyButton.hidden = mailView !== 'inbox' || !detail.sender;
   byId('messageTitle').textContent = detail.title || 'Без темы';
   byId('messageMeta').textContent = messageMetadata(detail);
   byId('messageBody').textContent = detail.message;
@@ -441,6 +461,35 @@ function showMessageDetail(detail, button) {
   setStatus(inboxStatus);
   byId('messageTitle').focus();
 }
+
+replyButton.addEventListener('click', () => {
+  if (openedMessage?.sender) selectMailView('compose', undefined, openedMessage);
+});
+
+deleteButton.addEventListener('click', async () => {
+  const message = openedMessage;
+  if (!message || deleteButton.disabled) return;
+  const token = sessionToken;
+  const view = mailView;
+  deleteButton.disabled = true;
+  setStatus(inboxStatus);
+  try {
+    await rpc('delete_message', { p_token: token, p_uuid: message.uuid, p_folder: view });
+    if (token !== sessionToken) return;
+    if (view === 'inbox') {
+      readMessages.add(message.uuid);
+      unreadMessages.delete(message.uuid);
+      setUnreadCount(unreadMessages.size);
+      Array.from(notifications.children).find(card => card.dataset.uuid === message.uuid)?.remove();
+    }
+    if (inboxDialog.open && mailView === view) selectMailView(view);
+    showNotice('Письмо удалено.');
+  } catch (error) {
+    if (token === sessionToken) handleMailError(error, inboxStatus, inboxDialog, 'mail');
+  } finally {
+    deleteButton.disabled = false;
+  }
+});
 
 byId('accessButton').addEventListener('click', () => openNetwork('account'));
 byId('mailButton').addEventListener('click', () => openNetwork('mail'));
