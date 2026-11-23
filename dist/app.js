@@ -41,6 +41,34 @@ routingModes.forEach(button => button.addEventListener('click', () => {
     document.getElementById(mode.getAttribute('aria-controls')).hidden = !selected;
   }
 }));
+const routingAccess = document.getElementById('routingAccessDialog');
+document.querySelectorAll('.routing-node').forEach(node => {
+  node.addEventListener('click', () => routingAccess.showModal());
+});
+const routingObserver = new ResizeObserver(entries => {
+  for (const { target: graph } of entries) {
+    if (!graph.clientWidth) continue;
+    const hub = graph.querySelector('.routing-hub');
+    const svg = graph.querySelector('.routing-lines');
+    const center = node => ({
+      x: node.offsetLeft + node.offsetWidth / 2,
+      y: node.offsetTop + node.offsetHeight / 2
+    });
+    const origin = center(hub);
+    const lines = Array.from(graph.querySelectorAll('.routing-node:not(.routing-hub)'), node => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      const destination = center(node);
+      line.setAttribute('x1', origin.x);
+      line.setAttribute('y1', origin.y);
+      line.setAttribute('x2', destination.x);
+      line.setAttribute('y2', destination.y);
+      line.classList.toggle('routing-line-warning', node.dataset.condition === 'warn');
+      return line;
+    });
+    svg.replaceChildren(...lines);
+  }
+});
+document.querySelectorAll('.routing-graph').forEach(graph => routingObserver.observe(graph));
 document.querySelectorAll('.nav-item[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));b.classList.add('active');const map={archive:'all',mail:'mail',projects:'research',intercepts:'critical',overview:'all'};state.filter=map[b.dataset.view];document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.filter===state.filter));document.querySelector('.docs-head').scrollIntoView({behavior:'smooth',block:b.dataset.view==='overview'?'end':'start'});render()}));
 document.getElementById('closeDialog').addEventListener('click',()=>document.getElementById('documentDialog').close());
 document.getElementById('documentDialog').addEventListener('click',e=>{if(e.target.id==='documentDialog')e.currentTarget.close()});
