@@ -1,0 +1,6 @@
+.terminal-status .meter span{transition:width 1.2s ease,background-color .4s,box-shadow .4s}
+.terminal-status i,.system-line i{transition:background-color .4s,box-shadow .4s}
+.terminal-status.signal-unstable .meter span{background:#ef9e18;box-shadow:0 0 7px #ef9e18}
+.terminal-status.signal-unstable b{color:#ef9e18}
+.terminal-status.signal-unstable i,.system-line.signal-unstable i{background:#ef9e18;box-shadow:0 0 9px #ef9e18}
+@media(prefers-reduced-motion:reduce){.terminal-status .meter span{transition:none}}
