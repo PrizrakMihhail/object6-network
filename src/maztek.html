@@ -8,6 +8,7 @@
   <title>Лаборатория Мазтек — Сеть Объекта №6</title>
   <link rel="stylesheet" href="maztek/lab.css">
   <script src="maztek/connection.js" defer></script>
+  <script src="maztek/document-reader.js" type="module"></script>
 </head>
 <body class="lab">
   <div id="labPage">
@@ -43,10 +44,10 @@
           <section class="lab-panel" id="mail" aria-labelledby="labMailTitle">
             <div class="section-head"><h2 id="labMailTitle">Почтовый сервер</h2></div>
             <ul class="lab-records">
-              <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vQmfqomRO5Jsajq4XpApXgNjhjx62-ZUWeqcuSwiN1QgDw6TtbTR6i7G9en3txxdg/pub" target="_blank" rel="noopener">Завершение исследовательской программы LONGINUS <span aria-label="(новая вкладка)">↗</span></a></li>
+              <li><a class="lab-link" href="maztek/documents/completion.html" data-lab-document="Завершение исследовательской программы LONGINUS" aria-haspopup="dialog">Завершение исследовательской программы LONGINUS <span aria-hidden="true">▤</span></a></li>
               <li class="lab-locked">Завершение программы LONGINUS / распоряжение по материалам проекта <span>Закрыто</span></li>
-              <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vRZyUUlmRE6V12aEa8dBmfKaC2kLAhXhTlfFqvc9MyBzhk_yU2cQyKStQPnH9hKAg/pub" target="_blank" rel="noopener">Служебная записка <span aria-label="(новая вкладка)">↗</span></a></li>
-              <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSK9MwQb6tuqOwA3orSQaZ0jLPqVgV2IlvRQdOuHa9-fzFM-nTdD0We1YGrgDwOuQ/pub" target="_blank" rel="noopener">Запрос на финансирование исследовательской программы LONGINUS <span aria-label="(новая вкладка)">↗</span></a></li>
+              <li><a class="lab-link" href="maztek/documents/memo.html" data-lab-document="Служебная записка" aria-haspopup="dialog">Служебная записка <span aria-hidden="true">▤</span></a></li>
+              <li><a class="lab-link" href="maztek/documents/funding.html" data-lab-document="Запрос на финансирование исследовательской программы LONGINUS" aria-haspopup="dialog">Запрос на финансирование исследовательской программы LONGINUS <span aria-hidden="true">▤</span></a></li>
             </ul>
           </section>
 
@@ -67,11 +68,11 @@
               </details>
               <details>
                 <summary>СВИРЕЛЬ-3</summary>
-                <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vTwRz5ISyaZCx6rFW1n0uj10UTqbgtoWbZgbwm0xukAlTpiK8f6ET21YDLnMb_qEw/pub" target="_blank" rel="noopener">Открыть документацию <span aria-label="(новая вкладка)">↗</span></a>
+                <a class="lab-link" href="maztek/documents/svirel.html" data-lab-document="СВИРЕЛЬ-3" aria-haspopup="dialog">Открыть документацию <span aria-hidden="true">▤</span></a>
               </details>
               <details>
                 <summary>ЦИТАДЕЛЬ</summary>
-                <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSYV9_QmpZC_0OBLYbhc28Y7qatXG6Rt5teHuNaYK0jaEsgF7eaTd1sJFbtwKYIXw/pub" target="_blank" rel="noopener">Открыть документацию <span aria-label="(новая вкладка)">↗</span></a>
+                <a class="lab-link" href="maztek/documents/citadel.html" data-lab-document="ЦИТАДЕЛЬ" aria-haspopup="dialog">Открыть документацию <span aria-hidden="true">▤</span></a>
               </details>
               <details>
                 <summary>ЛОНГИН <span>Закрыто</span></summary>
@@ -92,7 +93,7 @@
 
           <section class="lab-panel" id="codes" aria-labelledby="labCodesTitle">
             <div class="section-head"><h2 id="labCodesTitle">Справка о кодах</h2></div>
-            <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSy1vKPZ96Yg7cf798F81ts6O8sWmYKJR5TpnLTS5rLvKjD2WUCiVaX63rnY3zAEQ/pub" target="_blank" rel="noopener">Открыть справку <span aria-label="(новая вкладка)">↗</span></a>
+            <a class="lab-link" href="maztek/documents/codes.html" data-lab-document="Справка о кодах" aria-haspopup="dialog">Открыть справку <span aria-hidden="true">▤</span></a>
           </section>
         </div>
       </div>
@@ -109,6 +110,14 @@
     </header>
     <p id="labConnectionStatus" role="status">Поиск маршрута к лаборатории…</p>
     <progress id="labConnectionProgress" max="100" value="0" aria-label="Ход подключения"></progress>
+  </dialog>
+
+  <dialog class="lab-document" id="labDocument" aria-labelledby="labDocumentTitle">
+    <header>
+      <h2 id="labDocumentTitle">Документ MAZTECH</h2>
+      <form method="dialog"><button class="lab-link" autofocus>Закрыть</button></form>
+    </header>
+    <iframe title="Документ MAZTECH" sandbox></iframe>
   </dialog>
 </body>
 </html>

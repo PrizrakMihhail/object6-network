@@ -247,6 +247,32 @@
 .lab-connection progress::-webkit-progress-value { background: var(--amber); }
 .lab-connection progress::-moz-progress-bar { background: var(--amber); }
 
+.lab-document {
+  width: min(54rem, calc(100% - 1rem));
+  height: min(48rem, calc(100% - 1rem));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid var(--line2);
+}
+
+.lab-document[open] { display: flex; flex-direction: column; }
+.lab-document::backdrop { background: rgb(32 29 25 / 55%); }
+.lab-document header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  padding: .75rem 1rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line2);
+}
+.lab-document h2 { margin: 0; font: 400 clamp(1.2rem, 4vw, 1.85rem)/1.1 var(--display); }
+.lab-document button { cursor: pointer; font-size: .85rem; }
+.lab-document iframe { flex: 1; width: 100%; min-height: 0; border: 0; }
+
 @media (max-width: 950px) {
   .lab-sections { grid-template-columns: minmax(0, 1fr); }
 }
