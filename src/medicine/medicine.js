@@ -6,8 +6,9 @@ const navLinks = [...document.querySelectorAll('.medicine-nav a')];
 const admission = byId('admissionDialog');
 const admissionForm = byId('admissionForm');
 const openAdmission = byId('newAdmission');
-const submit = byId('admissionSubmit');
-const cancel = byId('admissionCancel');
+const analysisDialog = byId('analysisDialog');
+const analysisStatus = byId('analysisStatus');
+const analysisProgress = byId('analysisProgress');
 const patientDialog = byId('patientDialog');
 const patientList = byId('patientList');
 const diseaseList = byId('diseaseList');
@@ -26,6 +27,7 @@ const errors = {
   invalid_complications: 'Набор осложнений устарел. Обновите страницу и повторите.',
   invalid_medicine_notes: 'Комментарий должен занимать не более 4000 символов.',
   medicine_conflict: 'Не удалось повторить поступление с изменёнными данными. Проверьте карту пациента.',
+  medicine_diagnosis_changed: 'Справочник изменился. Обновите страницу и запустите анализ снова.',
   medicine_catalog_unavailable: 'Справочник диагнозов недоступен.',
   service_unavailable: 'База Медблока пока недоступна.'
 };
@@ -39,7 +41,7 @@ let canAdmit = false;
 let caseLoadError = '';
 let diseaseLoadError = '';
 const admissionDrafts = new Map();
-let submitting = false;
+let analysis;
 
 function element(tag, content, className) {
   const node = document.createElement(tag);
@@ -205,7 +207,7 @@ function renderComplications() {
 }
 
 function setAdmissionAccess() {
-  openAdmission.disabled = !canAdmit || !complications.length;
+  openAdmission.disabled = !canAdmit || !complications.length || !diseases.length;
 }
 
 function updateCaseCounts() {
@@ -246,51 +248,129 @@ async function loadMedicine() {
   setStatus(status, error || caseLoadError || (!canAdmit ? 'Доступна ваша карта пациента. Регистрация поступлений доступна медикам.' : ''), !!error);
 }
 
-openAdmission.addEventListener('click', () => {
+function showAdmission() {
   setStatus(admissionStatus);
   admission.showModal();
   byId('patientId').focus();
+}
+
+const analysisDuration = 10000;
+const diagnosisDisplayTime = 650;
+
+function setAnalysisPhase(run, phase) {
+  run.phase = phase;
+  byId('analysisScan').hidden = phase !== 'scanning';
+  byId('analysisResult').hidden = phase === 'scanning';
+  byId('analysisCancel').hidden = !['scanning', 'revealed'].includes(phase);
+  byId('analysisBack').hidden = byId('analysisRetry').hidden = phase !== 'failed';
+  for (const id of ['analysisRead', 'analysisNew', 'analysisClose']) byId(id).hidden = phase !== 'saved';
+}
+
+function updateAnalysis(run) {
+  const elapsed = performance.now() - run.started;
+  const progress = Math.min(100, Math.floor(elapsed / analysisDuration * 100));
+  analysisProgress.value = progress;
+  byId('analysisPercent').textContent = `${progress}%`;
+  byId('analysisStage').textContent = progress < 35 ? 'Сверка показателей'
+    : progress < 75 ? 'Сопоставление со справочником' : 'Уточнение диагноза';
+  byId('analysisCandidate').textContent = run.pool[Math.floor(elapsed / 430) % run.pool.length].name;
+}
+
+function closeAnalysis(reopen = false) {
+  clearInterval(analysis.interval);
+  clearTimeout(analysis.timer);
+  analysis = null;
+  analysisDialog.close();
+  if (reopen) showAdmission();
+  else openAdmission.focus();
+}
+
+async function saveAnalysis(run) {
+  setAnalysisPhase(run, 'saving');
+  setStatus(analysisStatus, 'Сохранение поступления…');
+  try {
+    const record = await rpc('analyze', {
+      ...run.payload, p_token: token, p_uuid: run.uuid, p_expected_diagnosis: run.diagnosis.slug
+    });
+    admissionDrafts.delete(run.key);
+    cases = [record, ...cases.filter(item => item.uuid !== record.uuid)];
+    updateCaseCounts();
+    renderPatients();
+    admissionForm.reset();
+    run.record = record;
+    setStatus(analysisStatus, 'Поступление зарегистрировано.');
+    setAnalysisPhase(run, 'saved');
+    byId('analysisRead').focus();
+  } catch (error) {
+    setAnalysisPhase(run, 'failed');
+    setStatus(analysisStatus, messageFor(error), true);
+    byId('analysisRetry').focus();
+  }
+}
+
+openAdmission.addEventListener('click', showAdmission);
+byId('admissionCancel').addEventListener('click', () => admission.close());
+byId('analysisCancel').addEventListener('click', () => closeAnalysis(true));
+byId('analysisBack').addEventListener('click', () => closeAnalysis(true));
+byId('analysisRetry').addEventListener('click', () => saveAnalysis(analysis));
+byId('analysisRead').addEventListener('click', () => {
+  const { patient_uuid } = analysis.record;
+  closeAnalysis();
+  openPatient(patientGroups().find(group => group[0].patient_uuid === patient_uuid));
 });
-cancel.addEventListener('click', () => admission.close());
-admission.addEventListener('cancel', event => {
-  if (submitting) event.preventDefault();
-});
-admissionForm.addEventListener('submit', async event => {
+byId('analysisNew').addEventListener('click', () => closeAnalysis(true));
+byId('analysisClose').addEventListener('click', () => closeAnalysis());
+analysisDialog.addEventListener('cancel', event => {
   event.preventDefault();
-  if (submitting || !canAdmit || !token) return;
+  if (analysis.phase !== 'saving') closeAnalysis(analysis.phase !== 'saved');
+});
+
+admissionForm.addEventListener('submit', event => {
+  event.preventDefault();
+  if (analysis || !canAdmit || !token || !diseases.length) return;
   const data = new FormData(admissionForm);
+  const overdue = data.get('overdue_minutes').trim();
+  if (overdue !== '-' && (!/^\d+$/.test(overdue) || Number(overdue) > 2147483647)) {
+    setStatus(admissionStatus, 'Введите целое число минут от 0 или «-», если просрочки не было.', true);
+    byId('exposureMinutes').focus();
+    return;
+  }
   const payload = {
     p_patient_id: data.get('id_number').trim(),
-    p_overdue_minutes: Number(data.get('overdue_minutes')),
+    p_overdue_minutes: overdue === '-' ? 0 : Number(overdue),
     p_complications: data.getAll('complications'),
     p_notes: data.get('notes')
   };
   const key = JSON.stringify(payload);
   if (!admissionDrafts.has(key)) admissionDrafts.set(key, crypto.randomUUID());
-  submitting = true;
-  submit.disabled = cancel.disabled = true;
-  setStatus(admissionStatus, 'Рассчитываю критичность и сохраняю поступление…');
-  try {
-    const record = await rpc('admit', { ...payload, p_token: token, p_uuid: admissionDrafts.get(key) });
-    admissionDrafts.delete(key);
-    cases = [record, ...cases.filter(item => item.uuid !== record.uuid)];
-    updateCaseCounts();
-    renderPatients();
-    admissionForm.reset();
-    admission.close();
-    setStatus(status, `Поступление зарегистрировано. Диагноз: ${record.diagnosis_name}.`);
-    openPatient(patientGroups().find(group => group[0].patient_uuid === record.patient_uuid));
-  } catch (error) {
-    if (['session_expired', 'medicine_access_denied'].includes(error.message)) {
-      canAdmit = false;
-      setAdmissionAccess();
-    }
-    setStatus(admissionStatus, messageFor(error), true);
-  } finally {
-    submitting = false;
-    submit.disabled = !canAdmit;
-    cancel.disabled = false;
+  const minutes = payload.p_overdue_minutes;
+  const exposure = minutes > 10 ? 4 : minutes > 5 ? 3 : minutes > 0 ? 2 : 1;
+  const severity = Math.max(exposure, ...complications
+    .filter(option => payload.p_complications.includes(option.slug))
+    .map(option => option.minimum_severity));
+  // Match the bytewise slug order and UUID index in the SQL function.
+  const pool = diseases.filter(disease => disease.severity === severity);
+  const slugs = pool.map(disease => disease.slug).sort();
+  if (!slugs.length) {
+    setStatus(admissionStatus, errors.medicine_catalog_unavailable, true);
+    return;
   }
+  const uuid = admissionDrafts.get(key);
+  const slug = slugs[Number.parseInt(uuid.slice(0, 8), 16) % slugs.length];
+  const run = { payload, key, uuid, diagnosis: pool.find(disease => disease.slug === slug), pool, started: performance.now() };
+  analysis = run;
+  setStatus(analysisStatus);
+  setAnalysisPhase(run, 'scanning');
+  updateAnalysis(run);
+  admission.close();
+  analysisDialog.showModal();
+  run.interval = setInterval(() => updateAnalysis(run), 100);
+  run.timer = setTimeout(() => {
+    clearInterval(run.interval);
+    byId('analysisDiagnosis').textContent = run.diagnosis.name;
+    setAnalysisPhase(run, 'revealed');
+    run.timer = setTimeout(() => saveAnalysis(run), diagnosisDisplayTime);
+  }, analysisDuration);
 });
 
 byId('patientSearch').addEventListener('input', renderPatients);

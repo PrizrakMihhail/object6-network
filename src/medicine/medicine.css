@@ -192,6 +192,80 @@ fieldset.medicine-field { margin: 0; padding: .35rem 0 0; border: 0; }
 .medicine-record-note { margin-top: .65rem; }
 .medicine-record-note p { margin: .1rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 
+.medicine-analysis { width: min(100% - 1.5rem, 42rem); }
+.medicine-analysis .medicine-dialog-body { display: grid; gap: .8rem; }
+.medicine-analysis-scan {
+  padding: clamp(.85rem, 3vw, 1.4rem);
+  border: 1px solid #285557;
+  border-radius: .55rem;
+  background: #102f34;
+  color: #c1f4e7;
+}
+.medicine-analysis-grid {
+  position: relative;
+  overflow: hidden;
+  height: clamp(5rem, 20vw, 8rem);
+  border: 1px solid #3b6c69;
+  background-image: linear-gradient(#296260 1px, transparent 1px), linear-gradient(90deg, #296260 1px, transparent 1px);
+  background-size: 1rem 1rem;
+}
+.medicine-analysis-grid::after {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3rem;
+  content: '';
+  background: linear-gradient(90deg, transparent, #75f4bb40);
+  border-right: 1px solid #83f4c8;
+  animation: medicine-sweep 1.8s linear infinite;
+}
+.medicine-analysis-grid svg { width: 100%; height: 100%; }
+.medicine-analysis-grid path {
+  fill: none;
+  stroke: #8bf5ce;
+  stroke-width: 2;
+  stroke-dasharray: 9 3;
+  animation: medicine-signal 1s linear infinite;
+}
+.medicine-analysis-reading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-top: .7rem;
+  font-size: .85rem;
+}
+.medicine-analysis-reading output { font-variant-numeric: tabular-nums; }
+.medicine-analysis progress { width: 100%; height: .65rem; accent-color: #60d8ab; }
+.medicine-analysis-candidate {
+  min-height: 2.8em;
+  margin: .55rem 0 0;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.medicine-analysis-result {
+  padding: clamp(1.2rem, 5vw, 2.1rem);
+  border: 1px solid var(--line);
+  border-left: .3rem solid var(--accent);
+  border-radius: .55rem;
+  background: var(--tint);
+}
+.medicine-analysis-result p { margin: 0 0 .45rem; color: var(--muted); }
+.medicine-analysis-result strong {
+  display: block;
+  color: var(--accent);
+  font-size: clamp(1.65rem, 5vw, 2.65rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+@keyframes medicine-sweep { from { left: -3rem; } to { left: 100%; } }
+@keyframes medicine-signal { to { stroke-dashoffset: -24; } }
+@media (prefers-reduced-motion: reduce) {
+  .medicine-analysis-grid::after, .medicine-analysis-grid path { animation: none; }
+  .medicine-analysis-grid::after { display: none; }
+}
+
 @media (max-width: 60rem) {
   .medicine-nav { order: 1; flex-basis: 100%; }
 }

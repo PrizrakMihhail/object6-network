@@ -112,8 +112,8 @@
         </div>
         <div class="medicine-field">
           <label for="exposureMinutes">Просрочка возвращения из Запретной зоны, мин</label>
-          <input id="exposureMinutes" name="overdue_minutes" type="number" min="0" max="2147483647" step="1" inputmode="numeric" aria-describedby="exposureGuide" required>
-          <p class="medicine-field-help" id="exposureGuide">0 минут — без просрочки. 1–5 минут — лёгкая просрочка, 6–10 минут — тяжёлая, больше 10 минут — смертельная. Осложнения могут повысить критичность диагноза.</p>
+          <input id="exposureMinutes" name="overdue_minutes" type="text" inputmode="text" maxlength="24" autocomplete="off" aria-describedby="exposureGuide" required>
+          <p class="medicine-field-help" id="exposureGuide">0 или «-» — без просрочки. 1–5 минут — лёгкая просрочка, 6–10 минут — тяжёлая, больше 10 минут — смертельная. Осложнения могут повысить критичность диагноза.</p>
         </div>
         <fieldset class="medicine-field" id="complications">
           <legend>Дополнительные осложнения</legend>
@@ -127,9 +127,43 @@
       </div>
       <footer class="medicine-dialog-actions">
         <button class="medicine-button" id="admissionCancel" type="button">Отмена</button>
-        <button class="medicine-button medicine-primary" id="admissionSubmit" type="submit">Зарегистрировать</button>
+        <button class="medicine-button medicine-primary" id="admissionSubmit" type="submit">Начать анализ</button>
       </footer>
     </form>
+  </dialog>
+
+  <dialog class="medicine-dialog medicine-analysis" id="analysisDialog" aria-labelledby="analysisTitle">
+    <header class="medicine-dialog-head">
+      <h2 id="analysisTitle">Анализ поступления</h2>
+    </header>
+    <div class="medicine-dialog-body">
+      <div id="analysisScan" class="medicine-analysis-scan">
+        <div class="medicine-analysis-grid" aria-hidden="true">
+          <svg viewBox="0 0 400 96" preserveAspectRatio="none">
+            <path d="M0 60H78L96 49l19 11h35l13 15 15-47 18 61 18-42 15 13h34l14-16 19 16H400" />
+          </svg>
+        </div>
+        <div class="medicine-analysis-reading">
+          <span id="analysisStage">Сверка показателей</span>
+          <output id="analysisPercent" aria-hidden="true">0%</output>
+        </div>
+        <progress id="analysisProgress" max="100" value="0" aria-label="Ход анализа"></progress>
+        <p class="medicine-analysis-candidate" aria-hidden="true" id="analysisCandidate"></p>
+      </div>
+      <div id="analysisResult" class="medicine-analysis-result" role="status" hidden>
+        <p>Определённый диагноз</p>
+        <strong id="analysisDiagnosis"></strong>
+      </div>
+      <p class="medicine-status" role="status" id="analysisStatus" hidden></p>
+    </div>
+    <footer class="medicine-dialog-actions">
+      <button class="medicine-button" id="analysisCancel" type="button">Отмена</button>
+      <button class="medicine-button" id="analysisBack" type="button" hidden>Вернуться к форме</button>
+      <button class="medicine-button medicine-primary" id="analysisRetry" type="button" hidden>Повторить сохранение</button>
+      <button class="medicine-button medicine-primary" id="analysisRead" type="button" hidden>Ознакомиться</button>
+      <button class="medicine-button" id="analysisNew" type="button" hidden>Новое поступление</button>
+      <button class="medicine-button" id="analysisClose" type="button" hidden>Закрыть</button>
+    </footer>
   </dialog>
 
   <dialog class="medicine-dialog medicine-patient-dialog" id="patientDialog" aria-labelledby="patientDialogTitle">
