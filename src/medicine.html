@@ -113,7 +113,7 @@
         <div class="medicine-field">
           <label for="exposureMinutes">Просрочка возвращения из Запретной зоны, мин</label>
           <input id="exposureMinutes" name="overdue_minutes" type="number" min="0" max="2147483647" step="1" inputmode="numeric" aria-describedby="exposureGuide" required>
-          <p class="medicine-field-help" id="exposureGuide">Система подберёт болезнь по просрочке. От 5 минут возможна лёгкая болезнь, от 10 минут — тяжёлая, от 15 минут — угрожающая жизни.</p>
+          <p class="medicine-field-help" id="exposureGuide">0 минут — без просрочки. 1–5 минут — лёгкая просрочка, 6–10 минут — тяжёлая, больше 10 минут — смертельная. Осложнения могут повысить критичность диагноза.</p>
         </div>
         <fieldset class="medicine-field" id="complications">
           <legend>Дополнительные осложнения</legend>
