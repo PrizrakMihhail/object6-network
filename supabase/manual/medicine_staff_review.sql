@@ -1,5 +1,5 @@
--- Review existing assignments in the SQL editor before enabling staff access.
--- Earlier versions of public signup exposed ADMIN as a self-selected role.
+-- Review current assignments in the SQL editor.
+-- ADMIN can be selected in the registration form.
 select u.id_number, u.username, u.role
 from public.object6_users u
 where exists (

@@ -14,7 +14,7 @@ $$;
 
 revoke execute on function object6_private.has_medicine_staff_role(uuid) from public, anon, authenticated;
 
--- These roles grant access to the medical registry, so public signup cannot assign them.
+-- Public signup currently offers ADMIN. MEDIC remains assigned separately.
 revoke insert, update on public.object6_users from public, anon, authenticated;
 revoke insert (role), update (role) on public.object6_users from public, anon, authenticated;
 
@@ -32,7 +32,7 @@ begin
   if exists (
     select 1 from unnest(p_roles) as requested(value)
     cross join lateral unnest(string_to_array(requested.value, ',')) as role(role_name)
-    where upper(btrim(role.role_name)) in ('ADMIN', 'MEDIC')
+    where upper(btrim(role.role_name)) = 'MEDIC'
   ) then
     raise sqlstate 'PT403' using message = 'restricted_roles';
   end if;
