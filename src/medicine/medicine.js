@@ -30,6 +30,7 @@ const errors = {
   medicine_diagnosis_changed: 'Справочник изменился. Обновите страницу и запустите анализ снова.',
   medicine_catalog_unavailable: 'Справочник диагнозов недоступен.',
   invalid_medicine_status: 'Выберите допустимый статус болезни.',
+  medicine_status_access_denied: 'Сменить статус болезни могут только ADMIN и MEDIC.',
   medicine_case_not_found: 'Это поступление больше недоступно.',
   service_unavailable: 'База Медблока пока недоступна.'
 };
@@ -168,22 +169,30 @@ function openDiseaseDescription(episode) {
 function appendCaseControls(item, episode) {
   const badge = element('span', null, 'medicine-case-status');
   badge.setAttribute('role', 'status');
+  const updateBadge = () => {
+    const cured = episode.status === 'cured';
+    badge.dataset.status = cured ? 'cured' : 'active';
+    badge.textContent = cured ? 'Вылечена' : 'Активна';
+  };
   const actions = element('div', null, 'medicine-case-actions');
-  const change = element('button', null, 'medicine-button');
-  change.type = 'button';
   const description = element('button', 'Описание болезни', 'medicine-button');
   description.type = 'button';
   description.setAttribute('aria-haspopup', 'dialog');
   description.addEventListener('click', () => openDiseaseDescription(episode));
+  actions.append(description);
+  updateBadge();
+  item.append(badge, actions);
+  if (access !== 'staff') return;
+
+  const change = element('button', null, 'medicine-button');
+  change.type = 'button';
   const feedback = element('p', null, 'medicine-status medicine-case-feedback');
   feedback.setAttribute('role', 'status');
   feedback.hidden = true;
 
   function updateLabels() {
-    const cured = episode.status === 'cured';
-    badge.dataset.status = cured ? 'cured' : 'active';
-    badge.textContent = cured ? 'Вылечена' : 'Активна';
-    change.textContent = cured ? 'Вернуть статус «Активна»' : 'Отметить вылеченной';
+    updateBadge();
+    change.textContent = episode.status === 'cured' ? 'Вернуть статус «Активна»' : 'Отметить вылеченной';
   }
 
   change.addEventListener('click', async () => {
@@ -205,8 +214,8 @@ function appendCaseControls(item, episode) {
   });
 
   updateLabels();
-  actions.append(change, description);
-  item.append(badge, actions, feedback);
+  actions.prepend(change);
+  item.append(feedback);
 }
 
 function openPatient(records) {
