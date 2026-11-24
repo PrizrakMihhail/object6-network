@@ -28,6 +28,9 @@ const errors = {
   restricted_roles: 'Роль MEDIC назначается администратором.',
   invalid_secret_length: 'Пароль и слово для взлома могут занимать до 72 байт каждое.',
   identity_taken: 'Это имя пользователя или код документа уже заняты.',
+  document_registered: 'Не удалось зарегистрироваться. Пользователь с таким ID уже существует и имеет пароль.',
+  document_ambiguous: 'С этим кодом документа найдено несколько профилей. Обратитесь к администратору.',
+  activation_requires_admin: 'Для профиля с ролью MEDIC пароль задаёт администратор.',
   session_expired: 'Сессия истекла. Войдите снова.',
   invalid_message: 'Заполните поля «Кому», «Тема» и «Сообщение».',
   recipient_not_found: 'Получатель с таким именем или кодом документа не найден.',
@@ -257,7 +260,7 @@ onSubmit(loginForm, accountStatus, async data => {
 
 function updateRoles() {
   const roles = new FormData(registrationForm).getAll('role');
-  byId('selectedRoles').textContent = roles.join(', ') || 'Выберите одну или несколько';
+  byId('selectedRoles').textContent = roles.join(', ') || 'Для нового профиля';
 }
 
 onSubmit(registrationForm, accountStatus, async data => {
@@ -267,11 +270,6 @@ onSubmit(registrationForm, accountStatus, async data => {
   const password = data.get('password');
   const hackWord = data.get('hack_word').trim();
   if (!username || !idNumber) throw new Error('invalid_registration');
-  if (!roles.length) {
-    rolePicker.open = true;
-    rolePicker.querySelector('summary').focus();
-    throw new Error('invalid_roles');
-  }
   if ([password, hackWord].some(secret => encoder.encode(secret).length > 72)) {
     throw new Error('invalid_secret_length');
   }
