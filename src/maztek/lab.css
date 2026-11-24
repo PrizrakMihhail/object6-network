@@ -1,45 +1,123 @@
-.lab .topbar .theme-switch { margin-left: auto; }
+@font-face {
+  font-family: "Lab Montag";
+  src: url("../assets/maztek/lux-montag.ttf") format("truetype");
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --paper: #f9f8f3;
+  --grid-line: #dfd8c6;
+  --panel: #d9d8d3;
+  --panel2: #efebe1;
+  --line: #ada28f;
+  --line2: #856128;
+  --text: #201d19;
+  --muted: #575147;
+  --amber: #784506;
+  --red: #8c3128;
+  --display: "Lab Montag", "Arial Narrow", sans-serif;
+  --grid: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+}
+
+* { box-sizing: border-box; }
+
+.lab {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--grid) var(--paper);
+  background-size: 2rem 2rem;
+  color: var(--text);
+  font: 1rem/1.5 system-ui, sans-serif;
+}
+
+.lab-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .35rem 1rem;
+  padding: .7rem max(1rem, calc((100% - 72rem) / 2));
+  background: var(--paper);
+  border-bottom: 1px solid var(--line2);
+  font-size: .82rem;
+}
+
+.lab-network { color: var(--muted); }
+.lab-network b { color: var(--amber); }
 
 .lab-main {
   max-width: 76rem;
-  padding: clamp(1rem, 4vw, 3rem);
+  margin: auto;
+  padding: 0 clamp(1rem, 3vw, 2rem) 3rem;
 }
+
+.lab-main:focus { outline: none; }
 
 .lab-return {
-  display: inline-block;
-  margin-bottom: 1.4rem;
-  font-size: .8rem;
-  color: var(--amber);
+  color: var(--text);
   text-underline-offset: .2em;
 }
+.lab-return span { color: var(--amber); }
 
 .lab .hero-row {
+  display: flex;
   align-items: center;
-  gap: clamp(1rem, 4vw, 3rem);
-  min-height: 9rem;
+  gap: clamp(1rem, 3vw, 2.25rem);
+  padding: clamp(1.4rem, 5vw, 3rem) 0;
+  border-bottom: 1px solid var(--line2);
+  margin-bottom: 1.2rem;
 }
 
-.lab .hero-row h1 { color: var(--text); }
-.lab .hero-row h1 span { color: var(--amber); }
-.lab .hero-row .lead { color: var(--muted); }
+.lab .hero-row h1 {
+  margin: 0;
+  font: 400 clamp(2.1rem, 5vw, 4.3rem)/1.04 var(--display);
+  text-transform: uppercase;
+}
+
+.lab .hero-row .lead { margin: .5rem 0 0; color: var(--muted); }
+
+.lab-identity {
+  display: grid;
+  justify-items: center;
+  flex: none;
+  font: 800 clamp(.75rem, 2vw, 1.2rem)/1 system-ui, sans-serif;
+  letter-spacing: .08em;
+}
+.lab-identity b { color: var(--amber); }
 
 .lab-mark {
   display: block;
-  width: clamp(3rem, 13vw, 9rem);
+  width: clamp(3.45rem, 10vw, 6rem);
   aspect-ratio: 240 / 222;
   flex: none;
-  background: var(--amber);
-  mask: url("../assets/maztek/mark.png") center / contain no-repeat;
+  background: url("../assets/maztek/mark.png") center / contain no-repeat;
+}
+
+.lab-workspace {
+  display: grid;
+  grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(.8rem, 2.5vw, 1.5rem);
 }
 
 .lab-nav {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-  gap: .55rem;
-  padding: .55rem;
-  margin-bottom: 1.25rem;
   background: var(--panel);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line2);
+}
+
+.lab-nav h2, .lab-panel h2 {
+  margin: 0;
+  font: 400 1.55rem/1.05 var(--display);
+  text-transform: uppercase;
+}
+
+.lab-nav h2 {
+  grid-column: 1 / -1;
+  padding: .7rem .85rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel2);
 }
 
 .lab-link {
@@ -51,14 +129,21 @@
   min-height: 2.75rem;
   padding: .65rem .8rem;
   color: var(--text);
-  background: var(--panel);
+  background: var(--paper);
   border: 1px solid var(--line);
   text-decoration: none;
   text-align: left;
   font: inherit;
 }
 
-.lab-nav .lab-link { justify-content: flex-start; }
+.lab-nav .lab-link {
+  justify-content: flex-start;
+  border: 0;
+  background: transparent;
+  font: 400 1.25rem/1.15 var(--display);
+  text-transform: uppercase;
+}
+.lab-nav .lab-link + .lab-link { border-top: 1px solid var(--line); }
 .lab-link span { color: var(--amber); }
 .lab-link:is(:hover, :focus-visible), .lab-projects summary:hover {
   background: var(--panel2);
@@ -81,15 +166,15 @@
 .lab-panel {
   min-width: 0;
   padding: clamp(.85rem, 2.2vw, 1.4rem);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line2);
   background: var(--panel);
   scroll-margin-top: 5.5rem;
   font-size: .85rem;
   line-height: 1.5;
 }
 
-.lab-panel:target { border-color: var(--amber); }
-.lab-panel .section-head { margin-bottom: .85rem; }
+.lab-panel:target { outline: 2px solid var(--amber); outline-offset: 2px; }
+.lab-panel .section-head { margin-bottom: .85rem; padding-bottom: .6rem; border-bottom: 1px solid var(--line); }
 .lab-panel p { margin: 0; }
 .lab-records { list-style: none; margin: 0; padding: 0; }
 .lab-records li + li { margin-top: .35rem; }
@@ -119,7 +204,7 @@
 .lab-projects summary {
   padding: .7rem .8rem;
   border: 1px solid var(--line);
-  background: var(--panel);
+  background: var(--paper);
   cursor: pointer;
 }
 .lab-projects summary::marker { color: var(--amber); }
@@ -134,7 +219,10 @@
   color: var(--text);
 }
 
-.lab-connection::backdrop { background: var(--bg); }
+.lab-connection::backdrop {
+  background: var(--grid) var(--paper);
+  background-size: 2rem 2rem;
+}
 .lab-connection header {
   display: flex;
   align-items: center;
@@ -143,7 +231,8 @@
   border-bottom: 1px solid var(--line);
 }
 .lab-connection .lab-mark { width: 3rem; }
-.lab-connection h2 { margin: 0; font: 500 clamp(1.2rem, 4vw, 2rem) var(--display); }
+.lab-connection .eyebrow { margin: 0 0 .35rem; color: var(--amber); font-size: .7rem; letter-spacing: .05em; }
+.lab-connection h2 { margin: 0; font: 400 clamp(1.35rem, 4vw, 2.3rem) var(--display); text-transform: uppercase; }
 .lab-connection #labConnectionStatus { color: var(--amber); font-size: .85rem; min-height: 2.2em; }
 .lab-connection progress {
   display: block;
@@ -160,12 +249,15 @@
 .lab-connection form { display: flex; justify-content: flex-end; margin-top: 1rem; }
 .lab-connection button { width: auto; cursor: pointer; font-size: .85rem; }
 
-@media (max-width: 720px) {
+@media (max-width: 950px) {
   .lab-sections { grid-template-columns: minmax(0, 1fr); }
-  .lab .hero-row h1 { font-size: clamp(1.9rem, 8vw, 3.2rem); }
 }
 
-@media (max-width: 340px) {
-  .lab .topbar { min-height: 64px; height: auto; flex-wrap: wrap; padding-block: .35rem; }
-  .lab .topbar .theme-switch { margin: .25rem .55rem .15rem; }
+@media (max-width: 650px) {
+  .lab-workspace { grid-template-columns: minmax(0, 1fr); }
+  .lab-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lab-nav .lab-link + .lab-link { border-top: 0; }
+  .lab-nav .lab-link:nth-of-type(n + 3) { border-top: 1px solid var(--line); }
+  .lab-nav .lab-link:nth-of-type(even) { border-left: 1px solid var(--line); }
+  .lab .hero-row h1 { font-size: clamp(1.75rem, 7vw, 3.2rem); }
 }

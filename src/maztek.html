@@ -3,106 +3,98 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b0e0d">
+  <meta name="theme-color" content="#f9f8f3">
   <meta name="description" content="Почтовый сервер и архив разработок лаборатории Мазтек">
   <title>Лаборатория Мазтек — Сеть Объекта №6</title>
-  <link rel="stylesheet" href="network/styles.css">
-  <link rel="stylesheet" href="shared/logo.css">
-  <link rel="stylesheet" href="shared/theme.css">
-  <link rel="stylesheet" href="shared/shard.css">
   <link rel="stylesheet" href="maztek/lab.css">
-  <script src="shared/theme.js"></script>
   <script src="maztek/connection.js" defer></script>
 </head>
 <body class="lab">
-  <div class="noise" aria-hidden="true"></div>
   <div id="labPage">
-    <header class="topbar">
-      <a class="brand" href="index.html" aria-label="Вернуться в Сеть Объекта №6">
-        <span class="brand-mark" aria-hidden="true">06</span>
-        <span><b>ОБЪЕКТ №6</b><small>INTERNAL RESEARCH NETWORK</small></span>
+    <header class="lab-topbar">
+      <a class="lab-return" href="index.html" aria-label="Вернуться в Сеть Объекта №6">
+        <span aria-hidden="true">←</span> Сеть Объекта №6
       </a>
-      <div class="system-line"><span><i></i> СЕТЬ: MAZTECH</span></div>
-      <div class="theme-switch" role="group" aria-label="Тема интерфейса">
-        <button type="button" data-theme-choice="standard" aria-pressed="true">Стандарт</button>
-        <button type="button" data-theme-choice="terminal" aria-pressed="false">Терминал</button>
-        <button type="button" data-theme-choice="shard" aria-pressed="false">Осколок</button>
-      </div>
+      <span class="lab-network">Внешний узел <b>MAZTECH</b></span>
     </header>
 
     <main class="lab-main" id="labMain" tabindex="-1">
-      <a class="lab-return" href="index.html">← Вернуться в Сеть</a>
       <section class="hero-row">
+        <div class="lab-identity" aria-hidden="true">
+          <span class="lab-mark"></span>
+          <span>MAZ<b>TECH</b></span>
+        </div>
         <div>
-          <p class="eyebrow">УЗЕЛ / MAZTECH</p>
-          <h1>Лаборатория <span>Мазтек</span></h1>
+          <h1>Лаборатория Мазтек</h1>
           <p class="lead">Почтовый сервер и архив исследовательских разработок.</p>
         </div>
-        <span class="lab-mark" aria-hidden="true"></span>
       </section>
 
-      <nav class="lab-nav" aria-label="Разделы лаборатории">
-        <a class="lab-link" href="#mail"><span aria-hidden="true">▤</span> Почта</a>
-        <a class="lab-link" href="#research"><span aria-hidden="true">◇</span> Разработки</a>
-        <a class="lab-link" href="#flytrap"><span aria-hidden="true">⊕</span> Система «Мухоловка»</a>
-        <a class="lab-link" href="#codes"><span aria-hidden="true">⌗</span> Справка о кодах</a>
-      </nav>
+      <div class="lab-workspace">
+        <nav class="lab-nav" aria-labelledby="labNavigationTitle">
+          <h2 id="labNavigationTitle">Быстрый доступ</h2>
+          <a class="lab-link" href="#mail"><span aria-hidden="true">▤</span> Почта</a>
+          <a class="lab-link" href="#research"><span aria-hidden="true">◇</span> Разработки</a>
+          <a class="lab-link" href="#flytrap"><span aria-hidden="true">⊕</span> Система «Мухоловка»</a>
+          <a class="lab-link" href="#codes"><span aria-hidden="true">⌗</span> Справка о кодах</a>
+        </nav>
 
-      <div class="lab-sections">
-        <section class="lab-panel" id="mail" aria-labelledby="labMailTitle">
-          <div class="section-head"><h2 id="labMailTitle">Почтовый сервер</h2></div>
-          <ul class="lab-records">
-            <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vQmfqomRO5Jsajq4XpApXgNjhjx62-ZUWeqcuSwiN1QgDw6TtbTR6i7G9en3txxdg/pub" target="_blank" rel="noopener">Завершение исследовательской программы LONGINUS <span aria-label="(новая вкладка)">↗</span></a></li>
-            <li class="lab-locked">Завершение программы LONGINUS / распоряжение по материалам проекта <span>Закрыто</span></li>
-            <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vRZyUUlmRE6V12aEa8dBmfKaC2kLAhXhTlfFqvc9MyBzhk_yU2cQyKStQPnH9hKAg/pub" target="_blank" rel="noopener">Служебная записка <span aria-label="(новая вкладка)">↗</span></a></li>
-            <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSK9MwQb6tuqOwA3orSQaZ0jLPqVgV2IlvRQdOuHa9-fzFM-nTdD0We1YGrgDwOuQ/pub" target="_blank" rel="noopener">Запрос на финансирование исследовательской программы LONGINUS <span aria-label="(новая вкладка)">↗</span></a></li>
-          </ul>
-        </section>
+        <div class="lab-sections">
+          <section class="lab-panel" id="mail" aria-labelledby="labMailTitle">
+            <div class="section-head"><h2 id="labMailTitle">Почтовый сервер</h2></div>
+            <ul class="lab-records">
+              <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vQmfqomRO5Jsajq4XpApXgNjhjx62-ZUWeqcuSwiN1QgDw6TtbTR6i7G9en3txxdg/pub" target="_blank" rel="noopener">Завершение исследовательской программы LONGINUS <span aria-label="(новая вкладка)">↗</span></a></li>
+              <li class="lab-locked">Завершение программы LONGINUS / распоряжение по материалам проекта <span>Закрыто</span></li>
+              <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vRZyUUlmRE6V12aEa8dBmfKaC2kLAhXhTlfFqvc9MyBzhk_yU2cQyKStQPnH9hKAg/pub" target="_blank" rel="noopener">Служебная записка <span aria-label="(новая вкладка)">↗</span></a></li>
+              <li><a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSK9MwQb6tuqOwA3orSQaZ0jLPqVgV2IlvRQdOuHa9-fzFM-nTdD0We1YGrgDwOuQ/pub" target="_blank" rel="noopener">Запрос на финансирование исследовательской программы LONGINUS <span aria-label="(новая вкладка)">↗</span></a></li>
+            </ul>
+          </section>
 
-        <section class="lab-panel" id="research" aria-labelledby="labResearchTitle">
-          <div class="section-head"><h2 id="labResearchTitle">Разработки</h2></div>
-          <div class="lab-projects">
-            <details>
-              <summary>SLEIPNIR</summary>
-              <ul class="lab-records">
-                <li class="lab-locked">Записка об испытании <span>Закрыто</span></li>
-                <li class="lab-locked">W/SLEIPNIR/S-1/VOICE_43 <span>Закрыто</span></li>
-                <li class="lab-locked">Отчёт о ходовом испытании S-1 <span>Закрыто</span></li>
-              </ul>
-            </details>
-            <details>
-              <summary>ЛАЗАРЬ</summary>
-              <p>Документация проекта LAZARIUS перенесена в Объект X.</p>
-            </details>
-            <details>
-              <summary>СВИРЕЛЬ-3</summary>
-              <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vTwRz5ISyaZCx6rFW1n0uj10UTqbgtoWbZgbwm0xukAlTpiK8f6ET21YDLnMb_qEw/pub" target="_blank" rel="noopener">Открыть документацию <span aria-label="(новая вкладка)">↗</span></a>
-            </details>
-            <details>
-              <summary>ЦИТАДЕЛЬ</summary>
-              <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSYV9_QmpZC_0OBLYbhc28Y7qatXG6Rt5teHuNaYK0jaEsgF7eaTd1sJFbtwKYIXw/pub" target="_blank" rel="noopener">Открыть документацию <span aria-label="(новая вкладка)">↗</span></a>
-            </details>
-            <details>
-              <summary>ЛОНГИН <span>Закрыто</span></summary>
-              <ul class="lab-records">
-                <li>Старая формула Лонгина</li>
-                <li>Рекомбинация</li>
-                <li>Обновлённая формула Лонгина</li>
-                <li>L-9 BLKWATER</li>
-              </ul>
-            </details>
-          </div>
-        </section>
+          <section class="lab-panel" id="research" aria-labelledby="labResearchTitle">
+            <div class="section-head"><h2 id="labResearchTitle">Разработки</h2></div>
+            <div class="lab-projects">
+              <details>
+                <summary>SLEIPNIR</summary>
+                <ul class="lab-records">
+                  <li class="lab-locked">Записка об испытании <span>Закрыто</span></li>
+                  <li class="lab-locked">W/SLEIPNIR/S-1/VOICE_43 <span>Закрыто</span></li>
+                  <li class="lab-locked">Отчёт о ходовом испытании S-1 <span>Закрыто</span></li>
+                </ul>
+              </details>
+              <details>
+                <summary>ЛАЗАРЬ</summary>
+                <p>Документация проекта LAZARIUS перенесена в Объект X.</p>
+              </details>
+              <details>
+                <summary>СВИРЕЛЬ-3</summary>
+                <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vTwRz5ISyaZCx6rFW1n0uj10UTqbgtoWbZgbwm0xukAlTpiK8f6ET21YDLnMb_qEw/pub" target="_blank" rel="noopener">Открыть документацию <span aria-label="(новая вкладка)">↗</span></a>
+              </details>
+              <details>
+                <summary>ЦИТАДЕЛЬ</summary>
+                <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSYV9_QmpZC_0OBLYbhc28Y7qatXG6Rt5teHuNaYK0jaEsgF7eaTd1sJFbtwKYIXw/pub" target="_blank" rel="noopener">Открыть документацию <span aria-label="(новая вкладка)">↗</span></a>
+              </details>
+              <details>
+                <summary>ЛОНГИН <span>Закрыто</span></summary>
+                <ul class="lab-records">
+                  <li>Старая формула Лонгина</li>
+                  <li>Рекомбинация</li>
+                  <li>Обновлённая формула Лонгина</li>
+                  <li>L-9 BLKWATER</li>
+                </ul>
+              </details>
+            </div>
+          </section>
 
-        <section class="lab-panel" id="flytrap" aria-labelledby="labFlytrapTitle">
-          <div class="section-head"><h2 id="labFlytrapTitle">Система «Мухоловка»</h2></div>
-          <p class="lab-locked">Доступ к системе закрыт <span>MAZTECH</span></p>
-        </section>
+          <section class="lab-panel" id="flytrap" aria-labelledby="labFlytrapTitle">
+            <div class="section-head"><h2 id="labFlytrapTitle">Система «Мухоловка»</h2></div>
+            <p class="lab-locked">Доступ к системе закрыт <span>MAZTECH</span></p>
+          </section>
 
-        <section class="lab-panel" id="codes" aria-labelledby="labCodesTitle">
-          <div class="section-head"><h2 id="labCodesTitle">Справка о кодах</h2></div>
-          <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSy1vKPZ96Yg7cf798F81ts6O8sWmYKJR5TpnLTS5rLvKjD2WUCiVaX63rnY3zAEQ/pub" target="_blank" rel="noopener">Открыть справку <span aria-label="(новая вкладка)">↗</span></a>
-        </section>
+          <section class="lab-panel" id="codes" aria-labelledby="labCodesTitle">
+            <div class="section-head"><h2 id="labCodesTitle">Справка о кодах</h2></div>
+            <a class="lab-link" href="https://docs.google.com/document/d/e/2PACX-1vSy1vKPZ96Yg7cf798F81ts6O8sWmYKJR5TpnLTS5rLvKjD2WUCiVaX63rnY3zAEQ/pub" target="_blank" rel="noopener">Открыть справку <span aria-label="(новая вкладка)">↗</span></a>
+          </section>
+        </div>
       </div>
     </main>
   </div>
