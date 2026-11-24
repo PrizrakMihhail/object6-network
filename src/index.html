@@ -6,19 +6,19 @@
   <meta name="theme-color" content="#0b0e0d">
   <meta name="description" content="Единая сеть архивов Объекта №6">
   <title>Сеть Объекта №6</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="routing.css">
-  <link rel="stylesheet" href="reactor.css">
-  <link rel="stylesheet" href="sidebar-fixed.css">
-  <link rel="stylesheet" href="network-signal.css">
-  <link rel="stylesheet" href="microreader.css">
-  <link rel="stylesheet" href="microreader-effects.css">
-  <link rel="stylesheet" href="logo.css">
-  <link rel="stylesheet" href="keyboard.css">
-  <link rel="stylesheet" href="leisure.css">
-  <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="account.css">
-  <script src="theme.js"></script>
+  <link rel="stylesheet" href="network/styles.css">
+  <link rel="stylesheet" href="network/routing.css">
+  <link rel="stylesheet" href="network/reactor.css">
+  <link rel="stylesheet" href="network/sidebar-fixed.css">
+  <link rel="stylesheet" href="network/network-signal.css">
+  <link rel="stylesheet" href="microreader/microreader.css">
+  <link rel="stylesheet" href="microreader/microreader-effects.css">
+  <link rel="stylesheet" href="shared/logo.css">
+  <link rel="stylesheet" href="shared/keyboard.css">
+  <link rel="stylesheet" href="leisure/leisure.css">
+  <link rel="stylesheet" href="shared/theme.css">
+  <link rel="stylesheet" href="account/account.css">
+  <script src="shared/theme.js"></script>
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -435,10 +435,10 @@
         <div><small>NODE-06 // PRESS ARCHIVE</small><h2 id="microreaderTitle">ОПТИЧЕСКИЙ МИКРОРИДЕР</h2></div>
         <button id="closeMicroreader" type="button" aria-label="Закрыть микроридер">×</button>
       </header>
-      <div class="microreader-status"><span id="lampStatus" aria-live="polite"><i></i> ЛАМПА: СТАБИЛЬНО</span><b id="clippingTitle">ВЫРЕЗКА 1</b><span id="clippingCounter">01 / 08</span></div>
+      <div class="microreader-status"><span id="lampStatus" aria-live="polite"><i></i> ЛАМПА: СТАБИЛЬНО</span><b id="clippingTitle"></b><span id="clippingCounter"></span></div>
       <figure class="microreader-stage" aria-live="polite">
-        <div class="microreader-glass"><img id="clippingImage" src="assets/microreader/clipping-1.png" alt="Газетная вырезка 1 из 8"></div>
-        <figcaption id="clippingCaption">АРХИВНАЯ КОПИЯ // ЛИСТ 01</figcaption>
+        <div class="microreader-glass"><img id="clippingImage" alt="" hidden></div>
+        <figcaption id="clippingCaption"></figcaption>
       </figure>
       <footer>
         <button id="previousClipping" type="button">ПРЕДЫДУЩАЯ</button>
@@ -521,14 +521,11 @@
     </form>
   </dialog>
 
-  <script src="app.js"></script>
-  <script src="reactor.js"></script>
-  <script type="module" src="supabase.js"></script>
-  <script type="module" src="account.js"></script>
-  <script src="network-signal.js"></script>
-  <script src="microreader-catalog.js"></script>
-  <script src="microreader.js"></script>
-  <script src="keyboard.js"></script>
-  <script src="leisure.js"></script>
+  <script src="network/reactor.js"></script>
+  <script type="module" src="network/index.js"></script>
+  <script src="network/network-signal.js"></script>
+  <script type="module" src="microreader/microreader.js"></script>
+  <script src="shared/keyboard.js"></script>
+  <script src="leisure/leisure.js"></script>
 </body>
 </html>

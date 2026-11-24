@@ -1,4 +1,4 @@
-import config from './supabase-config.js';
+import { requestData } from '../shared/supabase-api.js';
 
 const byId = id => document.getElementById(id);
 const accountDialog = byId('accessDialog');
@@ -55,12 +55,11 @@ const deleteButton = byId('deleteMessage');
 const recipientInput = composeForm.elements.namedItem('to');
 
 async function rpc(name, params) {
-  if (!config) throw new Error('service_unavailable');
-  const response = await fetch(new URL(`/rest/v1/rpc/object6_${name}`, config.url), {
+  const response = await requestData(`rpc/object6_${name}`, {
     method: 'POST',
-    headers: { apikey: config.publishableKey, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params),
-    signal: AbortSignal.timeout(10000)
+    timeout: 10000
   });
   if (response.status === 204) return;
   const result = await response.json();

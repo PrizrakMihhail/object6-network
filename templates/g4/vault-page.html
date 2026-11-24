@@ -1,0 +1,28 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090101"><title>{{pageTitle}}</title><link rel="stylesheet" href="g4/fourth.css"><link rel="stylesheet" href="g4/secure.css"><link rel="stylesheet" href="g4/dump-state.css"><link rel="stylesheet" href="shared/logo.css"><link rel="stylesheet" href="g4/access-gate.css"><link rel="stylesheet" href="shared/keyboard.css"><link rel="stylesheet" href="shared/theme.css"><script src="shared/theme.js"></script>{{extraStyles}}</head>
+<body data-puzzle="{{puzzle}}"><div class="crt" aria-hidden="true"></div>
+<dialog id="accessDialog" class="access-gate" aria-labelledby="accessTitle">
+  <div class="gate-frame">
+    <img src="assets/g4-logo-red-v1.png" alt="">
+    <p class="gate-kicker">G4 FORTRESS // SECURITY GATE</p>
+    <h1 id="accessTitle">{{accessTitle}}</h1>
+    <p class="gate-copy">Требуется подтверждение доступа. Выберите штатную авторизацию или попытку обхода защиты.</p>
+    <div id="choicePanel" class="gate-actions">
+      <button id="passwordChoice" type="button">ВВЕСТИ ПАРОЛЬ</button>
+      <button id="hackChoice" type="button">ВЗЛОМАТЬ</button>
+    </div>
+    <form id="passwordPanel" class="password-panel hidden">
+      <label for="passwordInput">ПАРОЛЬ ДОСТУПА</label>
+      <input id="passwordInput" type="password" autocomplete="off" spellcheck="false">
+      <p id="passwordError" class="password-error" aria-live="polite"></p>
+      <div class="gate-actions"><button type="submit">ПОДТВЕРДИТЬ</button><button id="backChoice" type="button">НАЗАД</button></div>
+    </form>
+    <a class="gate-cancel" href="fourth.html">[ ОТМЕНА / ВЕРНУТЬСЯ ]</a>
+  </div>
+</dialog>
+<main id="hackView" class="hack-shell hidden">
+  <header class="hack-head"><img class="secure-logo" src="assets/g4-logo-red-v1.png" alt="Логотип Четвёртой Передачи"><div><small>G4 FORTRESS MAINFRAME</small><h1>СИСТЕМА ЗАЩИТЫ АРХИВА</h1></div><a href="fourth.html">[ ПРЕРВАТЬ ]</a></header>
+  <section class="hack-intro"><p>&gt; ОБНАРУЖЕН ЗАКРЫТЫЙ РАЗДЕЛ</p><p>&gt; НАЙДИТЕ КОДОВОЕ СЛОВО ИЗ {{wordLength}} СИМВОЛОВ.</p><p>&gt; ОСТАЛОСЬ ПОПЫТОК: <span id="attemptBlocks">{{attemptBlocks}}</span></p></section>
+  <section class="hack-grid"><div id="memoryDump" class="memory-dump" aria-label="Дамп памяти"></div><aside id="hackLog" class="hack-log"><p>&gt; СЕАНС НАЧАТ</p><p>&gt; ИЩИТЕ СЛОВА В ДАМПЕ</p><p>&gt; LIKENESS = СОВПАДЕНИЯ ПО ПОЗИЦИИ</p></aside></section>
+  <footer class="hack-help"><button id="restartHack">НОВЫЙ ДАМП</button></footer>
+</main>
+{{vault}}<script src="shared/terminal-audio.js"></script><script type="module" src="g4/secure.js"></script><script src="shared/keyboard.js"></script></body></html>

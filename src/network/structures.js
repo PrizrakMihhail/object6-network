@@ -1,15 +1,13 @@
-import config from './supabase-config.js';
+import { hasSupabaseConfig, requestData } from '../shared/supabase-api.js';
 
 const nodes = new Map(
   Array.from(document.querySelectorAll('[data-structure-slug]'), node => [node.dataset.structureSlug, node])
 );
 
 async function loadStructures() {
-  const url = new URL('/rest/v1/object6_structures', config.url);
-  url.searchParams.set('select', 'slug,name,status,condition,description');
-  const response = await fetch(url, {
-    headers: { apikey: config.publishableKey },
-    signal: AbortSignal.timeout(5000)
+  const response = await requestData('object6_structures', {
+    query: { select: 'slug,name,status,condition,description' },
+    timeout: 5000
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -33,6 +31,6 @@ async function loadStructures() {
   }
 }
 
-if (config && nodes.size) {
+if (hasSupabaseConfig && nodes.size) {
   loadStructures().catch(error => console.warn('Supabase routing data unavailable:', error.message));
 }

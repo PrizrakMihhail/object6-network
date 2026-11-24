@@ -1,4 +1,4 @@
-const docs = [
+export const documents = [
  {id:'lazar',node:'maztech',type:'critical',code:'MZ-LZR-04',title:'Проект «ЛАЗАРЬ»',sub:'Медицинский комплекс / архивная сводка',date:'2175.11.08',level:'05',integrity:94,body:`<h3>ОБЩАЯ ИНФОРМАЦИЯ</h3><p>Проект «Лазарь» направлен на увеличение возможностей организма без замены его функций внешними системами. Комплекс разделён на направления «Альфа», «Бета» и «Омега».</p><p><b>СТАТУС:</b> документация перенесена в Объект-X. Доступ к полному набору формул возможен только через физический терминал.</p><h3>АРХИТЕКТУРА КОМПЛЕКСА</h3><p>«Альфа» — сила, выносливость и восстановление тканей. «Бета» — когнитивные способности и устойчивость нервной системы. «Омега» — интенсивная регенерация после критического повреждения.</p><p>Критические параметры активации: <span class="redacted">MT-403 / OMEGA SEQUENCE</span></p>`},
  {id:'hannibal',node:'matsumoto',type:'research',code:'MT-HNB-95',title:'Проект HANNIBAL',sub:'Кибернетическая программа / отчёт об активации',date:'1995.10.02',level:'04',integrity:71,body:`<h3>MATSUMOTO PHARMA &amp; BIOTECH</h3><p>Экспериментальная программа глубокой интеграции биологического организма с искусственными системами. В состав входят нейросинтетическая мускулатура, искусственный скелет, модульные системы жизнеобеспечения и нейронный интерфейс NEXUS-β.</p><p><b>НАБЛЮДЕНИЕ:</b> высокая физическая жизнеспособность субъекта не соответствует эксплуатационной надёжности. Зафиксированы нарушения моторного контроля и выраженная агрессивная реакция.</p><h3>ПОСЛЕДНЯЯ АКТИВАЦИЯ</h3><p>Объект HANNIBAL-05 помещён в криохранилище. Управляющая последовательность повреждена: <span class="redacted">NEXUS BETA ROOT KEY</span></p>`},
  {id:'citadel',node:'maztech',type:'research',code:'MZ-CT-0036',title:'Проект «ЦИТАДЕЛЬ»',sub:'Узловой оборонительный модуль / функциональная архитектура',date:'2175.08.21',level:'03',integrity:100,body:`<h3>АРХИВНАЯ СВОДКА</h3><p>Компактный узловой оборонительный модуль. Реактивное ядро заключено в многослойную защитную оболочку; сенсорный контур отслеживает температуру, давление, ультразвук и радиометрию.</p><p><b>СОСТОЯНИЯ:</b> SAFE → STANDBY → ARMED → ACTIVE. Переходы в ARMED и ACTIVE требуют внешней авторизации.</p><h3>РИСКИ И ПРОТОКОЛ</h3><p>Не вскрывать без допуска. Не подвергать ударному воздействию. Перемещать только в штатной оснастке.</p>`},
@@ -12,69 +12,3 @@ const docs = [
  {id:'soren',node:'field',type:'mail',code:'4G-MAIL-01',title:'Письмо Сорена Турхейма',sub:'Четвёртая Передача / перехваченное сообщение',date:'2169.06.01',level:'02',integrity:100,body:`<h3>ПЕРЕХВАЧЕННОЕ СООБЩЕНИЕ</h3><p>Маршрут восстановлен из локального почтового реле. Подпись отправителя подтверждена частично.</p>`},
  {id:'major',node:'field',type:'mail',code:'INT-MJR-07',title:'Сообщение от Майора',sub:'Перехват / короткий пакет',date:'2175.08.22',level:'03',integrity:64,body:`<h3>ВОССТАНОВЛЕННЫЙ ПАКЕТ</h3><p>Канал нестабилен. Проверьте лабораторию и не доверяйте автоматическим протоколам доступа.</p>`}
 ];
-
-let state={filter:'all',node:'all',query:'',favorite:new Set()};
-const list=document.getElementById('documentList');
-function render(){
- const q=state.query.toLowerCase();
- const found=docs.filter(d=>(state.filter==='all'||d.type===state.filter)&&(state.node==='all'||d.node===state.node)&&(`${d.title} ${d.sub} ${d.code}`.toLowerCase().includes(q)));
- list.innerHTML=found.length?found.map(d=>`<button class="doc-row" data-id="${d.id}" data-node="${d.node}"><span class="doc-icon">${d.node==='matsumoto'?'MT':d.node==='maztech'?'MZ':'N6'}</span><span class="doc-title"><b>${state.favorite.has(d.id)?'★ ':''}${d.title}</b><small>${d.code} · ${d.sub}</small></span><span class="doc-date">${d.date}</span><span class="doc-level ${d.type==='critical'?'critical':''}">LVL ${d.level}</span></button>`).join(''):'<div class="empty-state">СОВПАДЕНИЙ В ЭТОМ КОНТУРЕ НЕ НАЙДЕНО</div>';
- document.querySelectorAll('.doc-row').forEach(el=>el.addEventListener('click',()=>openDoc(el.dataset.id)));
-}
-function openDoc(id){
- const d=docs.find(x=>x.id===id)||{title:'Центральный шлюз',code:'NODE-06',sub:'Системный объект',date:'2176.04.07',level:'03',integrity:100,body:'<h3>ГЛАВНЫЙ ТЕРМИНАЛ</h3><p>Маршрутизация между доступными архивами выполняется штатно.</p>'};
- document.getElementById('docTitle').textContent=d.title;document.getElementById('docPath').textContent=`ARCHIVE://${d.node||'system'}/${d.code}`;
- document.getElementById('docMeta').innerHTML=`<span>КОД: <b>${d.code}</b></span><span>ДАТА: <b>${d.date}</b></span><span>ДОПУСК: <b>${d.level}</b></span>`;
- document.getElementById('docBody').innerHTML=d.body;document.getElementById('docIntegrity').textContent=d.integrity+'%';
- const mark=document.getElementById('markButton');mark.dataset.id=d.id||'';mark.textContent=state.favorite.has(d.id)?'УБРАТЬ ИЗ ИЗБРАННОГО':'ДОБАВИТЬ В ИЗБРАННОЕ';
- document.getElementById('documentDialog').showModal();
-}
-document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.filter=b.dataset.filter;render()}));
-document.querySelectorAll('.node-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.node-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.node=b.dataset.node;render()}));
-document.getElementById('searchInput').addEventListener('input',e=>{state.query=e.target.value;render()});
-const routingModes = document.querySelectorAll('.routing-switch button');
-routingModes.forEach(button => button.addEventListener('click', () => {
-  for (const mode of routingModes) {
-    const selected = mode === button;
-    mode.classList.toggle('active', selected);
-    mode.setAttribute('aria-pressed', String(selected));
-    document.getElementById(mode.getAttribute('aria-controls')).hidden = !selected;
-  }
-}));
-const routingAccess = document.getElementById('routingAccessDialog');
-document.querySelectorAll('.routing-node:not(#plazaNode, #reactorNode)').forEach(node => {
-  node.addEventListener('click', () => routingAccess.showModal());
-});
-document.getElementById('plazaNode').addEventListener('click', () => {
-  document.getElementById('plazaDialog').showModal();
-});
-const routingObserver = new ResizeObserver(entries => {
-  for (const { target: graph } of entries) {
-    if (!graph.clientWidth) continue;
-    const hub = graph.querySelector('.routing-hub');
-    const svg = graph.querySelector('.routing-lines');
-    const center = node => ({
-      x: node.offsetLeft + node.offsetWidth / 2,
-      y: node.offsetTop + node.offsetHeight / 2
-    });
-    const origin = center(hub);
-    const lines = Array.from(graph.querySelectorAll('.routing-node:not(.routing-hub)'), node => {
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      const destination = center(node);
-      line.setAttribute('x1', origin.x);
-      line.setAttribute('y1', origin.y);
-      line.setAttribute('x2', destination.x);
-      line.setAttribute('y2', destination.y);
-      line.classList.toggle('routing-line-warning', node.dataset.condition === 'warn');
-      if (node.id === 'reactorNode') line.classList.add('routing-line-reactor');
-      return line;
-    });
-    svg.replaceChildren(...lines);
-  }
-});
-document.querySelectorAll('.routing-graph').forEach(graph => routingObserver.observe(graph));
-document.querySelectorAll('.nav-item[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));b.classList.add('active');const map={archive:'all',mail:'mail',projects:'research',intercepts:'critical',overview:'all'};state.filter=map[b.dataset.view];document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('active',x.dataset.filter===state.filter));document.querySelector('.docs-head').scrollIntoView({behavior:'smooth',block:b.dataset.view==='overview'?'end':'start'});render()}));
-document.getElementById('closeDialog').addEventListener('click',()=>document.getElementById('documentDialog').close());
-document.getElementById('documentDialog').addEventListener('click',e=>{if(e.target.id==='documentDialog')e.currentTarget.close()});
-document.getElementById('markButton').addEventListener('click',e=>{const id=e.target.dataset.id;if(!id)return;state.favorite.has(id)?state.favorite.delete(id):state.favorite.add(id);e.target.textContent=state.favorite.has(id)?'УБРАТЬ ИЗ ИЗБРАННОГО':'ДОБАВИТЬ В ИЗБРАННОЕ';render()});
-render();

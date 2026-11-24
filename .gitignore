@@ -2,7 +2,8 @@ node_modules/
 .env
 .env.*
 !.env.example
-/dist/supabase-config.js
+/dist/
+/.build-*/
 *.tar.gz
 *.log
 .DS_Store

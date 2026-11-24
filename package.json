@@ -1,1 +1,12 @@
-{"name":"object6-network","version":"1.0.0","private":true,"engines":{"node":">=22"},"scripts":{"build":"node scripts/build-supabase-config.mjs && node scripts/build-microreader.mjs","preview":"node scripts/build-supabase-config.mjs && node serve.mjs"}}
+{
+  "name": "object6-network",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "prepreview": "npm run build",
+    "preview": "node serve.mjs"
+  }
+}
