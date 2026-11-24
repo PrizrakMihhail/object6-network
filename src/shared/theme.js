@@ -1,8 +1,10 @@
 (() => {
   const key = 'object6.theme';
+  const themeColors = { standard: null, terminal: '#100b05', shard: '#0d0b31' };
+  const normalize = value => Object.hasOwn(themeColors, value) ? value : 'standard';
   let theme = 'standard';
   try {
-    if (localStorage.getItem(key) === 'terminal') theme = 'terminal';
+    theme = normalize(localStorage.getItem(key));
   } catch {
     // The switch still works in the current page without storage.
   }
@@ -18,11 +20,11 @@
       for (const button of buttons) {
         button.setAttribute('aria-pressed', String(button.dataset.themeChoice === theme));
       }
-      if (meta) meta.content = theme === 'terminal' ? '#100b05' : baseColor;
+      if (meta) meta.content = themeColors[theme] ?? baseColor;
     };
     for (const button of buttons) {
       button.addEventListener('click', () => {
-        theme = button.dataset.themeChoice;
+        theme = normalize(button.dataset.themeChoice);
         apply();
         try {
           localStorage.setItem(key, theme);
@@ -33,7 +35,7 @@
     }
     window.addEventListener('storage', event => {
       if (event.key !== key && event.key !== null) return;
-      theme = event.newValue === 'terminal' ? 'terminal' : 'standard';
+      theme = normalize(event.newValue);
       apply();
     });
     apply();
