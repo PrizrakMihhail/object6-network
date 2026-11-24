@@ -40,11 +40,11 @@
 }
 
 html[data-theme="terminal"] {
-  --bg: #090603;
-  --panel: #140c04;
-  --panel2: #271708;
-  --line: #523314;
-  --line2: #875222;
+  --bg: #080706;
+  --panel: #100d08;
+  --panel2: #241a0c;
+  --line: #4e371b;
+  --line2: #8b6330;
   --text: #f2bb78;
   --muted: #bc8b56;
   --amber: #ffb746;
@@ -63,18 +63,15 @@ html[data-theme="terminal"] {
     color: var(--text);
   }
 
-  .noise, .crt {
-    opacity: .23;
-    background: repeating-linear-gradient(0deg, transparent 0 3px, #07040188 3px 4px);
-  }
+  .noise, .crt { display: none; }
 
   :is(.topbar, .sidebar, .terminal-status, .activity-panel) {
     border-color: var(--line);
   }
 
-  .topbar { background: #100903f5; }
-  .sidebar { background: #130b04f5; scrollbar-color: #875222 #130b04; }
-  .brand, .brand b, .hero-row h1, .section-head h2 { color: #ffbf6e; text-shadow: 0 0 .7rem #ed8f374d; }
+  .topbar, .sidebar { background: var(--bg); }
+  .sidebar { scrollbar-color: var(--line2) var(--bg); }
+  .brand, .brand b, .hero-row h1, .section-head h2 { color: var(--amber); }
   .hero-row h1 span { color: #d98c40; }
   .brand-mark { color: var(--amber); border-color: var(--line2); background: #281506; }
   .network-seal { border-color: var(--line2); }
@@ -95,7 +92,7 @@ html[data-theme="terminal"] {
   .nav-item em { background: #2e1909; color: #db9c60; }
   .nav-item .alert-count { color: var(--red); }
   .meter, .terminal-status .meter { background: #34200b; }
-  .status-strip { background: #160d04; }
+  .status-strip { background: var(--panel); }
   .status-strip b, .panel-title, .activity-feed b, .terminal-status b { color: #edb46c; }
   .status-strip .warning b, .activity-feed .hot b, .doc-level.critical { color: var(--red); }
   .activity-feed .cyan b { color: var(--cyan); }
@@ -105,14 +102,9 @@ html[data-theme="terminal"] {
   .filters button b { background: #311c0b; }
   :is(.search, .doc-level, .log-button) { border-color: var(--line2); }
 
-  .routing-map {
-    background: linear-gradient(#d38a3226 1px, transparent 1px),
-      linear-gradient(90deg, #d38a3226 1px, transparent 1px),
-      var(--panel);
-    background-size: 24px 24px, 24px 24px, 100% 100%;
-  }
-  .routing-node { background: #1a0e05; border-left-color: var(--line2); color: var(--text); }
-  .routing-hub, .routing-node:is(:hover, :focus-visible) { background: #311b0a; }
+  .routing-map { background: var(--bg); }
+  .routing-node { background: var(--panel); border-left-color: var(--line2); color: var(--text); }
+  .routing-hub, .routing-node:is(:hover, :focus-visible) { background: var(--panel2); }
   .routing-node[data-condition="warn"] { border-left-color: var(--amber); }
   .routing-node[data-condition="critical"] { border-left-color: var(--red); }
   .routing-description, .routing-switch button { color: var(--muted); }
@@ -123,7 +115,8 @@ html[data-theme="terminal"] {
   .routing-lines .routing-line-warning { stroke: var(--amber); }
 
   :is(.document-dialog, .access-dialog, .microreader-dialog, .leisure-dialog, .access-gate, .network-dialog)::backdrop {
-    background: #080400d9;
+    background: #080706df;
+    backdrop-filter: none;
   }
   :is(.doc-window, .access-dialog form, .microreader-machine, .leisure-dialog, .gate-frame) {
     color: var(--text);
@@ -140,9 +133,6 @@ html[data-theme="terminal"] {
   }
   .doc-window article h3 { border-color: var(--line2); color: #ffbf6e; }
   :is(.doc-meta b, .gate-kicker, .gate-copy) { color: var(--text); }
-  :is(dialog button, .gate-cancel, .leisure-card button) { border-color: var(--line2); color: #ffd197; background: #291708; }
-  :is(dialog button, .leisure-card button):not(:disabled):hover { background: #44270f; color: #ffe3b8; }
-  .access-dialog form button { background: #db8d37; color: #130803; }
   :is(.access-dialog label, .doc-meta, .microreader-status, .microreader-machine > footer) { border-color: var(--line); }
   .routing-access h2, .reactor-emergency { color: var(--red); }
   .microreader-stage { background: #160c04; }
@@ -163,9 +153,10 @@ html[data-theme="terminal"] {
   .leisure-icon { filter: sepia(1) saturate(1.8); }
   .mines-grid button:is([data-state="open"], [data-state="mine"]) { background: #1b0e05; color: #ffd396; }
   .mines-grid button[data-state="mine"] { color: var(--red); }
-  .reactor-rotors { border-color: var(--line2); background: repeating-linear-gradient(0deg, #180d04 0 7px, #201205 7px 8px); }
-  .reactor-disc { border-color: #936633; background: repeating-conic-gradient(#a57b50 0deg 1deg, #4b2d13 1deg 15deg); }
-  .reactor-rotor { border-color: #936633; background: #211006; }
+  .reactor-rotors { border-color: var(--line2); background: var(--bg); }
+  .reactor-disc, .reactor-rotor { border-color: var(--line2); background: var(--panel2); }
+  .reactor-wire > span { background: var(--wire-mid); }
+  .reactor-terminal::before { background: var(--rail-color); }
   :is(.reactor-terminal-body, .reactor-layer-mark, .reactor-readout dl div) { color: var(--text); border-color: var(--line2); background: #2b180a; }
   :is(.reactor-terminal-label, .reactor-readout dt) { color: #d3a571; }
   :is(.reactor-outcome, .reactor-readout dd) { color: var(--cyan); }
@@ -182,7 +173,19 @@ html[data-theme="terminal"] {
     box-shadow: none !important;
   }
 
-  --raster: repeating-linear-gradient(0deg, transparent 0 3px, #0004 3px 4px);
+  :is(button, .nav-item, .node-filter, .doc-row, .gate-cancel, .reactor-face, .terminal-status .meter span) {
+    transition: none;
+  }
+
+  :is(button:not(.reactor-rotor), .nav-item, .node-filter, .doc-row, .gate-cancel, .leisure-card) {
+    background-image: none;
+    text-shadow: none;
+  }
+
+  :is(.system-line i, .terminal-status i, .panel-title i, .terminal-status .meter span,
+      .microreader-status i, .microreader-glass, .leisure-icon-reader) {
+    box-shadow: none;
+  }
 
   :is(.theme-switch, .brand-mark, .sidebar .nav-item, .sidebar .terminal-status,
       .routing-map, .routing-node, .status-strip, .leisure-games, .leisure-titlebar,
@@ -248,7 +251,7 @@ html[data-theme="terminal"] {
     padding: clamp(.8rem, 2.6vw, 2.25rem);
     border: 1px solid var(--line2);
     border-radius: 0;
-    background: var(--raster), var(--bg);
+    background: var(--bg);
     box-shadow: none;
   }
 
@@ -270,10 +273,6 @@ html[data-theme="terminal"] {
     letter-spacing: .035em;
   }
 
-  .status-strip {
-    background: var(--raster), var(--panel);
-  }
-
   .status-strip b { white-space: nowrap; }
 
   .status-strip div {
@@ -293,26 +292,30 @@ html[data-theme="terminal"] {
     height: .38rem;
     margin-right: .35rem;
     background: currentColor;
-    box-shadow: 0 0 .4rem currentColor;
     vertical-align: .09em;
   }
 
   :is(.doc-window, .access-dialog form, .microreader-machine, .leisure-dialog, .gate-frame) {
     border: 1px solid var(--line2);
     border-radius: 0;
-    background: var(--raster), var(--panel);
+    background: var(--panel);
     box-shadow: none;
   }
 
   :is(dialog button:not(.reactor-rotor), .leisure-card button, .gate-cancel) {
     border-color: var(--line2);
+    background: var(--panel);
+    color: var(--text);
     font-family: var(--mono);
   }
 
-  .access-dialog form button {
+  :is(dialog button:not(.reactor-rotor), .leisure-card button, .gate-cancel):not(:disabled):hover,
+  .access-dialog form button[type="submit"] {
     background: var(--amber);
     color: var(--bg);
   }
+
+  .mines-grid button[data-state="mine"]:hover { color: var(--red); }
 
   .reactor-disc,
   .reactor-rotor,
