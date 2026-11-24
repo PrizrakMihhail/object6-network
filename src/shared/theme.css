@@ -59,7 +59,7 @@ html[data-theme="terminal"] {
   color: var(--text);
 
   body {
-    background: radial-gradient(ellipse at 50% 22%, #512c12 0, #211105 37%, #0a0603 76%);
+    background: var(--bg);
     color: var(--text);
   }
 
@@ -108,7 +108,7 @@ html[data-theme="terminal"] {
   .routing-map {
     background: linear-gradient(#d38a3226 1px, transparent 1px),
       linear-gradient(90deg, #d38a3226 1px, transparent 1px),
-      radial-gradient(ellipse at center, #3a210c, #130b04 75%);
+      var(--panel);
     background-size: 24px 24px, 24px 24px, 100% 100%;
   }
   .routing-node { background: #1a0e05; border-left-color: var(--line2); color: var(--text); }
@@ -122,17 +122,16 @@ html[data-theme="terminal"] {
   .routing-lines line { stroke: #90623b; }
   .routing-lines .routing-line-warning { stroke: var(--amber); }
 
-  :is(.document-dialog, .access-dialog, .microreader-dialog, .leisure-dialog, .access-gate)::backdrop {
+  :is(.document-dialog, .access-dialog, .microreader-dialog, .leisure-dialog, .access-gate, .network-dialog)::backdrop {
     background: #080400d9;
   }
   :is(.doc-window, .access-dialog form, .microreader-machine, .leisure-dialog, .gate-frame) {
     color: var(--text);
     background: var(--panel);
     border-color: var(--line2);
-    box-shadow: 0 0 .9rem #db812626, 0 1rem 4rem #000;
   }
   :is(.doc-window > header, .doc-window > footer, .microreader-machine > header, .leisure-header, .leisure-titlebar) {
-    background: linear-gradient(90deg, #382008, #1b1005);
+    background: var(--panel2);
     border-color: var(--line2);
     color: #ffbd6b;
   }
@@ -154,8 +153,8 @@ html[data-theme="terminal"] {
   :is(#leisure, .leisure-dialog) {
     --window-face: #241407;
     --window-inset: #140b04;
-    --window-raised: #925b2c #090502 #090502 #925b2c;
-    --window-sunken: #090502 #73451f #73451f #090502;
+    --window-raised: var(--line2);
+    --window-sunken: var(--line2);
     --window-muted: #c5976b;
     color: var(--text);
     background: var(--window-face);
@@ -167,7 +166,6 @@ html[data-theme="terminal"] {
   .reactor-rotors { border-color: var(--line2); background: repeating-linear-gradient(0deg, #180d04 0 7px, #201205 7px 8px); }
   .reactor-disc { border-color: #936633; background: repeating-conic-gradient(#a57b50 0deg 1deg, #4b2d13 1deg 15deg); }
   .reactor-rotor { border-color: #936633; background: #211006; }
-  .reactor-face { background: radial-gradient(circle at 38% 27%, #624220, #211104 72%); }
   :is(.reactor-terminal-body, .reactor-layer-mark, .reactor-readout dl div) { color: var(--text); border-color: var(--line2); background: #2b180a; }
   :is(.reactor-terminal-label, .reactor-readout dt) { color: #d3a571; }
   :is(.reactor-outcome, .reactor-readout dd) { color: var(--cyan); }
@@ -179,116 +177,91 @@ html[data-theme="terminal"] {
   }
   :is(.hack-head h1, .vault-head h1, .mail-message h2, .mail-body, .mail-body p, .gate-frame h1) { color: var(--text); }
   .keyboard-help, .keyboard-help-toggle { background: var(--bg); color: var(--amber); border-color: var(--line2); }
-  :focus-visible { outline-color: var(--amber) !important; }
-
-  --screen: #100902;
-  --raster: repeating-linear-gradient(0deg, #05020055 0 1px, transparent 1px 4px);
-
-  body {
-    background: repeating-linear-gradient(90deg, #191109 0 2px, #1c130a 2px 3px);
+  :focus-visible {
+    outline-color: var(--amber) !important;
+    box-shadow: none !important;
   }
 
-  .topbar {
-    background: linear-gradient(#34261a, #1a1109 52%, #100903);
-    border-bottom: 2px solid #725031;
-    box-shadow: inset 0 1px #7f6246, 0 4px 0 #090501;
+  --raster: repeating-linear-gradient(0deg, transparent 0 3px, #0004 3px 4px);
+
+  :is(.theme-switch, .brand-mark, .sidebar .nav-item, .sidebar .terminal-status,
+      .routing-map, .routing-node, .status-strip, .leisure-games, .leisure-titlebar,
+      .network-dialog, .message-notification, .mail-unread, .reactor-layer-mark, .reactor-terminal-body, dialog,
+      button:not(.reactor-rotor), input, select, textarea) {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .network-seal, .network-seal::before, .network-seal::after {
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .brand-mark {
     clip-path: none;
-    border-radius: 3px;
-    border: 1px solid #a06b35;
-    background: radial-gradient(ellipse, #572b0e, #1c0b02);
-    box-shadow: inset 0 1px 5px #080300, 0 0 .7rem #e1872338;
-    text-shadow: 0 0 .45rem #ff9c36;
+    border: 1px solid var(--line2);
+    background: var(--bg);
   }
 
   .theme-switch {
-    border: 1px solid #725131;
-    border-radius: 3px;
-    background: #100802;
-    box-shadow: 0 1px #84613e, inset 0 2px 5px #000;
-  }
-
-  .theme-switch button {
-    background: linear-gradient(#372719, #211408);
-    color: #eac597;
+    border-color: var(--line2);
+    background: var(--bg);
   }
 
   .theme-switch button[aria-pressed="true"] {
-    background: radial-gradient(ellipse, #6c3512, #301604);
-    color: #ffcc80;
-    box-shadow: inset 0 0 0 1px #be7935, inset 0 1px 5px #100500;
-    text-shadow: 0 0 .4rem #ff963a80;
-  }
-
-  .sidebar {
-    background: linear-gradient(90deg, #150d06, #281a0e 94%, #100801);
-    border-right: 2px solid #715030;
+    background: var(--amber);
+    color: var(--bg);
   }
 
   .sidebar .nav-item {
-    width: calc(100% - .65rem);
-    margin: .16rem .35rem;
-    border: 1px solid #644627;
-    border-bottom-color: #0b0502;
-    border-radius: 3px;
-    background: linear-gradient(#352619, #221508 55%, #170e07);
-    box-shadow: inset 0 1px #745636, 0 2px 2px #080400;
-    color: #e1b889;
+    margin-block: .125rem;
+    border: 1px solid transparent;
+    background: transparent;
   }
 
   .sidebar .nav-item:is(:hover, .active, [aria-current="location"]) {
-    border-color: #ab7134;
-    background: radial-gradient(ellipse at left, #6a3310, #241306 75%);
+    border-color: var(--line2);
+    background: var(--panel2);
     color: #ffe3ad;
   }
 
   .sidebar.showing-leisure .nav-item.active:not(:hover) {
-    border-color: #644627;
-    background: linear-gradient(#352619, #221508 55%, #170e07);
+    border-color: transparent;
+    background: transparent;
   }
 
-  .sidebar .nav-item > span:first-child {
-    color: #ffc17a;
-    text-shadow: 0 0 .5rem #ff9b45b0;
-  }
+  .sidebar .nav-item > span:first-child { color: var(--amber); }
 
   .sidebar .terminal-status {
     padding: .65rem .75rem;
-    border: 1px solid #725032;
-    border-radius: 3px;
-    background: #140a03;
-    box-shadow: inset 0 .15rem .45rem #080300, 0 1px #755536;
+    border: 1px solid var(--line);
+    background: var(--bg);
   }
 
   .shell > main {
     max-width: none;
     padding: clamp(.75rem, 3vw, 2.5rem);
-    background: linear-gradient(120deg, #2e2115, #120b06 63%, #24170b);
   }
 
   #networkContent,
   #leisure {
     padding: clamp(.8rem, 2.6vw, 2.25rem);
-    border: 3px solid;
-    border-color: #090502 #795635 #795635 #090502;
-    border-radius: clamp(.45rem, 1.8vw, 1.3rem);
-    background: var(--raster), radial-gradient(ellipse at 50% 18%, #311805, var(--screen) 65%);
-    box-shadow: 0 0 0 4px #302014, 0 0 0 5px #755130, inset 0 0 2rem #000;
+    border: 1px solid var(--line2);
+    border-radius: 0;
+    background: var(--raster), var(--bg);
+    box-shadow: none;
   }
 
   #networkContent .hero-row {
     margin-bottom: 1.15rem;
     padding-bottom: 1.25rem;
-    border-bottom: 1px dashed #8c592a;
+    border-bottom: 1px dashed var(--line2);
   }
 
   .hero-row h1 {
     font-size: clamp(1.8rem, 4.2vw, 3.75rem);
     line-height: 1.04;
     letter-spacing: -.035em;
-    text-shadow: 0 0 .8rem #ff9c404f;
   }
 
   .section-head h2 {
@@ -298,34 +271,16 @@ html[data-theme="terminal"] {
   }
 
   .status-strip {
-    border-radius: 4px;
-    background: var(--raster), #110802;
-    box-shadow: inset 0 2px 8px #080300, 0 1px #74471e;
+    background: var(--raster), var(--panel);
   }
 
-  .status-strip b {
-    white-space: nowrap;
-    color: #ffd38d;
-    text-shadow: 0 0 .8rem #ff9d4375;
-  }
-
-  .status-strip .warning b { text-shadow: 0 0 .65rem #f04b3880; }
+  .status-strip b { white-space: nowrap; }
 
   .status-strip div {
     display: grid;
     gap: .4rem;
     justify-items: start;
     align-content: space-between;
-  }
-
-  .routing-map, .leisure-games {
-    border-radius: .45rem;
-    box-shadow: inset 0 0 1.3rem #060200;
-  }
-
-  .routing-node {
-    border-radius: 3px;
-    box-shadow: inset 0 1px #69421e, 0 .2rem .45rem #060300a8;
   }
 
   .routing-name { font-size: .875rem; }
@@ -337,35 +292,36 @@ html[data-theme="terminal"] {
     width: .38rem;
     height: .38rem;
     margin-right: .35rem;
-    border-radius: 50%;
     background: currentColor;
     box-shadow: 0 0 .4rem currentColor;
     vertical-align: .09em;
   }
 
-  .leisure-titlebar {
-    border: 1px solid #805021;
-    border-radius: .2rem;
-  }
-
   :is(.doc-window, .access-dialog form, .microreader-machine, .leisure-dialog, .gate-frame) {
-    border: 2px solid;
-    border-color: #7d5838 #211206 #211206 #7d5838;
-    border-radius: .75rem;
-    background: var(--raster), radial-gradient(ellipse at top, #311906, #140a03 70%);
-    box-shadow: 0 0 0 4px #302216, 0 0 0 5px #7a583b, 0 1.1rem 4rem #000;
+    border: 1px solid var(--line2);
+    border-radius: 0;
+    background: var(--raster), var(--panel);
+    box-shadow: none;
   }
 
-  :is(.doc-window > header, .microreader-machine > header, .leisure-header) {
-    border-bottom: 1px solid #a0642a;
-    background: linear-gradient(#39291b, #201307);
-    box-shadow: inset 0 1px #795839, 0 3px 0 #0c0501;
+  :is(dialog button:not(.reactor-rotor), .leisure-card button, .gate-cancel) {
+    border-color: var(--line2);
+    font-family: var(--mono);
   }
 
-  :is(dialog button:not(.reactor-rotor), .leisure-card button) {
-    border-radius: 3px;
-    border-color: #916132 #43290f #34200c #80512c;
-    box-shadow: inset 0 1px #77502a, 0 2px 2px #090502;
+  .access-dialog form button {
+    background: var(--amber);
+    color: var(--bg);
+  }
+
+  .reactor-disc,
+  .reactor-rotor,
+  .reactor-rotors {
+    box-shadow: none;
+  }
+
+  .reactor-face {
+    background: var(--panel2);
   }
 
   @media (max-width: 800px) {
