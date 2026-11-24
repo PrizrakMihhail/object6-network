@@ -1,0 +1,171 @@
+.lab .topbar .theme-switch { margin-left: auto; }
+
+.lab-main {
+  max-width: 76rem;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.lab-return {
+  display: inline-block;
+  margin-bottom: 1.4rem;
+  font-size: .8rem;
+  color: var(--amber);
+  text-underline-offset: .2em;
+}
+
+.lab .hero-row {
+  align-items: center;
+  gap: clamp(1rem, 4vw, 3rem);
+  min-height: 9rem;
+}
+
+.lab .hero-row h1 { color: var(--text); }
+.lab .hero-row h1 span { color: var(--amber); }
+.lab .hero-row .lead { color: var(--muted); }
+
+.lab-mark {
+  display: block;
+  width: clamp(3rem, 13vw, 9rem);
+  aspect-ratio: 240 / 222;
+  flex: none;
+  background: var(--amber);
+  mask: url("../assets/maztek/mark.png") center / contain no-repeat;
+}
+
+.lab-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: .55rem;
+  padding: .55rem;
+  margin-bottom: 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.lab-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: .65rem .8rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  text-align: left;
+  font: inherit;
+}
+
+.lab-nav .lab-link { justify-content: flex-start; }
+.lab-link span { color: var(--amber); }
+.lab-link:is(:hover, :focus-visible), .lab-projects summary:hover {
+  background: var(--panel2);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.lab :is(a, button, summary):focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.lab-sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.lab-panel {
+  min-width: 0;
+  padding: clamp(.85rem, 2.2vw, 1.4rem);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  scroll-margin-top: 5.5rem;
+  font-size: .85rem;
+  line-height: 1.5;
+}
+
+.lab-panel:target { border-color: var(--amber); }
+.lab-panel .section-head { margin-bottom: .85rem; }
+.lab-panel p { margin: 0; }
+.lab-records { list-style: none; margin: 0; padding: 0; }
+.lab-records li + li { margin-top: .35rem; }
+
+.lab-locked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  min-height: 2.75rem;
+  padding: .65rem .8rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.lab-locked span, .lab-projects summary span {
+  flex: none;
+  color: var(--red);
+  font-size: .72rem;
+}
+
+.lab-projects { display: grid; gap: .4rem; }
+.lab-projects details[open] { padding-bottom: .35rem; }
+.lab-projects details > :not(summary) { margin: .45rem 0 0; }
+.lab-projects details > p { padding: .3rem .8rem; }
+.lab-projects summary {
+  padding: .7rem .8rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  cursor: pointer;
+}
+.lab-projects summary::marker { color: var(--amber); }
+.lab-projects summary span { float: right; }
+.lab-projects li:not(.lab-locked) { padding-inline: .8rem; }
+
+.lab-connection {
+  width: min(39rem, calc(100% - 2rem));
+  padding: clamp(1rem, 4vw, 2rem);
+  background: var(--panel);
+  border: 1px solid var(--line2);
+  color: var(--text);
+}
+
+.lab-connection::backdrop { background: var(--bg); }
+.lab-connection header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.lab-connection .lab-mark { width: 3rem; }
+.lab-connection h2 { margin: 0; font: 500 clamp(1.2rem, 4vw, 2rem) var(--display); }
+.lab-connection #labConnectionStatus { color: var(--amber); font-size: .85rem; min-height: 2.2em; }
+.lab-connection progress {
+  display: block;
+  appearance: none;
+  width: 100%;
+  height: .75rem;
+  border: 1px solid var(--line2);
+  background: var(--panel2);
+  color: var(--amber);
+}
+.lab-connection progress::-webkit-progress-bar { background: var(--panel2); }
+.lab-connection progress::-webkit-progress-value { background: var(--amber); }
+.lab-connection progress::-moz-progress-bar { background: var(--amber); }
+.lab-connection form { display: flex; justify-content: flex-end; margin-top: 1rem; }
+.lab-connection button { width: auto; cursor: pointer; font-size: .85rem; }
+
+@media (max-width: 720px) {
+  .lab-sections { grid-template-columns: minmax(0, 1fr); }
+  .lab .hero-row h1 { font-size: clamp(1.9rem, 8vw, 3.2rem); }
+}
+
+@media (max-width: 340px) {
+  .lab .topbar { min-height: 64px; height: auto; flex-wrap: wrap; padding-block: .35rem; }
+  .lab .topbar .theme-switch { margin: .25rem .55rem .15rem; }
+}
