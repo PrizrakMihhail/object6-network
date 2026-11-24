@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f2f8f7">
+  <meta name="description" content="Реестр пациентов и справочник заболеваний Медблока Объекта №6">
+  <title>Медблок — Сеть Объекта №6</title>
+  <link rel="stylesheet" href="medicine/medicine.css">
+  <script src="medicine/medicine.js" type="module"></script>
+</head>
+<body class="medicine">
+  <a class="medicine-skip" href="#medicineMain">К содержанию</a>
+  <header class="medicine-topbar">
+    <div class="medicine-topbar-inner">
+      <a class="medicine-brand" href="#overview">
+        <span class="medicine-mark" aria-hidden="true">+</span>
+        <span><strong>Медблок</strong><small>Объект №6</small></span>
+      </a>
+      <nav class="medicine-nav" aria-label="Разделы Медблока">
+        <a href="#overview" aria-current="location">Главная</a>
+        <a href="#patients">База пациентов</a>
+        <a href="#diseases">Перечень болезней</a>
+        <a href="#laboratory">Лабораторные исследования</a>
+      </nav>
+      <a class="medicine-back" href="index.html"><span aria-hidden="true">←</span> В Сеть</a>
+    </div>
+  </header>
+
+  <main class="medicine-main" id="medicineMain" tabindex="-1">
+    <p class="medicine-status" id="medicineStatus" role="status" hidden></p>
+
+    <section class="medicine-section" id="overview" aria-labelledby="overviewTitle">
+      <header class="medicine-hero">
+        <div>
+          <h1 id="overviewTitle" tabindex="-1">Медблок</h1>
+          <p>Реестр пациентов и регистрация поступлений после возвращения из Запретной зоны.</p>
+        </div>
+        <button class="medicine-button medicine-primary" id="newAdmission" type="button" aria-haspopup="dialog" disabled>
+          <span aria-hidden="true">+</span> Новое поступление
+        </button>
+      </header>
+      <dl class="medicine-statistics" aria-label="Статистика Медблока">
+        <div class="medicine-stat">
+          <dt>Пациенты в реестре</dt>
+          <dd id="patientCount">—</dd>
+        </div>
+        <div class="medicine-stat">
+          <dt>Болезни в справочнике</dt>
+          <dd id="diseaseCount">—</dd>
+        </div>
+        <div class="medicine-stat">
+          <dt>Поступления</dt>
+          <dd id="admissionCount">—</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="medicine-section" id="patients" aria-labelledby="patientsTitle" hidden>
+      <header class="medicine-section-head">
+        <div>
+          <h1 id="patientsTitle" tabindex="-1">База пациентов</h1>
+          <p>Выберите пациента, чтобы открыть его историю поступлений.</p>
+        </div>
+        <div class="medicine-search">
+          <label for="patientSearch">Поиск пациента</label>
+          <input id="patientSearch" type="search" placeholder="Имя или ID" autocomplete="off">
+        </div>
+      </header>
+      <ul class="medicine-list" id="patientList" aria-label="Пациенты" aria-busy="true">
+        <li class="medicine-empty">Загрузка реестра…</li>
+      </ul>
+    </section>
+
+    <section class="medicine-section" id="diseases" aria-labelledby="diseasesTitle" hidden>
+      <header class="medicine-section-head">
+        <div>
+          <h1 id="diseasesTitle" tabindex="-1">Перечень болезней</h1>
+          <p>Описание заболеваний и степень их тяжести.</p>
+        </div>
+        <div class="medicine-search">
+          <label for="diseaseSearch">Поиск болезни</label>
+          <input id="diseaseSearch" type="search" placeholder="Название или описание" autocomplete="off">
+        </div>
+      </header>
+      <ul class="medicine-list medicine-diseases" id="diseaseList" aria-label="Болезни" aria-busy="true">
+        <li class="medicine-empty">Загрузка справочника…</li>
+      </ul>
+    </section>
+
+    <section class="medicine-section" id="laboratory" aria-labelledby="laboratoryTitle" hidden>
+      <header class="medicine-section-head">
+        <div>
+          <h1 id="laboratoryTitle" tabindex="-1">Лабораторные исследования</h1>
+          <p>Справочные признаки болезней для сверки с результатами обследования.</p>
+        </div>
+      </header>
+      <p class="medicine-empty" id="laboratoryStatus">Результатов лабораторных исследований пока нет.</p>
+      <ul class="medicine-list" id="laboratoryList" aria-label="Лабораторные исследования" hidden></ul>
+    </section>
+  </main>
+
+  <dialog class="medicine-dialog" id="admissionDialog" aria-labelledby="admissionTitle">
+    <form class="medicine-form" id="admissionForm">
+      <header class="medicine-dialog-head">
+        <h2 id="admissionTitle">Новое поступление</h2>
+      </header>
+      <div class="medicine-dialog-body">
+        <div class="medicine-field">
+          <label for="patientId">ID пациента</label>
+          <input id="patientId" name="id_number" type="text" maxlength="64" autocomplete="off" spellcheck="false" required>
+        </div>
+        <div class="medicine-field">
+          <label for="exposureMinutes">Просрочка возвращения из Запретной зоны, мин</label>
+          <input id="exposureMinutes" name="overdue_minutes" type="number" min="0" max="2147483647" step="1" inputmode="numeric" aria-describedby="exposureGuide" required>
+          <p class="medicine-field-help" id="exposureGuide">Система подберёт болезнь по просрочке. От 5 минут возможна лёгкая болезнь, от 10 минут — тяжёлая, от 15 минут — угрожающая жизни.</p>
+        </div>
+        <fieldset class="medicine-field" id="complications">
+          <legend>Дополнительные осложнения</legend>
+          <div class="medicine-options" id="complicationOptions"></div>
+        </fieldset>
+        <div class="medicine-field">
+          <label for="medicNotes">Комментарий медика</label>
+          <textarea id="medicNotes" name="notes" rows="4" maxlength="4000"></textarea>
+        </div>
+        <p class="medicine-status" id="admissionStatus" role="status" hidden></p>
+      </div>
+      <footer class="medicine-dialog-actions">
+        <button class="medicine-button" id="admissionCancel" type="button">Отмена</button>
+        <button class="medicine-button medicine-primary" id="admissionSubmit" type="submit">Зарегистрировать</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="medicine-dialog medicine-patient-dialog" id="patientDialog" aria-labelledby="patientDialogTitle">
+    <header class="medicine-dialog-head">
+      <h2 id="patientDialogTitle">Карта пациента</h2>
+    </header>
+    <article class="medicine-dialog-body" id="patientRecord" aria-label="История поступлений"></article>
+    <form class="medicine-dialog-actions" method="dialog">
+      <button class="medicine-button" id="printRecord" type="button">Печать карты</button>
+      <button class="medicine-button medicine-primary" type="submit">Закрыть</button>
+    </form>
+  </dialog>
+</body>
+</html>

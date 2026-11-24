@@ -71,6 +71,7 @@
   background: #101612;
   color: var(--text);
   text-align: left;
+  text-decoration: none;
   overflow-wrap: anywhere;
   cursor: pointer;
   box-shadow: 0 6px 16px #0507068c;

@@ -8,7 +8,7 @@ routingModes.forEach(button => button.addEventListener('click', () => {
   }
 }));
 const routingAccess = document.getElementById('routingAccessDialog');
-document.querySelectorAll('.routing-node:not(#plazaNode, #reactorNode)').forEach(node => {
+document.querySelectorAll('button.routing-node:not(#plazaNode, #reactorNode)').forEach(node => {
   node.addEventListener('click', () => routingAccess.showModal());
 });
 document.getElementById('plazaNode').addEventListener('click', () => {

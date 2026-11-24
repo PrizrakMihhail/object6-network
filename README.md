@@ -33,6 +33,7 @@ Workflow собирает сайт и публикует `dist/`. Относит
 - `src/index.html` — разметка главной страницы, включая сеть, аккаунты, почту и досуг.
 - `src/network/` — архив, карта и реактор. Тексты документов находятся в `archive-documents.js`.
 - `src/account/` — вход, профиль, уведомления и сообщения.
+- `src/medicine.html` и `src/medicine/` — Медблок, приём и печать карты пациента.
 - `src/leisure/` и `src/microreader/` — игры, таблица результатов и интерфейс чтения газет.
 - `src/fourth.html`, `src/g4/` и `templates/g4/` — внешняя сеть G4, параметры игровых головоломок, общий шаблон доступа и тексты закрытого архива и письма.
 - `src/shared/` — тема, клавиатура, звуки и HTTP-клиент Supabase.
@@ -62,5 +63,22 @@ values (
   extensions.crypt('ЗАМЕНИТЕ-ПАРОЛЬ', extensions.gen_salt('bf', 10))
 );
 ```
+
+## Медблок
+
+В Supabase после настройки аккаунтов примените по порядку миграции
+`20261124090000_object6_medicine.sql` и `20261124090100_object6_diseases_seed.sql`.
+Они создают каталог диагнозов и историю поступлений. Игрок видит свою карту после входа.
+Медик видит все поступления и может регистрировать новые.
+Назначьте медика по его UUID в SQL Editor.
+
+```sql
+insert into object6_private.medicine_staff (user_uuid)
+values ('00000000-0000-0000-0000-000000000000')
+on conflict do nothing;
+```
+
+Кнопка «Печать карты» открывает режим печати браузера. В нём можно выбрать
+принтер или сохранить карту в PDF.
 
 Документация публикации: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
