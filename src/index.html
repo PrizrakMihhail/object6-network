@@ -57,12 +57,12 @@
       <a class="nav-item leisure-link" id="leisureTab" href="#leisure" aria-controls="leisure"><span aria-hidden="true">▦</span><b>Досуг</b></a>
       <a class="nav-item" href="maztek.html?connect=1" aria-label="Лаборатория Мазтек"><span aria-hidden="true">⬡</span><b>Лаборатория Мазтек</b></a>
       <a class="nav-item" href="medicine.html" aria-label="Медблок"><span aria-hidden="true">✚</span><b>Медблок</b></a>
-      <div class="network-contours">
+      <div class="network-contours" role="group" aria-label="Контуры архива">
         <div class="nav-label">КОНТУРЫ</div>
-        <button class="node-filter active" data-node="all"><i class="amber"></i> Все узлы</button>
-        <button class="node-filter" data-node="maztech"><i class="orange"></i> MAZTECH</button>
-        <button class="node-filter" data-node="matsumoto"><i class="cyan"></i> MATSUMOTO</button>
-        <button class="node-filter" data-node="field"><i class="green"></i> ПОЛЕВЫЕ</button>
+        <button type="button" class="node-filter active" data-node="all" aria-pressed="true"><i class="amber"></i> Все узлы</button>
+        <button type="button" class="node-filter" data-node="maztech" aria-pressed="false"><i class="orange"></i> MAZTECH</button>
+        <button type="button" class="node-filter" data-node="matsumoto" aria-pressed="false"><i class="cyan"></i> MATSUMOTO</button>
+        <button type="button" class="node-filter" data-node="field" aria-pressed="false"><i class="green"></i> ПОЛЕВЫЕ</button>
       </div>
       <div class="terminal-status">
         <small>СОЕДИНЕНИЕ</small><b><i></i> СТАБИЛЬНО</b>
@@ -182,6 +182,15 @@
             <div><p class="eyebrow">ПОСЛЕДНЯЯ СИНХРОНИЗАЦИЯ: 04:18</p><h2>ДОКУМЕНТЫ СЕТИ</h2></div>
             <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Поиск по архиву" autocomplete="off"></label>
           </div>
+          <label class="archive-contour-select">
+            Контур
+            <select id="archiveContour">
+              <option value="all">Все узлы</option>
+              <option value="maztech">MAZTECH</option>
+              <option value="matsumoto">MATSUMOTO</option>
+              <option value="field">Полевые</option>
+            </select>
+          </label>
           <div class="filters" id="filters">
             <button class="active" data-filter="all">ВСЕ <b>12</b></button>
             <button data-filter="critical">КРИТИЧЕСКИЕ <b>3</b></button>
@@ -527,9 +536,13 @@
   </dialog>
 
   <script src="network/reactor.js"></script>
-  <script type="module" src="network/index.js"></script>
+  <script type="module" src="network/archive.js"></script>
+  <script type="module" src="network/routing.js"></script>
+  <script type="module" src="network/structures.js"></script>
+  <script type="module" src="account/account.js"></script>
   <script src="network/network-signal.js"></script>
-  <script type="module" src="microreader/microreader.js"></script>
+  <script type="application/json" id="microreaderCatalog">[]</script>
+  <script src="microreader/microreader.js"></script>
   <script src="shared/keyboard.js"></script>
   <script src="leisure/leisure.js"></script>
 </body>

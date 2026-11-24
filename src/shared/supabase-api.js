@@ -1,6 +1,8 @@
-import config from './supabase-config.js';
+// A missing deployment configuration must not prevent local UI from starting.
+const configuration = import('./supabase-config.js').then(module => module.default, () => null);
 
-export function requestData(path, { query, timeout, ...options }) {
+export async function requestData(path, { query, timeout, ...options }) {
+  const config = await configuration;
   if (!config) throw new Error('service_unavailable');
 
   const url = new URL(`/rest/v1/${path}`, config.url);
@@ -11,5 +13,3 @@ export function requestData(path, { query, timeout, ...options }) {
     signal: AbortSignal.timeout(timeout)
   });
 }
-
-export const hasSupabaseConfig = Boolean(config);

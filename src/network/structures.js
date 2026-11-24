@@ -1,4 +1,4 @@
-import { hasSupabaseConfig, requestData } from '../shared/supabase-api.js';
+import { requestData } from '../shared/supabase-api.js';
 
 const nodes = new Map(
   Array.from(document.querySelectorAll('[data-structure-slug]'), node => [node.dataset.structureSlug, node])
@@ -31,6 +31,10 @@ async function loadStructures() {
   }
 }
 
-if (hasSupabaseConfig && nodes.size) {
-  loadStructures().catch(error => console.warn('Supabase routing data unavailable:', error.message));
+if (nodes.size) {
+  loadStructures().catch(error => {
+    if (error.message !== 'service_unavailable') {
+      console.warn('Supabase routing data unavailable:', error.message);
+    }
+  });
 }

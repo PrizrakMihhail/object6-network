@@ -2,3 +2,35 @@
  .sidebar{position:sticky;top:74px;align-self:start;height:calc(100vh - 74px);min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#3d4a3d #090d0b;padding-bottom:140px}
  .sidebar .terminal-status{position:static;margin:2rem 11px 0}
 }
+
+.docs-head {
+  scroll-margin-block-start: 5rem;
+}
+
+.archive-contour-select {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .docs-head {
+    scroll-margin-block-start: 8.25rem;
+  }
+
+  .archive-contour-select {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin-bottom: .45rem;
+    color: var(--muted);
+    font-size: .75rem;
+  }
+
+  .archive-contour-select select {
+    min-height: 2rem;
+    padding-inline: .45rem;
+    border: 1px solid var(--line2);
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+  }
+}

@@ -2,6 +2,7 @@
 .microreader-machine,.microreader-glass{scrollbar-width:none;-ms-overflow-style:none}
 .microreader-dialog::-webkit-scrollbar,.microreader-machine::-webkit-scrollbar,.microreader-glass::-webkit-scrollbar{display:none;width:0;height:0}
 .microreader-glass img{transition:filter .55s ease,opacity .55s ease}
+.microreader-glass img[hidden]{display:none}
 .microreader-machine.lamp-failure .microreader-glass img{animation:projector-slip 2s linear both;transition:none}
 .microreader-machine.lamp-failure .microreader-glass:after{position:absolute;inset:0;z-index:2;background:repeating-linear-gradient(0deg,#050705 0 7px,#37402f 8px 9px,#10140e 10px 18px);animation:projector-shutter 2s linear both}
 @keyframes projector-slip{0%{transform:translateY(0);filter:brightness(.8)}12%{transform:translateY(9px) skewX(.8deg);filter:brightness(.4)}25%{transform:translateY(-12px);filter:brightness(.2)}40%,100%{opacity:0;filter:brightness(0);transform:translateY(0)}}

@@ -5,6 +5,8 @@ const dialog = document.getElementById('documentDialog');
 const mark = document.getElementById('markButton');
 const filters = document.querySelectorAll('#filters button');
 const nodeFilters = document.querySelectorAll('.node-filter');
+const contour = document.getElementById('archiveContour');
+const heading = document.querySelector('.docs-head');
 const navigation = document.querySelectorAll('.nav-item');
 const state = { filter: 'all', node: 'all', query: '', favorites: new Set() };
 const categoryByView = { archive: 'all', mail: 'mail', projects: 'research', intercepts: 'critical', overview: 'all' };
@@ -40,6 +42,17 @@ function setFilter(filter) {
   render();
 }
 
+function setContour(node) {
+  state.node = node;
+  contour.value = node;
+  for (const button of nodeFilters) {
+    const active = button.dataset.node === node;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  }
+  render();
+}
+
 list.addEventListener('click', event => {
   const row = event.target.closest('.doc-row');
   if (!row) return;
@@ -61,10 +74,10 @@ list.addEventListener('click', event => {
 
 filters.forEach(button => button.addEventListener('click', () => setFilter(button.dataset.filter)));
 nodeFilters.forEach(button => button.addEventListener('click', () => {
-  nodeFilters.forEach(item => item.classList.toggle('active', item === button));
-  state.node = button.dataset.node;
-  render();
+  setContour(button.dataset.node);
+  heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }));
+contour.addEventListener('change', () => setContour(contour.value));
 document.getElementById('searchInput').addEventListener('input', event => {
   state.query = event.target.value.toLowerCase();
   render();
@@ -75,7 +88,7 @@ navigation.forEach(button => {
   button.addEventListener('click', () => {
     navigation.forEach(item => item.classList.toggle('active', item === button));
     setFilter(categoryByView[view]);
-    document.querySelector('.docs-head').scrollIntoView({
+    heading.scrollIntoView({
       behavior: 'smooth',
       block: view === 'overview' ? 'end' : 'start'
     });

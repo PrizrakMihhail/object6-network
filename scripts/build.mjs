@@ -24,8 +24,13 @@ async function buildMicroreader(directory) {
       title: name.replace(/\.[^.]+$/, '').replace(/^clipping-(\d+)$/i, 'ВЫРЕЗКА $1').replace(/[_-]+/g, ' '),
       caption: `АРХИВНАЯ КОПИЯ // ЛИСТ ${String(index + 1).padStart(2, '0')}`
     }));
-  await writeFile(new URL('microreader/microreader-catalog.js', directory),
-    `export default ${JSON.stringify(slides, null, 2)};\n`);
+  const page = new URL('index.html', directory);
+  const html = await readFile(page, 'utf8');
+  const placeholder = '<script type="application/json" id="microreaderCatalog">[]</script>';
+  if (!html.includes(placeholder)) throw new Error('Microreader catalog placeholder is missing');
+  const catalog = JSON.stringify(slides).replaceAll('<', '\\u003c');
+  await writeFile(page, html.replace(placeholder, () =>
+    `<script type="application/json" id="microreaderCatalog">${catalog}</script>`));
   console.log(`Microreader: ${slides.length} images`);
 }
 
