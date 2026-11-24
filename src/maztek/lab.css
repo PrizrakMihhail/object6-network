@@ -246,8 +246,6 @@
 .lab-connection progress::-webkit-progress-bar { background: var(--panel2); }
 .lab-connection progress::-webkit-progress-value { background: var(--amber); }
 .lab-connection progress::-moz-progress-bar { background: var(--amber); }
-.lab-connection form { display: flex; justify-content: flex-end; margin-top: 1rem; }
-.lab-connection button { width: auto; cursor: pointer; font-size: .85rem; }
 
 @media (max-width: 950px) {
   .lab-sections { grid-template-columns: minmax(0, 1fr); }
