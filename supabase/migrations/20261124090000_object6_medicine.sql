@@ -27,19 +27,10 @@ create index object6_medicine_patient_history
 create index object6_medicine_recent
   on public.object6_medicine (admitted_at desc, uuid desc);
 
--- Account registration roles are self-selected. Assign access from the SQL editor:
--- insert into object6_private.medicine_staff (user_uuid)
--- select "UUID" from public.object6_users where id_number::text = '<exact staff ID>'
--- on conflict do nothing;
-create table object6_private.medicine_staff (
-  user_uuid uuid primary key references public.object6_users ("UUID") on delete cascade
-);
-
 alter table public.object6_diseases enable row level security;
 alter table public.object6_medicine enable row level security;
-alter table object6_private.medicine_staff enable row level security;
 
-revoke all on public.object6_diseases, public.object6_medicine, object6_private.medicine_staff
+revoke all on public.object6_diseases, public.object6_medicine
   from public, anon, authenticated;
 grant select on public.object6_diseases to anon, authenticated;
 create policy object6_diseases_catalog on public.object6_diseases
@@ -77,22 +68,22 @@ language plpgsql stable security definer set search_path = ''
 as $$
 declare
   viewer uuid := object6_private.require_user(p_token);
-  can_admit boolean;
   cases jsonb;
 begin
   if viewer is null then
     raise sqlstate 'PT401' using message = 'session_expired';
   end if;
 
-  select exists (select 1 from object6_private.medicine_staff s where s.user_uuid = viewer)
-  into can_admit;
-
   select coalesce(jsonb_agg(to_jsonb(c) order by c.admitted_at desc, c.uuid desc), '[]'::jsonb)
   into cases
   from object6_private.medicine_case_details c
-  where can_admit or c.patient_uuid = viewer;
+  where c.patient_uuid = viewer or exists (
+    select 1
+    from public.object6_medicine intake
+    where intake.uuid = c.uuid and intake.admitted_by = viewer
+  );
 
-  return jsonb_build_object('can_admit', can_admit, 'cases', cases);
+  return jsonb_build_object('can_admit', true, 'cases', cases);
 end;
 $$;
 
@@ -117,9 +108,6 @@ declare
 begin
   if medic is null then
     raise sqlstate 'PT401' using message = 'session_expired';
-  end if;
-  if not exists (select 1 from object6_private.medicine_staff s where s.user_uuid = medic) then
-    raise sqlstate 'PT403' using message = 'medicine_access_denied';
   end if;
   if p_uuid is null then
     raise sqlstate 'PT400' using message = 'invalid_medicine_uuid';
