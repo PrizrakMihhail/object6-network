@@ -13,15 +13,16 @@
   <a class="medicine-skip" href="#medicineMain">К содержанию</a>
   <header class="medicine-topbar">
     <div class="medicine-topbar-inner">
-      <a class="medicine-brand" href="#overview">
+      <a class="medicine-brand" id="medicineBrand" href="#diseases">
         <span class="medicine-mark" aria-hidden="true">+</span>
         <span><strong>Медблок</strong><small>Объект №6</small></span>
       </a>
       <nav class="medicine-nav" aria-label="Разделы Медблока">
-        <a href="#overview" aria-current="location">Главная</a>
-        <a href="#patients">База пациентов</a>
-        <a href="#diseases">Перечень болезней</a>
-        <a href="#laboratory">Лабораторные исследования</a>
+        <a href="#overview" data-medicine-access="staff" hidden>Главная</a>
+        <a href="#patients" data-medicine-access="staff" hidden>База пациентов</a>
+        <a href="#diseases" aria-current="location">Перечень болезней</a>
+        <a href="#my-record" data-medicine-access="personal" hidden>Моя карта</a>
+        <a href="#laboratory" data-medicine-access="staff" hidden>Лабораторные исследования</a>
       </nav>
       <a class="medicine-back" href="index.html"><span aria-hidden="true">←</span> В Сеть</a>
     </div>
@@ -30,7 +31,7 @@
   <main class="medicine-main" id="medicineMain" tabindex="-1">
     <p class="medicine-status" id="medicineStatus" role="status" hidden></p>
 
-    <section class="medicine-section" id="overview" aria-labelledby="overviewTitle">
+    <section class="medicine-section" id="overview" aria-labelledby="overviewTitle" data-medicine-access="staff" hidden>
       <header class="medicine-hero">
         <div>
           <h1 id="overviewTitle" tabindex="-1">Медблок</h1>
@@ -56,7 +57,7 @@
       </dl>
     </section>
 
-    <section class="medicine-section" id="patients" aria-labelledby="patientsTitle" hidden>
+    <section class="medicine-section" id="patients" aria-labelledby="patientsTitle" data-medicine-access="staff" hidden>
       <header class="medicine-section-head">
         <div>
           <h1 id="patientsTitle" tabindex="-1">База пациентов</h1>
@@ -72,7 +73,7 @@
       </ul>
     </section>
 
-    <section class="medicine-section" id="diseases" aria-labelledby="diseasesTitle" hidden>
+    <section class="medicine-section" id="diseases" aria-labelledby="diseasesTitle">
       <header class="medicine-section-head">
         <div>
           <h1 id="diseasesTitle" tabindex="-1">Перечень болезней</h1>
@@ -88,7 +89,18 @@
       </ul>
     </section>
 
-    <section class="medicine-section" id="laboratory" aria-labelledby="laboratoryTitle" hidden>
+    <section class="medicine-section" id="my-record" aria-labelledby="myRecordTitle" data-medicine-access="personal" hidden>
+      <header class="medicine-section-head">
+        <div>
+          <h1 id="myRecordTitle" tabindex="-1">Моя медицинская карта</h1>
+          <p>История ваших поступлений и текущие статусы диагнозов.</p>
+        </div>
+      </header>
+      <p class="medicine-empty" id="myRecordEmpty">Поступлений пока нет.</p>
+      <button class="medicine-button medicine-primary" id="openMyRecord" type="button" aria-haspopup="dialog" hidden>Открыть мою карту</button>
+    </section>
+
+    <section class="medicine-section" id="laboratory" aria-labelledby="laboratoryTitle" data-medicine-access="staff" hidden>
       <header class="medicine-section-head">
         <div>
           <h1 id="laboratoryTitle" tabindex="-1">Лабораторные исследования</h1>

@@ -39,6 +39,8 @@ try { token = sessionStorage.getItem('object6-session'); } catch { /* The catalo
 let cases = [];
 let diseases = [];
 let complications = [];
+let laboratory = [];
+let access = 'public';
 let canAdmit = false;
 let caseLoadError = '';
 let diseaseLoadError = '';
@@ -81,9 +83,13 @@ function rpc(name, params) {
 }
 
 function showSection(focus = false) {
-  const selected = sections.find(section => `#${section.id}` === location.hash) ?? sections[0];
+  const available = node => !node.dataset.medicineAccess || node.dataset.medicineAccess === access;
+  const home = access === 'staff' ? 'overview' : 'diseases';
+  const selected = sections.find(section => available(section) && `#${section.id}` === location.hash) ?? byId(home);
+  byId('medicineBrand').hash = home;
   for (const section of sections) section.hidden = section !== selected;
   for (const link of navLinks) {
+    link.hidden = !available(link);
     if (link.hash === `#${selected.id}`) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   }
@@ -245,10 +251,10 @@ function renderDiseases() {
 function renderLab() {
   const labList = byId('laboratoryList');
   const labStatus = byId('laboratoryStatus');
-  const entries = diseases.filter(disease => disease.lab_notes);
+  const entries = laboratory;
   labList.hidden = !entries.length;
   labStatus.hidden = !!entries.length;
-  labStatus.textContent = diseaseLoadError || 'Справочных данных пока нет.';
+  labStatus.textContent = 'Справочных данных пока нет.';
   listItems(labList, entries.map(disease => {
     const row = element('li', null, 'medicine-disease');
     row.append(element('h2', disease.name), element('p', disease.lab_notes));
@@ -281,7 +287,7 @@ async function loadMedicine() {
   setStatus(status, 'Загрузка Медблока…');
   const [catalog, options, history] = await Promise.allSettled([
     read('object6_diseases', {
-      query: { select: 'slug,name,severity,description,symptoms,treatment,lab_notes', order: 'severity.asc,name.asc' }
+      query: { select: 'slug,name,severity,description,symptoms,treatment', order: 'severity.asc,name.asc' }
     }),
     rpc('complications', {}),
     token ? rpc('cases', { p_token: token }) : null
@@ -295,9 +301,18 @@ async function loadMedicine() {
     renderComplications();
   }
   if (history.status === 'fulfilled' && history.value) {
-    cases = history.value.cases;
-    canAdmit = history.value.can_admit;
-    updateCaseCounts();
+    const { staff } = history.value;
+    if (typeof staff === 'boolean') {
+      access = staff ? 'staff' : 'personal';
+      canAdmit = staff && history.value.can_admit;
+      cases = history.value.cases;
+      laboratory = history.value.laboratory;
+      byId('myRecordEmpty').hidden = cases.length > 0;
+      byId('openMyRecord').hidden = !cases.length;
+      updateCaseCounts();
+    } else {
+      caseLoadError = 'Настройки доступа к картам ещё не обновлены.';
+    }
   } else {
     caseLoadError = history.status === 'rejected' ? messageFor(history.reason) : 'Войдите в Сеть, чтобы открыть карты пациентов.';
   }
@@ -305,9 +320,10 @@ async function loadMedicine() {
   renderPatients();
   renderDiseases();
   renderLab();
+  showSection();
   const error = diseaseLoadError || (history.status === 'rejected' ? caseLoadError : '')
     || (canAdmit && options.status === 'rejected' ? messageFor(options.reason) : '');
-  setStatus(status, error || caseLoadError || (!canAdmit ? 'Доступна ваша карта пациента. Регистрация поступлений доступна медикам.' : ''), !!error);
+  setStatus(status, error || caseLoadError, !!error);
 }
 
 function showAdmission() {
@@ -436,6 +452,7 @@ admissionForm.addEventListener('submit', event => {
 });
 
 byId('patientSearch').addEventListener('input', renderPatients);
+byId('openMyRecord').addEventListener('click', () => openPatient(cases));
 byId('diseaseSearch').addEventListener('input', renderDiseases);
 byId('printRecord').addEventListener('click', () => window.print());
 window.addEventListener('hashchange', () => showSection(true));
