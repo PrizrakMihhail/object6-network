@@ -29,6 +29,8 @@ const errors = {
   medicine_conflict: 'Не удалось повторить поступление с изменёнными данными. Проверьте карту пациента.',
   medicine_diagnosis_changed: 'Справочник изменился. Обновите страницу и запустите анализ снова.',
   medicine_catalog_unavailable: 'Справочник диагнозов недоступен.',
+  invalid_medicine_status: 'Выберите допустимый статус болезни.',
+  medicine_case_not_found: 'Это поступление больше недоступно.',
   service_unavailable: 'База Медблока пока недоступна.'
 };
 
@@ -142,6 +144,65 @@ function appendNote(parent, label, content) {
   parent.append(block);
 }
 
+function openDiseaseDescription(episode) {
+  const disease = diseases.find(item => item.slug === episode.diagnosis_slug);
+  byId('diseaseDetailsTitle').textContent = episode.diagnosis_name;
+  const body = byId('diseaseDetailsBody');
+  body.replaceChildren(severityBadge(episode.severity));
+  if (disease) {
+    body.append(element('p', disease.description));
+    appendNote(body, 'Симптомы', disease.symptoms);
+    appendNote(body, 'Лечение', disease.treatment);
+  } else {
+    body.append(element('p', 'Описание болезни сейчас недоступно.'));
+  }
+  byId('diseaseDetailsDialog').showModal();
+}
+
+function appendCaseControls(item, episode) {
+  const badge = element('span', null, 'medicine-case-status');
+  badge.setAttribute('role', 'status');
+  const actions = element('div', null, 'medicine-case-actions');
+  const change = element('button', null, 'medicine-button');
+  change.type = 'button';
+  const description = element('button', 'Описание болезни', 'medicine-button');
+  description.type = 'button';
+  description.setAttribute('aria-haspopup', 'dialog');
+  description.addEventListener('click', () => openDiseaseDescription(episode));
+  const feedback = element('p', null, 'medicine-status medicine-case-feedback');
+  feedback.setAttribute('role', 'status');
+  feedback.hidden = true;
+
+  function updateLabels() {
+    const cured = episode.status === 'cured';
+    badge.dataset.status = cured ? 'cured' : 'active';
+    badge.textContent = cured ? 'Вылечена' : 'Активна';
+    change.textContent = cured ? 'Вернуть статус «Активна»' : 'Отметить вылеченной';
+  }
+
+  change.addEventListener('click', async () => {
+    if (change.disabled) return;
+    change.disabled = true;
+    setStatus(feedback, 'Сохранение статуса…');
+    try {
+      const { status } = await rpc('set_status', {
+        p_token: token, p_uuid: episode.uuid, p_status: episode.status === 'cured' ? 'active' : 'cured'
+      });
+      episode.status = status;
+      updateLabels();
+      setStatus(feedback);
+    } catch (error) {
+      setStatus(feedback, messageFor(error), true);
+    } finally {
+      change.disabled = false;
+    }
+  });
+
+  updateLabels();
+  actions.append(change, description);
+  item.append(badge, actions, feedback);
+}
+
 function openPatient(records) {
   const latest = records[0];
   const name = latest.patient_name || 'Пациент';
@@ -159,6 +220,7 @@ function openPatient(records) {
     const names = (episode.complications ?? []).map(slug => complications.find(option => option.slug === slug)?.name ?? slug);
     appendNote(item, 'Осложнения', names.join(', ') || 'Без осложнений');
     appendNote(item, 'Комментарий медика', episode.notes);
+    appendCaseControls(item, episode);
     history.append(item);
   }
   record.replaceChildren(identity, history);

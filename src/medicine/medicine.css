@@ -191,6 +191,21 @@ fieldset.medicine-field { margin: 0; padding: .35rem 0 0; border: 0; }
 .medicine-case-meta { margin: .45rem 0 .25rem; }
 .medicine-record-note { margin-top: .65rem; }
 .medicine-record-note p { margin: .1rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.medicine-case-status {
+  display: inline-block;
+  margin-top: .8rem;
+  padding: .18rem .55rem;
+  border-radius: .35rem;
+  background: #fff0d6;
+  color: #77450a;
+  font-size: .82rem;
+  font-weight: 650;
+}
+.medicine-case-status[data-status="cured"] { background: #e6f1ed; color: #275746; }
+.medicine-case-actions { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: .7rem; }
+.medicine-case-actions .medicine-button { font-size: .85rem; }
+.medicine-dialog .medicine-case-feedback { margin-top: .65rem; }
+.medicine-disease-details > p { margin: .75rem 0 0; overflow-wrap: anywhere; }
 
 .medicine-analysis { width: min(100% - 1.5rem, 42rem); }
 .medicine-analysis .medicine-dialog-body { display: grid; gap: .8rem; }
@@ -297,9 +312,11 @@ fieldset.medicine-field { margin: 0; padding: .35rem 0 0; border: 0; }
   }
   #patientDialog::backdrop { display: none; }
   #patientDialog .medicine-dialog-actions { display: none; }
+  #patientRecord :is(.medicine-case-actions, .medicine-case-feedback) { display: none; }
   #patientDialog .medicine-dialog-head, #patientRecord { position: static; padding: 0; }
   #patientRecord { margin-top: .6rem; }
   #patientRecord .medicine-history { display: block; }
   #patientRecord .medicine-case { break-inside: avoid; margin-bottom: .75rem; }
   #patientRecord .medicine-severity { color: #000; border: 1px solid #aaa; }
+  #patientRecord .medicine-case-status { color: #000; border: 1px solid #aaa; }
 }
