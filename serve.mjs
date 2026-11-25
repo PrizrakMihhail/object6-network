@@ -28,7 +28,8 @@ createServer(async (req, res) => {
   }
   try {
     const { pathname } = new URL(req.url, 'http://127.0.0.1');
-    const name = decodeURIComponent(pathname).replace(/^\/+/, '') || 'index.html';
+    const requestPath = decodeURIComponent(pathname).replace(/^\/+/, '');
+    const name = requestPath === '' || requestPath.endsWith('/') ? `${requestPath}index.html` : requestPath;
     const candidate = resolve(root, name);
     const path = isLocal(candidate) ? await realpath(candidate) : null;
     if (!path || !isLocal(path)) {
