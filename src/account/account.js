@@ -450,7 +450,7 @@ async function openMessage(message, button, meta) {
 function showMessageDetail(detail, button) {
   activeMessageButton = button;
   openedMessage = detail;
-  replyButton.hidden = mailView !== 'inbox' || !detail.sender;
+  replyButton.hidden = mailView !== 'inbox' || !detail.sender || detail.sender_is_guest === true;
   byId('messageTitle').textContent = detail.title || 'Без темы';
   byId('messageMeta').textContent = messageMetadata(detail);
   byId('messageBody').textContent = detail.message;
@@ -461,7 +461,7 @@ function showMessageDetail(detail, button) {
 }
 
 replyButton.addEventListener('click', () => {
-  if (openedMessage?.sender) selectMailView('compose', undefined, openedMessage);
+  if (!replyButton.hidden && openedMessage?.sender) selectMailView('compose', undefined, openedMessage);
 });
 
 deleteButton.addEventListener('click', async () => {
