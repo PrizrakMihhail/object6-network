@@ -49,6 +49,9 @@ let inboxVersion = 0;
 let activeMessageButton = null;
 let pendingSend = null;
 let noticeTimer;
+let mailTimer;
+let notificationRequest;
+let shownNotifications = new Set();
 let readMessages = new Set();
 let unreadMessages = new Set();
 let inboxLoaded = false;
@@ -91,8 +94,11 @@ function showNotice(message) {
 }
 
 function setSession(token, user = null) {
+  clearInterval(mailTimer);
+  notificationRequest = null;
   if (!token || token !== sessionToken) {
     notifications.replaceChildren();
+    shownNotifications = new Set();
     readMessages = new Set();
     unreadMessages = new Set();
     inboxLoaded = false;
@@ -113,6 +119,9 @@ function setSession(token, user = null) {
     composeForm.reset();
     recipientInput.readOnly = false;
     clearInbox();
+  } else if (user) {
+    loadNotifications(token);
+    mailTimer = setInterval(() => loadNotifications(token), 60_000);
   }
 }
 
@@ -123,20 +132,35 @@ function setUnreadCount(count) {
 }
 
 async function loadNotifications(token) {
+  if (token !== sessionToken || notificationRequest) return;
+  const request = {};
+  notificationRequest = request;
+  const version = inboxVersion;
   try {
     const messages = await rpc('message_notifications', { p_token: token });
-    if (token !== sessionToken) return;
-    const unread = messages.filter(message => !readMessages.has(message.uuid)
-      && (!inboxLoaded || unreadMessages.has(message.uuid)));
-    if (!inboxLoaded) {
-      unreadMessages = new Set(unread.map(message => message.uuid));
-      setUnreadCount(unreadMessages.size);
+    if (notificationRequest !== request) return;
+    const unread = messages.filter(message => !readMessages.has(message.uuid));
+    const newlyArrived = unread.some(message => !unreadMessages.has(message.uuid));
+    unreadMessages = new Set(unread.map(message => message.uuid));
+    setUnreadCount(unreadMessages.size);
+    for (const card of [...notifications.children]) {
+      if (!unreadMessages.has(card.dataset.uuid)) card.remove();
     }
-    unread.forEach(showMessageNotification);
+    for (const message of unread) {
+      if (shownNotifications.has(message.uuid)) continue;
+      shownNotifications.add(message.uuid);
+      showMessageNotification(message);
+    }
+    if (newlyArrived && version === inboxVersion && inboxLoaded && inboxDialog.open
+      && mailView === 'inbox' && !inboxList.hidden) {
+      selectMailView('inbox');
+    }
   } catch (error) {
-    if (token !== sessionToken) return;
+    if (notificationRequest !== request) return;
     if (error.message === 'session_expired') setSession(null);
     else console.warn('Message notifications unavailable:', error.message);
+  } finally {
+    if (notificationRequest === request) notificationRequest = null;
   }
 }
 
@@ -175,7 +199,6 @@ async function restoreSession() {
   try {
     const user = await rpc('profile', { p_token: sessionToken });
     setSession(sessionToken, user);
-    loadNotifications(sessionToken);
   } catch (error) {
     if (error.message !== 'session_expired') throw error;
     setSession(null);
@@ -250,7 +273,6 @@ onSubmit(loginForm, accountStatus, async data => {
   if (result.error) throw new Error(result.error);
   setSession(result.token, result.profile);
   loginForm.reset();
-  loadNotifications(result.token);
   if (!accountDialog.open) return;
   const target = loginTarget;
   accountDialog.close();
